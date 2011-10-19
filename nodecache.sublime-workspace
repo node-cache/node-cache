@@ -1,0 +1,497 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"margin",
+				"margin: margin: T R B L"
+			],
+			[
+				"to",
+				"token"
+			],
+			[
+				"is",
+				"isConnected"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/Makefile/Make.sublime-build",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": true,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/mathiaspeter/Sites/lagerfeuer/node_cache-test.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/modules/data_manager.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/modules/validation.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/config.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/dbconfig.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/modules/cache_facades/memcached.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/modules/cache_facades/node_cache.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/modules/eventlayer.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/lib/utils.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/schema.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/shema.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/api/db-api.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/backend.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/modules/database_eventlayer.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/modules/database_facades/mongodb.coffee",
+		"/Users/mathiaspeter/Sites/lagerfeuer/api/db-connector.coffee",
+		"/Users/mathiaspeter/Sites/test_batman/test_batman.coffee",
+		"/Users/mathiaspeter/Sites/simpleasync/test/test.js",
+		"/Users/mathiaspeter/Sites/simpleasync/async.js",
+		"/Users/mathiaspeter/Sites/simpleasync/test/test.coffee",
+		"/Users/mathiaspeter/Sites/simpleasync/async.coffee",
+		"/Users/mathiaspeter/Sites/test/async.js",
+		"/Users/mathiaspeter/Sites/test/async.coffee",
+		"/Users/mathiaspeter/Sites/test/test.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/users/trainingsplan.coffee",
+		"/Users/mathiaspeter/Sites/milonst/server.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/general.js",
+		"/Users/mathiaspeter/Sites/milonst/modules/login.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/js/libs/backbone.js",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/general.coffee",
+		"/Users/mathiaspeter/Sites/milonst/config.coffee",
+		"/Users/mathiaspeter/Sites/milonst/libs/formvalidation.coffee",
+		"/Users/mathiaspeter/Sites/tree/test.cfm",
+		"/Users/mathiaspeter/Sites/tree/jquery-1.6.1.js",
+		"/Users/mathiaspeter/Sites/WebMart/layout/css/src/nib/config.styl",
+		"/Users/mathiaspeter/Sites/milonst/node_modules/socket.io/lib/socket.io.js",
+		"/Users/mathiaspeter/Sites/wblayout/newsletter.html",
+		"/Users/mathiaspeter/Sites/wblayout/index.html",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/page_newsletter.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/page_home.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/webmart.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/webmart_newsletter.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/globals.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/pages.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/basics.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/teasers.styl",
+		"/Users/mathiaspeter/Sites/wblayout/js/src/script.coffee",
+		"/Users/mathiaspeter/Sites/wblayout/humans.txt",
+		"/Users/mathiaspeter/Downloads/thedjinn-jquery-ui-dial-6458eba/demo/index.html",
+		"/Users/mathiaspeter/Sites/wblayout/js/script.js",
+		"/Users/mathiaspeter/Sites/wblayout/js/lib/script.coffee",
+		"/Users/mathiaspeter/Downloads/paulirish-html5-boilerplate-007754e/index.html",
+		"/Users/mathiaspeter/Sites/milonst/static/css/fonts.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/nib/config.styl",
+		"/Users/mathiaspeter/Sites/wblayout/css/src/basics",
+		"/Users/mathiaspeter/Sites/milonst/static/css/modules.styl",
+		"/Users/mathiaspeter/Sites/milonst/static/css/styles.styl",
+		"/Users/mathiaspeter/Sites/milonst/static/css/utils.styl",
+		"/Users/mathiaspeter/Sites/wblayout/hero.html",
+		"/Users/mathiaspeter/Sites/wblayout/css/base.stylus",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/users/users.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/app.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/planview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/planedit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/api.coffee",
+		"/Users/mathiaspeter/Sites/milonst/Rohdaten/device_legcurlpp_defaults.json",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/elementview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/powerview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/poweredit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/devicesettingview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/devicesettingedit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/nodeedit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/css/nib/vendor.styl",
+		"/Users/mathiaspeter/Sites/milonst/static/css/fnbuttons.styl",
+		"/Users/mathiaspeter/Sites/milonst/static/css/nib/buttons.styl",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/nodeview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/js/libs/socketclient.coffee",
+		"/Users/mathiaspeter/Sites/milonst/views/admin.ejs",
+		"/Users/mathiaspeter/Sites/milonst/modules/redischannelemitter.coffee",
+		"/Users/mathiaspeter/Sites/milonst/libs/socketfactory.coffee",
+		"/Users/mathiaspeter/Sites/milonst/modules/modelfactory.coffee",
+		"/Volumes/www/ds_tcs/dynasite_admin/api/api.cfm",
+		"/Volumes/www/ds_tcs/dynasite_codebase/backtest/_todo_api.cfm",
+		"/Volumes/www/ds_tcs/dynasite_codebase/help/_demo_action.cfm",
+		"/Volumes/www/ds_tcs/dynasite_codebase/help/_demo.cfm",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/users/contracts.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/studios/studioadmin.coffee",
+		"/Users/mathiaspeter/Sites/milonst/views/layout_new.ejs",
+		"/Users/mathiaspeter/Sites/milonst/i18n/de.json",
+		"/Users/mathiaspeter/Sites/milonst/modules/aws.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/servoview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/Rohdaten/example_device.json",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/users/trainingsplan.js",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/users/masterdata.coffee",
+		"/Users/mathiaspeter/Sites/milonst/views/layout.ejs",
+		"/Users/mathiaspeter/Sites/milonst/Rohdaten/legcurlpp_defaults",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/nodelist.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/elementedit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/elementlist.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/itemview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/itemedit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/itemlist.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/overview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training/planlist.ejs",
+		"/Users/mathiaspeter/Sites/milonst/i18n/en.json",
+		"/Users/mathiaspeter/Sites/milonst/i18n/jp.json",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/studios/studioadmin/edit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/masterdata/edit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/js/app/studios/studios.coffee",
+		"/Users/mathiaspeter/Sites/milonst/static/js/libs/datavalidator.coffee",
+		"/Users/mathiaspeter/Sites/milonst/server.js",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/contract/edit.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/masterdata/view.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/js/libs/underscore.string.js",
+		"/Users/mathiaspeter/Sites/milonst/node_modules/underscore.string/lib/underscore.string.js",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/studios/useradmin/overview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/contract/view.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/contract/overview.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/stats/view.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/search.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/search_empty.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/userlist.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/studios/useradmin/list.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/contract/base.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/studios/search.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/studios/courses/view.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/studios/studioadmin/list.ejs",
+		"/Users/mathiaspeter/Sites/milonst/static/html/snippets/studios/studioadmin/overview.ejs"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 84.0,
+		"include_history":
+		[
+			"*.coffee",
+			"*.*",
+			"*.ejs",
+			"*.*",
+			"*.coffee",
+			"*.ejs",
+			"*.coffee",
+			""
+		],
+		"location_history":
+		[
+			"/Users/mathiaspeter/Sites/milonst/",
+			"/Users/mathiaspeter/Sites/milonst/static/js/app",
+			"/Users/mathiaspeter/Sites/milonst/static/html/snippets",
+			"/Users/mathiaspeter/Sites/milonst/static/",
+			"/Users/mathiaspeter/Sites/milonst/static/html/snippets",
+			"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training",
+			"/Users/mathiaspeter/Sites/milonst/static/js/",
+			"/Users/mathiaspeter/Sites/milonst/static/html/snippets/users/training",
+			"/Users/mathiaspeter/Sites/milonst/",
+			"/Users/mathiaspeter/Sites/milonst/static/",
+			"/Users/mathiaspeter/Sites/milonst/",
+			"/Users/mathiaspeter/Sites/milonst/node_modules"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"'abc'",
+			"stringValue",
+			"_error",
+			"PORT",
+			"runRegistered",
+			"PORT",
+			"HOST",
+			"PORT",
+			"_initFields",
+			"search",
+			"processing",
+			"formvalidation",
+			"form",
+			"express-form",
+			"onClck",
+			"soy.$$escapeHtml",
+			"append",
+			"output",
+			"opt_sb",
+			"treeB",
+			"\\t",
+			"scr",
+			"images/screens/",
+			"<a",
+			"href=\".+?\"",
+			"href",
+			" class=\"feature-list-element\"",
+			"eature-list-element",
+			"<li>",
+			"<li><a",
+			"../",
+			"  ",
+			"\"en\"",
+			"en",
+			"  ",
+			"cgreen",
+			"cblue",
+			"vendor-prefixes",
+			"console",
+			"		console.log \"ERROR\", error\n",
+			"console",
+			"selname",
+			"ng",
+			"iNg",
+			"nodegroups",
+			"devicetypes",
+			"options._onlysub",
+			"genericView",
+			"attrs",
+			"_runSave",
+			"setSilent",
+			"options",
+			"console",
+			"val",
+			"elCurr",
+			"elCurrOut",
+			"setMode",
+			"display none",
+			"msg",
+			"socketConnected",
+			"_startConnectionTry",
+			"_killConnectionTry",
+			"_connect",
+			"setSession",
+			"_setClientSession",
+			"sessionid",
+			"_onSocketConnected",
+			"socketConnected",
+			"->",
+			"_onConnected",
+			"socketConnected",
+			"_onSocketConnected",
+			"sessionid",
+			"_onReady",
+			"established",
+			"_addToQueue",
+			"socketConnector",
+			"channelEmitter",
+			"connect",
+			"_connect",
+			"io",
+			"socketFactory",
+			"\"LOCAL\"",
+			"callback",
+			"loginObj",
+			"req",
+			"loginObj",
+			"gradi",
+			"settingsc",
+			"i18n.",
+			"servos",
+			"servosettings",
+			"localname",
+			"lastServo",
+			"settingsettings",
+			"servo",
+			"slider",
+			"name",
+			"i18n.",
+			"subs",
+			"ServosettingsView",
+			"2p",
+			"Leistungs",
+			"satz",
+			"/\\*.+",
+			"Servo-Einstellungen",
+			"i18n_legcurlpp_",
+			"leg_curl_pp",
+			"create",
+			"tmpls",
+			"_len2",
+			"element",
+			"view",
+			"oExport",
+			"setViewMode",
+			"iEls",
+			"subs",
+			"item",
+			"subs",
+			"console",
+			"element",
+			"URL",
+			"getDataDefault",
+			"plan",
+			"listView",
+			"listViewUrl",
+			"'list'",
+			"list"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": true,
+		"regex": false,
+		"replace_history":
+		[
+			"",
+			"\\t",
+			"= ",
+			"",
+			"navigate",
+			"reset",
+			".",
+			"",
+			"\\t",
+			"	",
+			"											<div class=\"actions actionsbottom\">",
+			"											<div class=\"actions actions-bottom\">",
+			"\\t",
+			"\"$&\"",
+			"\\n//",
+			"minmaxvalue",
+			"\"$&\":",
+			"$&",
+			"			\"_t\": 				{ name: \"_t\",			",
+			"			\"_t\": 				{ name: \"_t\",		",
+			"			\"_u\": 				{ name: \"_u\",	",
+			"			\"_t\": 				{ name: \"_t\"",
+			"			\"_t\": 			{ name: \"_t\"",
+			"			\"_t\": 		{ name: \"_t\"",
+			",",
+			",\\n",
+			"\\n",
+			"[host",
+			"- $&  ",
+			"$&  ",
+			"$&",
+			"$",
+			"\\t",
+			"\\n",
+			"\\t",
+			"class=\"content content-",
+			"\\t",
+			" \\t",
+			" ",
+			"\\t",
+			"xxx",
+			"...",
+			"\\t",
+			"   ",
+			"@",
+			"#",
+			"@",
+			"#",
+			"\"",
+			"@"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer": false,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 26.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.953605029519,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"api.coffee"
+			],
+			[
+				"admin",
+				"static/css/admin.styl"
+			],
+			[
+				"tp",
+				"node_modules/mysql/test/simple/test-parser.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 226.0390625,
+	"status_bar_visible": false
+}

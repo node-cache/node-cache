@@ -1,0 +1,19 @@
+{
+  "author": "mpneuried <mp@tcs.de>",
+  "name": "nodecache",
+  "description": "a simple node internal caching module",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tcs-de/nodecache.git"
+  },
+  "engines": {
+    "node": "~0.4.*"
+  },
+  "dependencies": {
+    "underscore": ">= 1.1.7"
+  },
+  "devDependencies": {
+    "expresso": ">= 0.9.2"
+  },
+}
