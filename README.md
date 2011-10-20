@@ -14,83 +14,74 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 
 Or just require the `node_cache.js` file to get the superclass
 
-## How to use
+## Examples:
 
-Initialize:
+### Initialize:
 
 ```
-  var NodeCache = require( "node-cache" );
-  var myCache = new NodeCache();
+var NodeCache = require( "node-cache" );
+var myCache = new NodeCache();
 ```
 
-## nodecache.set( key, val, [ ttl ], callback )
+### Store a key (SET):
 
-Sets a `key` `value` pair. It is possible to define an `ttl` ( default: see options ).  
+`myCache.set( key, val, [ ttl ], callback )`
+
+Sets a `key` `value` pair. It is possible to define a `ttl` (in seconds).  
 Returns `true` on success.
 
-Possible `ttl` examples are:
+```
+obj = { my: "Special", variable: 42 };
+myCache.set( "myKey", obj, function( err, success ){
+  if( !err && success ){
+    console.log( success );
+    // true
+    // ... do something ...
+  }
+});
+```
 
-- `10`: 10 ms
-- `10ms`: 10 ms
-- `1s`: 1 Second
-- `5m`: 5 Minutes
-- `2h`: 2 Hours
-- `4d`: 4 Days 
+### Retrieve a key (GET):
 
+`myCache.get( key, callback )`
 
+Gets a saved value from the cache.
+Returns an empty object `{}` if not found or expired.
+If the value was found it returns an object with the `key` `value` pair.
 
-<pre>
-  obj = { my: "Special", variable: 42 };
+```
+myCache.get( "myKey", function( err, value ){
+  if( !err ){
+    console.log( value );
+    // { "myKey": { my: "Special", variable: 42 } }
+    // ... do something ...
+  }
+});
+```
+### Delete a key
 
-  myCache.set( "myKey", obj, function( err, success ){
-    if( !err && success ){
-      console.log( success );
-      // true
-      
-      ... do something ...
-    }
-  });
-</pre>
+`myCache.del( key, callback )`
 
-## nodecache.get( key, callback )
+Delete a key. Returns `true`. A delete will never fail.
 
-Gets a saved value.  
-Returns an empty object if not found or expired.
-If the value has been found it returns an object with the `key` `value` pair.
+```
+myCache.del( "myKey", function( err, value ){
+  if( !err ){
+    console.log( value );
+    // { "myKey": { my: "Special", variable: 42 } }
+    // ... do something ...
+  }
+});
+```
 
-<pre>
-  myCache.get( "myKey", function( err, value ){
-    if( !err ){
-      console.log( value );
-      // { "myKey": { my: "Special", variable: 42 } }
-      
-      ... do something ...
-    }
-  });
-</pre>
+### Statistics
 
-## nodecache.del( key, callback )
-
-Delete a saved value.  
-Returns `true` on success.
-
-<pre>
-  myCache.del( "myKey", function( err, value ){
-    if( !err ){
-      console.log( value );
-      // { "myKey": { my: "Special", variable: 42 } }
-      
-      ... do something ...
-    }
-  });
-</pre>
-
-## nodecache.getStats()
+`myCache.getStats()`
 
 Returns the statistics.  
 
-<pre>
-  myCache.getStats();
+```
+myCache.getStats();
   /*
     {
       keys: 0,    // global key count
@@ -100,19 +91,11 @@ Returns the statistics.
       vsize: 0    // global value size count
     }
   */
-</pre>
-
-## nodecache.checkData()
-
-Run global check to delete expired data.  
-
-<pre>
-  myCache.checkData();
-</pre>
+```
 
 ## Work in progress
 
-`node-cache` is work in progress. Your ideas, suggestions etc. are very welcome.
+`nodecache` is work in progress. Your ideas, suggestions etc. are very welcome.
 
 ## License 
 
