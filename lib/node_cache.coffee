@@ -1,17 +1,5 @@
 _ = require( "underscore" )
 
-# configure the time method
-# define options and the sequential multiplicators
-_timeConfig = 
-	types: [ "ms", "s", "m", "h", "d" ]
-	multiConfig: [ 1, 1000, 60, 60, 24 ]
-# calculate the final multiplacatos
-_timeConfig.multi = _.reduce( _timeConfig.multiConfig, ( v1, v2, idx, ar )->
-	v1.push ( v1[ idx-1 ] or 1 ) * v2
-	v1
-, [] )
-
-
 # generate superclass
 module.exports = class NodeCache
 	constructor: ( @options = {} )->
@@ -26,8 +14,10 @@ module.exports = class NodeCache
 			# used standard size for calculating value size
 			objectValueSize: 80
 			arrayValueSize: 40
-			# standard time to live. 0 = infinity; 10 = 10ms; 1m = 1 Min. ...
+			# standard time to live in seconds. 0 = infinity;
 			stdTTL: 0
+			# time in seconds to check all data and delete expired keys
+			checkperiod: 600
 		, @options )
 
 		# statistics container
@@ -35,8 +25,11 @@ module.exports = class NodeCache
 			hits: 0
 			misses: 0
 			keys: 0
-			ksize: 0 # cummulierte Länge aller Keynamen
-			vsize: 0 # cummulierte Länge aller Values. Nur bei Strings relevant
+			ksize: 0
+			vsize: 0
+		
+		# initalize checking period
+		@_checkData()
 
 	# ## get
 	#
@@ -44,7 +37,7 @@ module.exports = class NodeCache
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String ): cache key
+	# * `key` ( String | String[] ): cache key or an array of keys
 	# * `cb` ( Function ): Callback function
 	# 
 	# **Example:**
@@ -52,17 +45,24 @@ module.exports = class NodeCache
 	#     myCache.key "myKey", ( err, val )->
 	#       console.log( err, val )
 	#
-	get: ( key, cb )->
-		# get data and incremet stats
-		if @data[ key ]? and @_check( key, @data[ key ] )
-			@stats.hits++
-			oRet = {}
-			oRet[ key ] = @_unwrap( @data[ key ] )
-			cb( null, oRet )
-		else
-			# if not found return a error
-			@stats.misses++
-			cb( null, {} )
+	get: ( keys, cb )=>
+		# convert a string to an array of one key
+		if _.isString( keys )
+			keys = [ keys ]
+		
+		# define return
+		oRet = {}
+		for key in keys
+			# get data and incremet stats
+			if @data[ key ]? and @_check( key, @data[ key ] )
+				@stats.hits++
+				oRet[ key ] = @_unwrap( @data[ key ] )
+			else
+				# if not found return a error
+				@stats.misses++
+
+		# return all found keys
+		cb( null, oRet )
 		return
 	
 	# ## set
@@ -73,7 +73,7 @@ module.exports = class NodeCache
 	#
 	# * `key` ( String ): cache key
 	# * `value` ( Any ): A element to cache. If the option `option.forceString` is `true` the module trys to translate it to a serialized JSON
-	# * `[ ttl ]` ( Number | String ): The time to live. Possible example Value are: `10` = 10 ms; `0` = infinity; `5m` = 5 Minutes; The following extensions are allowed: s, m, h, d
+	# * `[ ttl ]` ( Number | String ): ( optional ) The time to live in seconds.
 	# * `cb` ( Function ): Callback function
 	# 
 	# **Example:**
@@ -84,7 +84,7 @@ module.exports = class NodeCache
 	#     myCache.set "myKey", "my_String Value", "10h", ( err, success )->
 	#       console.log( err, success ) 
 	#
-	set: ( key, value, ttl, cb )=>
+	set: ( key, value, ttl, cb=-> )=>
 		# internal helper variables
 		existend = false
 		
@@ -93,7 +93,7 @@ module.exports = class NodeCache
 			value = JSON.stringify( value ) 
 
 		# remap the arguments if `ttl` is not passed
-		if arguments.length is 3
+		if arguments.length is 3 and _.isFunction( ttl )
 			cb = ttl
 			ttl = @options.stdTTL
 		
@@ -117,13 +117,17 @@ module.exports = class NodeCache
 	
 	# ## del
 	#
-	# remove a key from the cache
+	# remove a key
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String ): cache key to delete
+	# * `key` ( String | String[] ): cache key to delete or a array of cache keys
 	# * `cb` ( Function ): Callback function
+	#
+	# **Return**
 	# 
+	# ( Number ): Number of deleted keys
+	#
 	# **Example:**
 	#     
 	#     myCache.del( "myKey" )
@@ -131,21 +135,28 @@ module.exports = class NodeCache
 	#     myCache.del( "myKey", ( err, success )->
 	#       console.log( err, success ) 
 	#
-	del: ( key, cb=-> )=>
-		# only delete if existend
-		if @data[ key ]?
-			# calc the stats
-			@stats.vsize -= @_getValLength( @_unwrap( @data[ key ] ) )
-			@stats.ksize -= @_getKeyLength( key )
-			@stats.keys--
-			# delete the value
-			delete @data[ key ]
-			# return true
-			cb( null, true )
-		else
-			# if the key has not been found return an error
-			@stats.misses++
-			cb( null, true )
+	del: ( keys, cb=-> )=>
+		# convert a string to an array of one key
+		if _.isString( keys )
+			keys = [ keys ]
+
+		delCount = 0
+		for key in keys
+			# only delete if existend
+			if @data[ key ]?
+				# calc the stats
+				@stats.vsize -= @_getValLength( @_unwrap( @data[ key ] ) )
+				@stats.ksize -= @_getKeyLength( key )
+				@stats.keys--
+				delCount++
+				# delete the value
+				delete @data[ key ]
+				# return true
+			else
+				# if the key has not been found return an error
+				@stats.misses++
+		
+		cb( null, delCount )
 		return
 	
 	# ## getStats
@@ -174,52 +185,116 @@ module.exports = class NodeCache
 	getStats: =>
 		@stats
 	
-	# ## checkData
-	# Housekeeping mehtod.
-	# Check all the cached data and delete the invalid values
+	# ## flushAll
 	#
-	# **Parameters:**
+	# flush the hole data and reset the stats
 	#
-	# -
-	#
-	# **Return**
-	# 
-	# ( Object ): Stats data
-	# 
 	# **Example:**
-	# 
-	# myCache.chackData()
-	# 
-	checkData: =>
-		# run the housekeeping method
-		for key, value of @data
-			@_check( key, vData )
+	#     
+	#     myCache.flushAll()
+	#     
+	#     myCache.getStats()
+	#     # {
+	#     # hits: 0,
+	#     # misses: 0,
+	#     # keys: 0,
+	#     # ksize: 0,
+	#     # vsize: 0
+	#     # }
+	#     
+	flushAll: ( _startPeriod = true )=>
+		# parameter just for testing
+
+		# set data empty 
+		@data = {}
+
+		# reset stats
+		@stats = 
+			hits: 0
+			misses: 0
+			keys: 0
+			ksize: 0
+			vsize: 0
+		
+		# reset check period
+		@_killCheckPeriod()
+		@_checkData( _startPeriod )
+
 		return
 	
+	# ## _checkData
+	#
+	# internal Housekeeping mehtod.
+	# Check all the cached data and delete the invalid values
+	_checkData: ( startPeriod = true )=>
+		# run the housekeeping method
+		for key, value of @data
+			@_check( key, value )
+		
+		if startPeriod
+			@checkTimeout = setTimeout( @_checkData, ( @options.checkperiod * 1000 ) )
+		return
+	
+	# ## _killCheckPeriod
+	#
+	# stop the checkdata period. Only needed to abort the script in testing mode.
+	_killCheckPeriod: ->
+		clearTimeout( @checkTimeout ) if @checkTimeout?
+	
+	# ## _check
+	#
+	# internal method the check the value. If it's not valid any moe delete it
+	_check: ( key, data )=>
+		now = new Date().getTime()
+
+		# data is invalid if the ttl is to old and is not 0
+		if data.t < now and data.t isnt 0
+			@del( key )
+			false
+		else
+			true
+	
+	# ## _wrap
+	#
 	# internal method to wrap a value in an object with some metadata
 	_wrap: ( value, ttl )=>
 		# define the time to live
+		now = new Date().getTime()
 		livetime = 0
+
+		ttlMultiplicator = 1000
+
+		# use given ttl
 		if ttl is 0
 			livetime = 0
 		else if ttl 
-			livetime = new Date().getTime() + @_getMilliSeconds( ttl )
+			livetime = now + ( ttl * ttlMultiplicator )
 		else
-			livetime = @options.stdTTL
+			# use standard ttl
+			if @options.stdTTL is 0
+				livetime = @options.stdTTL
+			else
+				livetime = now + ( @options.stdTTL * ttlMultiplicator )
 
 		# return teh wrapped value
 		oReturn =
 			t: livetime
 			v: value
-
+	
+	# ## _unwrap
+	#
 	# internal method to extract get the value out of the wrapped value
 	_unwrap: ( value )=>
 		value.v or null
 	
+	# ## _getKeyLength
+	#
 	# internal method the calculate the key length
 	_getKeyLength: ( key )=>
 		key.length
 	
+	# ## _getValLength
+	#
 	# internal method to calculate the value length
 	_getValLength: ( value )=>
 		if _.isString( value )
@@ -234,18 +309,9 @@ module.exports = class NodeCache
 		else
 			# if the data is an Object multiply each element with a defined default length
 			@options.objectValueSize * _.size( value )
-		
-	# internal method the check the value. If it's not valid any moe delete it
-	_check: ( key, data )=>
-		now = new Date().getTime()
-
-		# data is invalid if the ttl is to old and is not 0
-		if data.t < now and data.t isnt 0
-			@del( key )
-			false
-		else
-			true
 	
+	# ## _error
+	#
 	# internal method to handle an error message
 	_error: ( type, data = {}, cb )=>
 		# generate the error object
@@ -260,43 +326,3 @@ module.exports = class NodeCache
 		else
 			# if no callbach is defined return the error object
 			error
-	
-	# ## getMilliSeconds
-	#
-	# get the milliseconds form a String like "5s" or "3h". Format is "[ time ][ type ]"  
-	# Possible types are [ "ms", "s", "m", "h", "d" ]
-	#
-	# **Parameters:**
-	#
-	# * `time` ( String|Number ): the time to convert
-	# 
-	# **Returns:**
-	#
-	# ( Number ): timespan in miliseconds
-	# 
-	# **Example:**
-	#
-	#     utils.getMilliSeconds( 100 )   # 100
-	#     utils.getMilliSeconds( "100" ) # 100
-	#     utils.getMilliSeconds( "5s" )  # 5000
-	#     utils.getMilliSeconds( "3m" )  # 180000
-	#     utils.getMilliSeconds( "3d" )  # 259200000
-	#     utils.getMilliSeconds( "aaa" ) # null
-	#
-	_getMilliSeconds: ( time )=>
-		iType = -1
-		if _.isString( time )
-			# slice the input to time and type
-			type = time.replace( /\d+/gi, '' )
-			time = parseInt( time.replace( /\D+/gi, '' ), 10 )
-
-			# find the type
-			iType = _timeConfig.types.indexOf( type )
-		
-		# multiplicate the time
-		if iType >= 0
-			time * _timeConfig.multi[ iType ]	
-		else if isNaN( time )
-			null
-		else
-			time

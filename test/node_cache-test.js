@@ -3,8 +3,9 @@
   _ = require("underscore");
   VCache = require("../lib/node_cache");
   localCache = new VCache({
-    stdTTL: '15m'
+    stdTTL: 0
   });
+  localCache._killCheckPeriod();
   randomString = function(length, withnumbers) {
     var chars, i, randomstring, rnum, string_length;
     if (withnumbers == null) {
@@ -29,6 +30,7 @@
   module.exports = {
     "general": function(beforeExit, assert) {
       var key, n, start, value, value2;
+      console.log("START GENERAL TEST");
       n = 0;
       start = _.clone(localCache.getStats());
       value = randomString(100);
@@ -53,7 +55,7 @@
         localCache.del("xxx", function(err, res) {
           n++;
           assert.isNull(err, err);
-          return assert.ok(res);
+          return assert.equal(0, res);
         });
         localCache.set(key, value2, 0, function(err, res) {
           n++;
@@ -71,7 +73,7 @@
         return localCache.del(key, function(err, res) {
           n++;
           assert.isNull(err, err);
-          assert.ok(res);
+          assert.equal(1, res);
           assert.equal(0, localCache.getStats().keys - start.keys);
           return localCache.get(key, function(err, res) {
             n++;
@@ -84,12 +86,40 @@
         return assert.equal(8, n, "not exited");
       });
     },
+    "flush": function(beforeExit, assert) {
+      var count, i, key, n, startKeys, val, _i, _len;
+      console.log("START FLUSH TEST");
+      n = 0;
+      count = 100;
+      startKeys = localCache.getStats().keys;
+      ks = [];
+      val = randomString(20);
+      for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
+        key = randomString(7);
+        ks.push(key);
+      }
+      for (_i = 0, _len = ks.length; _i < _len; _i++) {
+        key = ks[_i];
+        localCache.set(key, val, 0, function(err, res) {
+          n++;
+          assert.isNull(err, err);
+        });
+      }
+      assert.equal(localCache.getStats().keys, startKeys + count);
+      localCache.flushAll(false);
+      assert.equal(localCache.getStats().keys, 0);
+      assert.eql(localCache.data, {});
+      return beforeExit(function() {
+        return assert.equal(n, count + 0);
+      });
+    },
     "many": function(beforeExit, assert) {
       var count, i, key, n, time, val, _i, _j, _len, _len2;
       n = 0;
       count = 100000;
       console.log("START MANY TEST/BENCHMARK.\nSet, Get and check " + count + " elements");
       val = randomString(20);
+      ks = [];
       for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
         key = randomString(7);
         ks.push(key);
@@ -121,22 +151,23 @@
     },
     "delete": function(beforeExit, assert) {
       var count, i, n, ri, startKeys;
+      console.log("START DELETE TEST");
       n = 0;
       count = 10000;
       startKeys = localCache.getStats().keys;
       for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
         ri = Math.floor(Math.random() * vs.length);
-        localCache.del(ks[i], function(err, success) {
+        localCache.del(ks[i], function(err, count) {
           n++;
           assert.isNull(err, err);
-          return assert.ok(success);
+          return assert.equal(1, count);
         });
       }
       for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
         ri = Math.floor(Math.random() * vs.length);
-        localCache.del(ks[i], function(err, success) {
+        localCache.del(ks[i], function(err, count) {
           n++;
-          assert.ok(success);
+          assert.equal(0, count);
           return assert.isNull(err, err);
         });
       }
@@ -145,65 +176,9 @@
         return assert.equal(n, count * 2);
       });
     },
-    "ttl": function(beforeExit, assert) {
-      var key, key2, n, val;
-      val = randomString(20);
-      key = randomString(7);
-      key2 = randomString(7);
-      n = 0;
-      localCache.set(key, val, 500, function(err, res) {
-        assert.isNull(err, err);
-        assert.ok(res);
-        return localCache.get(key, function(err, res) {
-          var pred;
-          assert.isNull(err, err);
-          pred = {};
-          pred[key] = val;
-          return assert.eql(pred, res);
-        });
-      });
-      localCache.set(key2, val, 800, function(err, res) {
-        assert.isNull(err, err);
-        assert.ok(res);
-        return localCache.get(key2, function(err, res) {
-          var pred;
-          assert.isNull(err, err);
-          pred = {};
-          pred[key2] = val;
-          return assert.eql(pred, res);
-        });
-      });
-      setTimeout(function() {
-        ++n;
-        return localCache.get(key, function(err, res) {
-          var pred;
-          assert.isNull(err, err);
-          pred = {};
-          pred[key] = val;
-          return assert.eql(pred, res);
-        });
-      }, 400);
-      setTimeout(function() {
-        ++n;
-        return localCache.get(key, function(err, res) {
-          assert.isNull(err, err);
-          return assert.eql({}, res);
-        });
-      }, 600);
-      return setTimeout(function() {
-        ++n;
-        return localCache.get(key2, function(err, res) {
-          var pred;
-          assert.isNull(err, err);
-          pred = {};
-          pred[key2] = val;
-          assert.eql(pred, res);
-          return assert.eql(pred, res);
-        });
-      }, 600);
-    },
     "stats": function(beforeExit, assert) {
       var count, end, i, key, keys, n, start, val, vals, _ref;
+      console.log("START STATS TEST");
       n = 0;
       start = _.clone(localCache.getStats());
       count = 5;
@@ -251,6 +226,128 @@
       return beforeExit(function() {
         return assert.equal(n, count * 5);
       });
+    },
+    "multi": function(beforeExit, assert) {
+      var count, getKeys, i, key, n, pred, startKeys, val, _i, _j, _len, _len2;
+      console.log("START MULTI TEST");
+      n = 0;
+      count = 100;
+      startKeys = localCache.getStats().keys;
+      ks = [];
+      val = randomString(20);
+      for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
+        key = randomString(7);
+        ks.push(key);
+      }
+      for (_i = 0, _len = ks.length; _i < _len; _i++) {
+        key = ks[_i];
+        localCache.set(key, val, 0, function(err, res) {
+          n++;
+          assert.isNull(err, err);
+        });
+      }
+      getKeys = ks.splice(50, 5);
+      pred = {};
+      for (_j = 0, _len2 = getKeys.length; _j < _len2; _j++) {
+        key = getKeys[_j];
+        pred[key] = val;
+      }
+      localCache.get(getKeys, function(err, res) {
+        n++;
+        assert.isNull(err, err);
+        return assert.eql(pred, res);
+      });
+      localCache.del(getKeys, function(err, res) {
+        n++;
+        assert.isNull(err, err);
+        return assert.equal(getKeys.length, res);
+      });
+      localCache.get(getKeys, function(err, res) {
+        n++;
+        assert.isNull(err, err);
+        return assert.eql({}, res);
+      });
+      return beforeExit(function() {
+        return assert.equal(n, count + 3);
+      });
+    },
+    "ttl": function(beforeExit, assert) {
+      var key, key2, n, val;
+      console.log("START TTL TEST");
+      val = randomString(20);
+      key = randomString(7);
+      key2 = randomString(7);
+      n = 0;
+      localCache.set(key, val, 0.5, function(err, res) {
+        assert.isNull(err, err);
+        assert.ok(res);
+        return localCache.get(key, function(err, res) {
+          var pred;
+          assert.isNull(err, err);
+          pred = {};
+          pred[key] = val;
+          return assert.eql(pred, res);
+        });
+      });
+      localCache.set(key2, val, 0.8, function(err, res) {
+        assert.isNull(err, err);
+        assert.ok(res);
+        return localCache.get(key2, function(err, res) {
+          var pred;
+          assert.isNull(err, err);
+          pred = {};
+          pred[key2] = val;
+          return assert.eql(pred, res);
+        });
+      });
+      setTimeout(function() {
+        ++n;
+        return localCache.get(key, function(err, res) {
+          var pred;
+          assert.isNull(err, err);
+          pred = {};
+          pred[key] = val;
+          return assert.eql(pred, res);
+        });
+      }, 400);
+      setTimeout(function() {
+        ++n;
+        return localCache.get(key, function(err, res) {
+          assert.isNull(err, err);
+          return assert.eql({}, res);
+        });
+      }, 600);
+      setTimeout(function() {
+        ++n;
+        return localCache.get(key2, function(err, res) {
+          var pred;
+          assert.isNull(err, err);
+          pred = {};
+          pred[key2] = val;
+          assert.eql(pred, res);
+          return assert.eql(pred, res);
+        });
+      }, 600);
+      return setTimeout(function() {
+        var startKeys;
+        startKeys = localCache.getStats().keys;
+        key = "autotest";
+        return localCache.set(key, val, 0.5, function(err, res) {
+          assert.isNull(err, err);
+          assert.ok(res);
+          assert.equal(startKeys + 1, localCache.getStats().keys);
+          return localCache.get(key, function(err, res) {
+            var pred;
+            pred = {};
+            pred[key] = val;
+            assert.eql(pred, res);
+            return setTimeout(function() {
+              localCache._checkData(false);
+              return assert.isUndefined(localCache.data[key]);
+            }, 700);
+          });
+        });
+      }, 1000);
     }
   };
 }).call(this);

@@ -2,7 +2,9 @@
 _ = require( "underscore" )
 
 VCache = require "../lib/node_cache"
-localCache = new VCache( stdTTL: '15m' )
+localCache = new VCache( stdTTL: 0 )
+# just for testing disable the check period
+localCache._killCheckPeriod()
 
 # test helper
 randomString = ( length, withnumbers = true ) ->
@@ -25,6 +27,7 @@ ks = []
 # define tests
 module.exports = 
 	"general": (beforeExit, assert) ->
+		console.log "START GENERAL TEST"
 
 		n = 0
 
@@ -60,7 +63,7 @@ module.exports =
 			localCache.del "xxx", ( err, res )->
 				n++
 				assert.isNull( err, err )
-				assert.ok res
+				assert.equal( 0, res )
 			
 			# test update
 			localCache.set key, value2, 0, ( err, res )->
@@ -83,7 +86,7 @@ module.exports =
 			localCache.del key, ( err, res )->
 				n++
 				assert.isNull( err, err )
-				assert.ok res
+				assert.equal 1, res
 
 				# check stats
 				assert.equal 0, localCache.getStats().keys - start.keys
@@ -96,15 +99,48 @@ module.exports =
 
 		beforeExit ->
 			assert.equal( 8, n, "not exited" )
+	
+	"flush": (beforeExit, assert) ->
+		console.log "START FLUSH TEST"
+		n = 0
+		count = 100
+		startKeys = localCache.getStats().keys
+
+		# set `count` values
+		ks = []
+		val = randomString( 20 )
+		for i in [1..count]
+			key = randomString( 7 )
+			ks.push key
+		
+		for key in ks	
+			localCache.set key, val, 0, ( err, res )->
+				n++
+				assert.isNull( err, err )
+				return
+		
+		# check if all data set
+		assert.equal( localCache.getStats().keys, startKeys + count )
+
+		localCache.flushAll( false )
+
+		# check for empty data
+		assert.equal( localCache.getStats().keys, 0 )
+		assert.eql( localCache.data, {} )
+
+
+		beforeExit ->
+			# check  successfull runs
+			assert.equal( n, count + 0 )
 
 	"many": (beforeExit, assert) ->
 		n = 0
 		count = 100000
 		console.log "START MANY TEST/BENCHMARK.\nSet, Get and check #{count} elements"
 		val = randomString( 20 )
+		ks = []
 		for i in [1..count]
 			key = randomString( 7 )
-
 			ks.push key
 		
 		time = new Date().getTime()
@@ -126,11 +162,11 @@ module.exports =
 		console.log( "MANY STATS:", localCache.getStats() )
 		
 		beforeExit ->
-
-			assert.equal( n, count)
+			assert.equal( n, count )
 			
 
 	"delete": (beforeExit, assert) ->
+		console.log "START DELETE TEST"
 		n = 0
 		count = 10000
 		startKeys = localCache.getStats().keys
@@ -138,16 +174,17 @@ module.exports =
 		# test deletes
 		for i in [1..count]
 			ri = Math.floor(Math.random() * vs.length)
-			localCache.del ks[ i ], ( err, success )->
+			localCache.del ks[ i ], ( err, count )->
 				n++
 				assert.isNull( err, err )
-				assert.ok( success )
+				assert.equal( 1, count )
 		
+		# test deletes again. should not delete a key
 		for i in [1..count]
 			ri = Math.floor(Math.random() * vs.length)
-			localCache.del ks[ i ], ( err, success )->
+			localCache.del ks[ i ], ( err, count )->
 				n++
-				assert.ok( success )
+				assert.equal( 0, count )
 				assert.isNull( err, err )
 		
 		# check stats for only a single deletion	
@@ -157,66 +194,8 @@ module.exports =
 			# check  successfull runs
 			assert.equal( n, count * 2)
 	
-	"ttl": (beforeExit, assert) ->
-		val = randomString( 20 )
-		key = randomString( 7 )
-		key2 = randomString( 7 )
-		n = 0
-
-		# set a key with ttl
-		localCache.set key, val, 500, ( err, res )->
-			assert.isNull( err, err )
-			assert.ok( res )
-
-			# check the key immediately
-			localCache.get key, ( err, res )->
-				assert.isNull( err, err )
-				pred = {}
-				pred[ key ] = val
-				assert.eql( pred, res )
-		
-		# set another key
-		localCache.set key2, val, 800, ( err, res )->
-			assert.isNull( err, err )
-			assert.ok( res )
-
-			# check the key immediately
-			localCache.get key2, ( err, res )->
-				assert.isNull( err, err )
-				pred = {}
-				pred[ key2 ] = val
-				assert.eql( pred, res )
-		
-		# check key before lifetime end
-		setTimeout( ->
-			++n;
-			localCache.get key, ( err, res )->
-				assert.isNull( err, err )
-				pred = {}
-				pred[ key ] = val
-				assert.eql( pred, res )
-		, 400 )
-
-		# check key after lifetime end
-		setTimeout( ->
-			++n;
-			localCache.get key, ( err, res )->
-				assert.isNull( err, err )
-				assert.eql( {}, res )
-		, 600 )
-
-		# check second key before lifetime end
-		setTimeout( ->
-			++n;
-			localCache.get key2, ( err, res )->
-				assert.isNull( err, err )
-				pred = {}
-				pred[ key2 ] = val
-				assert.eql( pred, res )
-				assert.eql( pred, res )
-		, 600 )
-	
 	"stats": (beforeExit, assert) ->
+		console.log "START STATS TEST"
 		n = 0
 		start = _.clone( localCache.getStats() )
 		count = 5
@@ -269,3 +248,142 @@ module.exports =
 		beforeExit ->
 
 			assert.equal( n, count*5 )
+	
+	"multi": (beforeExit, assert) ->
+		console.log "START MULTI TEST"
+		n = 0
+		count = 100
+		startKeys = localCache.getStats().keys
+
+		# set `count` values
+		ks = []
+		val = randomString( 20 )
+		for i in [1..count]
+			key = randomString( 7 )
+			ks.push key
+		
+		for key in ks	
+			localCache.set key, val, 0, ( err, res )->
+				n++
+				assert.isNull( err, err )
+				return
+		
+		# generate a sub list of keys
+		getKeys = ks.splice( 50, 5 )
+		# generate prediction
+		pred = {}
+		for key in getKeys
+			pred[ key ] = val
+		
+		# try to get list
+		localCache.get getKeys, ( err, res )->
+			n++
+			assert.isNull( err, err )
+			assert.eql( pred, res )
+		
+		# delete list of keys
+		localCache.del getKeys, ( err, res )->
+			n++
+			assert.isNull( err, err )
+			assert.equal( getKeys.length, res )
+		
+		# try to get list again. Empty result predicted
+		localCache.get getKeys, ( err, res )->
+			n++
+			assert.isNull( err, err )
+			assert.eql( {}, res )
+		
+		beforeExit ->
+			# check  successfull runs
+			assert.equal( n, count + 3)
+	
+	"ttl": (beforeExit, assert) ->
+		console.log "START TTL TEST"
+		val = randomString( 20 )
+		key = randomString( 7 )
+		key2 = randomString( 7 )
+		n = 0
+
+		# set a key with ttl
+		localCache.set key, val, 0.5, ( err, res )->
+			assert.isNull( err, err )
+			assert.ok( res )
+
+			# check the key immediately
+			localCache.get key, ( err, res )->
+				assert.isNull( err, err )
+				pred = {}
+				pred[ key ] = val
+				assert.eql( pred, res )
+		
+		# set another key
+		localCache.set key2, val, 0.8, ( err, res )->
+			assert.isNull( err, err )
+			assert.ok( res )
+
+			# check the key immediately
+			localCache.get key2, ( err, res )->
+				assert.isNull( err, err )
+				pred = {}
+				pred[ key2 ] = val
+				assert.eql( pred, res )
+		
+		# check key before lifetime end
+		setTimeout( ->
+			++n;
+			localCache.get key, ( err, res )->
+				assert.isNull( err, err )
+				pred = {}
+				pred[ key ] = val
+				assert.eql( pred, res )
+		, 400 )
+
+		# check key after lifetime end
+		setTimeout( ->
+			++n;
+			localCache.get key, ( err, res )->
+				assert.isNull( err, err )
+				assert.eql( {}, res )
+		, 600 )
+
+		# check second key before lifetime end
+		setTimeout( ->
+			++n;
+			localCache.get key2, ( err, res )->
+				assert.isNull( err, err )
+				pred = {}
+				pred[ key2 ] = val
+				assert.eql( pred, res )
+				assert.eql( pred, res )
+		, 600 )
+
+		# test the automatic check
+		setTimeout( ->
+			startKeys = localCache.getStats().keys
+
+			key = "autotest"
+
+			# inset a value with ttl
+			localCache.set key, val, 0.5, ( err, res )->
+				assert.isNull( err, err )
+				assert.ok( res )
+				assert.equal( startKeys + 1, localCache.getStats().keys )
+
+				# check existens
+				localCache.get key, ( err, res )->
+					pred = {}
+					pred[ key ] = val
+					assert.eql( pred, res )
+					
+					# run general checkdata after ttl
+					setTimeout( ->
+						localCache._checkData( false )
+						
+						# deep dirty check if key is deleted
+						assert.isUndefined( localCache.data[ key ] )
+
+					, 700 )
+
+		, 1000 )
+		
+	
