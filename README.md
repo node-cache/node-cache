@@ -58,17 +58,55 @@ myCache.get( "myKey", function( err, value ){
   }
 });
 ```
+
+### Retrieve multiple keys (GET):
+
+`myCache.get( [ key1, key2, ... ,keyn ], callback )`
+
+Gets multiple saved values from the cache.
+Returns an empty object `{}` if not found or expired.
+If the value was found it returns an object with the `key` `value` pair.
+
+```
+myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
+  if( !err ){
+    console.log( value );
+    /*
+      {
+        "myKeyA": { my: "Special", variable: 123 },
+        "myKeyB": { the: "Glory", answer: 42 }
+      }
+    */
+    // ... do something ...
+  }
+});
+```
+
 ### Delete a key
 
 `myCache.del( key, callback )`
 
-Delete a key. Returns `true`. A delete will never fail.
+Delete a key. Returns the number of deleted entries. A delete will never fail.
 
 ```
-myCache.del( "myKey", function( err, value ){
+myCache.del( "myKey", function( err, count ){
   if( !err ){
-    console.log( value );
-    // { "myKey": { my: "Special", variable: 42 } }
+    console.log( count ); // 1
+    // ... do something ...
+  }
+});
+```
+
+### Delete multiple keys
+
+`myCache.del( [ key1, key2, ... ,keyn ], callback )`
+
+Delete multiple keys. Returns the number of deleted entries. A delete will never fail.
+
+```
+myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
+  if( !err ){
+    console.log( count ); // 2
     // ... do something ...
   }
 });
@@ -81,6 +119,26 @@ myCache.del( "myKey", function( err, value ){
 Returns the statistics.  
 
 ```
+myCache.getStats();
+  /*
+    {
+      keys: 0,    // global key count
+      hits: 0,    // global hit count
+      misses: 0,  // global miss count
+      ksize: 0,   // global key size count
+      vsize: 0    // global value size count
+    }
+  */
+```
+
+### Flush all data
+
+`myCache.flushAll()`
+
+Flush all data.  
+
+```
+myCache.flushAll();
 myCache.getStats();
   /*
     {
