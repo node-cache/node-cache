@@ -38,7 +38,6 @@ module.exports = class VariableCache
 	#       console.log( err, val )
 	#
 	get: ( key, cb )->
-
 		# get data and incremet stats
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			@stats.hits++
@@ -84,10 +83,10 @@ module.exports = class VariableCache
 		# remove existing data from stats
 		if @data[ key ]
 			existend = true
-			@stats.vsize -= @_getValLength( @_unwrap( data[ key ] ) )
+			@stats.vsize -= @_getValLength( @_unwrap( @data[ key ] ) )
 		
 		# set the value
-		@data[ key ] = @_wrap( value )
+		@data[ key ] = @_wrap( value, ttl )
 		@stats.vsize += @_getValLength( value )
 
 		# only add the keys and key-size if the key is new
@@ -96,7 +95,7 @@ module.exports = class VariableCache
 			@stats.keys++
 		
 		# return true
-		cb( cb, true )
+		cb( null, true )
 		return
 	
 	# ## del
@@ -129,7 +128,7 @@ module.exports = class VariableCache
 		else
 			# if the key has not been found return an error
 			@stats.misses++
-			@_error( 'not-found', method: "dl", cb )
+			@_error( 'not-found', method: "del", cb )
 		return
 	
 	# ## getStats
@@ -181,11 +180,16 @@ module.exports = class VariableCache
 		return
 	
 	# internal method to wrap a value in an object with some metadata
-	_wrap: ( value, ttl = @options.stdTTL )=>
+	_wrap: ( value, ttl )=>
 		# define the time to live
-		if ttl
+		livetime = 0
+		if ttl is 0
+			livetime = 0
+		else if ttl 
 			livetime = new Date().getTime() + utils.getMilliSeconds( ttl )
-		
+		else
+			livetime = @options.stdTTL
+
 		# return teh wrapped value
 		oReturn =
 			t: livetime
@@ -219,7 +223,7 @@ module.exports = class VariableCache
 		now = new Date().getTime()
 
 		# data is invalid if the ttl is to old and is not 0
-		if data.t < now and date.t isnt 0
+		if data.t < now and data.t isnt 0
 			@del( key )
 			false
 		else

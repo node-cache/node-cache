@@ -28,12 +28,13 @@
   vs = [];
   ks = [];
   module.exports = {
-    "test node_cache#general": function(beforeExit, assert) {
+    "general": function(beforeExit, assert) {
       var done, key, value;
       done = false;
       value = randomString(100);
       key = randomString(10);
       localCache.set(key, value, 0, function(err, res) {
+        assert.isNull(err, err);
         return localCache.get(key, function(err, res) {
           done = true;
           assert.equal(value, res);
@@ -44,10 +45,11 @@
         return assert.equal(true, done, "not exited");
       });
     },
-    "test node_cache#many": function(beforeExit, assert) {
+    "many": function(beforeExit, assert) {
       var count, i, key, n, time, val, _i, _j, _len, _len2;
       n = 0;
-      count = 1000000;
+      count = 100000;
+      console.log("START MANY TEST/BENCHMARK.\nSet, Get and check " + count + " elements");
       val = randomString(20);
       for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
         key = randomString(7);
@@ -56,9 +58,12 @@
       time = new Date().getTime();
       for (_i = 0, _len = ks.length; _i < _len; _i++) {
         key = ks[_i];
-        localCache.set(key, val, 0, function(err, res) {});
+        localCache.set(key, val, 0, function(err, res) {
+          assert.isNull(err, err);
+        });
       }
-      console.log("time:", new Date().getTime() - time);
+      console.log("TIME-SET:", new Date().getTime() - time);
+      time = new Date().getTime();
       for (_j = 0, _len2 = ks.length; _j < _len2; _j++) {
         key = ks[_j];
         localCache.get(key, function(err, res) {
@@ -66,15 +71,14 @@
           return assert.equal(val, res);
         });
       }
-      console.log("time:", new Date().getTime() - time);
-      console.log("general stats:", localCache.getStats());
+      console.log("TIME-GET:", new Date().getTime() - time);
+      console.log("MANY STATS:", localCache.getStats());
       return beforeExit(function() {
         return assert.equal(n, count);
       });
     },
-    "test node_cache#delete": function(beforeExit, assert) {
-      var count, i, n, ri, startKeys, time;
-      time = new Date().getTime();
+    "delete": function(beforeExit, assert) {
+      var count, i, n, ri, startKeys;
       n = 0;
       count = 10000;
       startKeys = localCache.getStats().keys;
@@ -82,15 +86,109 @@
         ri = Math.floor(Math.random() * vs.length);
         localCache.del(ks[i], function(err, success) {
           n++;
-          assert.equal(true, success);
+          assert.ok(success);
           return assert.isNull(err, err);
         });
       }
-      console.log("time:", new Date().getTime() - time);
-      console.log("general stats:", localCache.getStats());
+      console.log("DELETE STATS:", localCache.getStats());
+      assert.equal(localCache.getStats().keys, startKeys - n);
       return beforeExit(function() {
-        assert.equal(n, count);
-        return assert.equal(localCache.getStats().keys, startKeys - n);
+        return assert.equal(n, count);
+      });
+    },
+    "ttl": function(beforeExit, assert) {
+      var key, key2, n, val;
+      val = randomString(20);
+      key = randomString(7);
+      key2 = randomString(7);
+      n = 0;
+      localCache.set(key, val, 500, function(err, res) {
+        assert.isNull(err, err);
+        assert.ok(res);
+        return localCache.get(key, function(err, res) {
+          assert.isNull(err, err);
+          return assert.equal(val, res);
+        });
+      });
+      localCache.set(key2, val, 800, function(err, res) {
+        assert.isNull(err, err);
+        assert.ok(res);
+        return localCache.get(key2, function(err, res) {
+          assert.isNull(err, err);
+          return assert.equal(val, res);
+        });
+      });
+      setTimeout(function() {
+        ++n;
+        return localCache.get(key, function(err, res) {
+          assert.isNull(err, err);
+          return assert.equal(val, res);
+        });
+      }, 400);
+      setTimeout(function() {
+        ++n;
+        return localCache.get(key, function(err, res) {
+          assert.isNull(res, res);
+          return assert.equal('not-found', err.errorcode);
+        });
+      }, 600);
+      setTimeout(function() {
+        ++n;
+        return localCache.get(key2, function(err, res) {
+          assert.isNull(err, err);
+          return assert.equal(val, res);
+        });
+      }, 600);
+      return setTimeout(function() {
+        return console.log("TTL STATS:", localCache.getStats());
+      }, 700);
+    },
+    "stats": function(beforeExit, assert) {
+      var count, end, i, key, keys, n, start, val, _ref;
+      n = 0;
+      start = _.clone(localCache.getStats());
+      count = 5;
+      keys = [];
+      for (i = 1, _ref = count * 2; 1 <= _ref ? i <= _ref : i >= _ref; 1 <= _ref ? i++ : i--) {
+        key = randomString(7);
+        val = randomString(50);
+        keys.push(key);
+        localCache.set(key, val, 0, function(err, success) {
+          n++;
+          assert.ok(success);
+          return assert.isNull(err, err);
+        });
+      }
+      for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
+        key = randomString(7);
+        val = randomString(50);
+        localCache.get(keys[i], function(err, success) {
+          n++;
+          assert.ok(success);
+          return assert.isNull(err, err);
+        });
+        localCache.del(keys[i], function(err, success) {
+          n++;
+          assert.ok(success);
+          return assert.isNull(err, err);
+        });
+      }
+      for (i = 1; 1 <= count ? i <= count : i >= count; 1 <= count ? i++ : i--) {
+        localCache.get("xxxx", function(err, res) {
+          ++n;
+          assert.isNull(res, res);
+          return assert.equal('not-found', err.errorcode);
+        });
+      }
+      end = localCache.getStats();
+      console.log(start, end);
+      assert.equal(end.hits - start.hits, 5, "hits wrong");
+      assert.equal(end.misses - start.misses, 5, "misses wrong");
+      assert.equal(end.keys - start.keys, 5, "hits wrong");
+      assert.equal(end.ksize - start.ksize, 5 * 7, "hits wrong");
+      assert.equal(end.vsize - start.vsize, 5 * 50, "hits wrong");
+      return beforeExit(function() {
+        return assert.equal(n, count * 5);
       });
     }
   };

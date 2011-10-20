@@ -33,12 +33,14 @@ module.exports =
 	#     utils.getMilliSeconds( "aaa" ) # null
 	#
 	getMilliSeconds: ( time )=>
-		# slice the input to time and type
-		type = time.replace( /\d+/gi, '' )
-		time = parseInt( time.replace( /\D+/gi, '' ), 10 )
+		iType = -1
+		if _.isString( time )
+			# slice the input to time and type
+			type = time.replace( /\d+/gi, '' )
+			time = parseInt( time.replace( /\D+/gi, '' ), 10 )
 
-		# find the type
-		iType = _timeConfig.types.indexOf( type )
+			# find the type
+			iType = _timeConfig.types.indexOf( type )
 		
 		# multiplicate the time
 		if iType >= 0
