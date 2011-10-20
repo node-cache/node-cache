@@ -22,7 +22,7 @@ module.exports = class NodeCache
 		# module options
 		@options = _.extend(
 			# convert all elements to string 
-			forceString: true
+			forceString: false
 			# used standard size for calculating value size
 			objectValueSize: 80
 			arrayValueSize: 40
