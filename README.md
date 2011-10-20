@@ -1,9 +1,10 @@
-# Simple and fast nodejs internal chaching.
+# Simple and fast NodeJS internal caching.
 
-Simple caching module to save values inbetween nodejs.  
-It is possible to define a time to live. So the values will be deleted after they has been expired.
+A simple caching module that has `set`, `get` and `delete` methods and works a little bit like memcached.
+Keys can have a timeout after which they expire and are cleaned from the cache.  
+All keys are stored in a single object so the practical limit is at around 1m keys.
 
-*written in coffee-script*
+*Written in coffee-script*
 
 ## Install
 
@@ -15,12 +16,12 @@ Or just require the `node_cache.js` file to get the superclass
 
 ## How to use
 
-initialize:
+Initialize:
 
-<pre>
+```
   var NodeCache = require( "node-cache" );
   var myCache = new NodeCache();
-</pre>
+```
 
 ## nodecache.set( key, val, [ ttl ], callback )
 
