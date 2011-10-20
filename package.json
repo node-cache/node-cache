@@ -2,7 +2,7 @@
 	"name": "node-cache",
 	"description": "A simple node internal caching module with expiring values",
 	"keywords": [ "cache", "local", "variable", "coffee", "coffee-script", "underscore" ],
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"author": "tcs-de <github@tcs.de>",
 	"main": "./index.js",
 	"homepage": "https://github.com/tcs-de/nodecache",
