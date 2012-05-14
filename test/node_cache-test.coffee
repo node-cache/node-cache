@@ -3,10 +3,10 @@ _ = require( "underscore" )
 
 VCache = require "../lib/node_cache"
 localCache = new VCache( stdTTL: 0 )
-localCacheTTL = new VCache( stdTTL: 0.3 )
+localCacheTTL = new VCache( stdTTL: 0.3, checkperiod: 0 )
 # just for testing disable the check period
 localCache._killCheckPeriod()
-localCacheTTL._killCheckPeriod()
+#localCacheTTL._killCheckPeriod() # disabled to test checkperiod = 0
 
 # test helper
 randomString = ( length, withnumbers = true ) ->

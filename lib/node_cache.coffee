@@ -279,7 +279,7 @@ module.exports = class NodeCache
 		for key, value of @data
 			@_check( key, value )
 		
-		if startPeriod
+		if startPeriod and @options.checkperiod > 0
 			@checkTimeout = setTimeout( @_checkData, ( @options.checkperiod * 1000 ) )
 		return
 	

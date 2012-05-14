@@ -23,6 +23,16 @@ var NodeCache = require( "node-cache" );
 var myCache = new NodeCache();
 ```
 
+### Options
+
+- `stdTTL`: the standard ttl as number in seconds for every generated cache element. Default = 0 = unlimited
+- `checkperiod`: The period in seconds as number for the automatc delete check intervall. 0 = no periodic check 
+
+```
+var NodeCache = require( "node-cache" );
+var myCacheOptions = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
+```
+
 ### Store a key (SET):
 
 `myCache.set( key, val, [ ttl ], callback )`
@@ -107,6 +117,37 @@ Delete multiple keys. Returns the number of deleted entries. A delete will never
 myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
   if( !err ){
     console.log( count ); // 2
+    // ... do something ...
+  }
+});
+```
+
+### Change TTL
+
+`myCache.ttl( key, ttl, callback )`
+
+Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.  
+If the ttl-argument isnt passed the default-TTL will be used.
+
+```
+myCache = new NodeCache( { stdTTL: 100 } )
+myCache.ttl( "existendKey", 100, function( err, changed ){
+  if( !err ){
+    console.log( changed ); // true
+    // ... do something ...
+  }
+});
+
+myCache.ttl( "missingKey", 100, function( err, changed ){
+  if( !err ){
+    console.log( changed ); // false
+    // ... do something ...
+  }
+});
+
+myCache.ttl( "existendKey", function( err, changed ){
+  if( !err ){
+    console.log( changed ); // true
     // ... do something ...
   }
 });

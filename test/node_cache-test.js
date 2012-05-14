@@ -6,10 +6,10 @@
     stdTTL: 0
   });
   localCacheTTL = new VCache({
-    stdTTL: 0.3
+    stdTTL: 0.3,
+    checkperiod: 0
   });
   localCache._killCheckPeriod();
-  localCacheTTL._killCheckPeriod();
   randomString = function(length, withnumbers) {
     var chars, i, randomstring, rnum, string_length;
     if (withnumbers == null) {
