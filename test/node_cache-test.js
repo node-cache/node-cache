@@ -1,11 +1,15 @@
 (function() {
-  var VCache, ks, localCache, randomString, vs, _;
+  var VCache, ks, localCache, localCacheTTL, randomString, vs, _;
   _ = require("underscore");
   VCache = require("../lib/node_cache");
   localCache = new VCache({
     stdTTL: 0
   });
+  localCacheTTL = new VCache({
+    stdTTL: 0.3
+  });
   localCache._killCheckPeriod();
+  localCacheTTL._killCheckPeriod();
   randomString = function(length, withnumbers) {
     var chars, i, randomstring, rnum, string_length;
     if (withnumbers == null) {
@@ -272,11 +276,14 @@
       });
     },
     "ttl": function(beforeExit, assert) {
-      var key, key2, n, val;
+      var key, key2, key3, key4, key5, n, val;
       console.log("START TTL TEST");
       val = randomString(20);
       key = randomString(7);
       key2 = randomString(7);
+      key3 = randomString(7);
+      key4 = randomString(7);
+      key5 = randomString(7);
       n = 0;
       localCache.set(key, val, 0.5, function(err, res) {
         assert.isNull(err, err);
@@ -328,7 +335,7 @@
           return assert.eql(pred, res);
         });
       }, 600);
-      return setTimeout(function() {
+      setTimeout(function() {
         var startKeys;
         startKeys = localCache.getStats().keys;
         key = "autotest";
@@ -348,6 +355,82 @@
           });
         });
       }, 1000);
+      localCache.set(key3, val, 100, function(err, res) {
+        assert.isNull(err, err);
+        assert.ok(res);
+        return localCache.get(key3, function(err, res) {
+          var pred;
+          assert.isNull(err, err);
+          pred = {};
+          pred[key3] = val;
+          assert.eql(pred, res);
+          localCache.ttl(key3 + "false", 0.3, function(err, setted) {
+            assert.isNull(err, err);
+            return assert.equal(false, setted);
+          });
+          localCache.ttl(key3, 0.3, function(err, setted) {
+            assert.isNull(err, err);
+            return assert.ok(setted);
+          });
+          localCache.get(key3, function(err, res) {
+            pred = {};
+            pred[key3] = val;
+            return assert.eql(pred, res);
+          });
+          return setTimeout(function() {
+            localCache._checkData(false);
+            return assert.isUndefined(localCache.data[key3]);
+          }, 500);
+        });
+      });
+      localCache.set(key4, val, 100, function(err, res) {
+        assert.isNull(err, err);
+        assert.ok(res);
+        return localCache.get(key4, function(err, res) {
+          var pred;
+          assert.isNull(err, err);
+          pred = {};
+          pred[key4] = val;
+          assert.eql(pred, res);
+          localCache.ttl(key4 + "false", function(err, setted) {
+            assert.isNull(err, err);
+            return assert.equal(false, setted);
+          });
+          return localCache.ttl(key4, function(err, setted) {
+            assert.isNull(err, err);
+            assert.ok(setted);
+            return assert.isUndefined(localCache.data[key4]);
+          });
+        });
+      });
+      return localCacheTTL.set(key5, val, 100, function(err, res) {
+        assert.isNull(err, err);
+        assert.ok(res);
+        return localCacheTTL.get(key5, function(err, res) {
+          var pred;
+          assert.isNull(err, err);
+          pred = {};
+          pred[key5] = val;
+          assert.eql(pred, res);
+          localCacheTTL.ttl(key5 + "false", function(err, setted) {
+            assert.isNull(err, err);
+            return assert.equal(false, setted);
+          });
+          localCacheTTL.ttl(key5, function(err, setted) {
+            assert.isNull(err, err);
+            return assert.ok(setted);
+          });
+          localCacheTTL.get(key5, function(err, res) {
+            pred = {};
+            pred[key5] = val;
+            return assert.eql(pred, res);
+          });
+          return setTimeout(function() {
+            localCacheTTL._checkData(false);
+            return assert.isUndefined(localCacheTTL.data[key5]);
+          }, 500);
+        });
+      });
     }
   };
 }).call(this);

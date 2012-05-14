@@ -3,8 +3,10 @@ _ = require( "underscore" )
 
 VCache = require "../lib/node_cache"
 localCache = new VCache( stdTTL: 0 )
+localCacheTTL = new VCache( stdTTL: 0.3 )
 # just for testing disable the check period
 localCache._killCheckPeriod()
+localCacheTTL._killCheckPeriod()
 
 # test helper
 randomString = ( length, withnumbers = true ) ->
@@ -299,9 +301,13 @@ module.exports =
 	
 	"ttl": (beforeExit, assert) ->
 		console.log "START TTL TEST"
+
 		val = randomString( 20 )
 		key = randomString( 7 )
 		key2 = randomString( 7 )
+		key3 = randomString( 7 )
+		key4 = randomString( 7 )
+		key5 = randomString( 7 )
 		n = 0
 
 		# set a key with ttl
@@ -327,7 +333,7 @@ module.exports =
 				pred = {}
 				pred[ key2 ] = val
 				assert.eql( pred, res )
-		
+
 		# check key before lifetime end
 		setTimeout( ->
 			++n;
@@ -385,5 +391,109 @@ module.exports =
 					, 700 )
 
 		, 1000 )
+
+		# set a key with ttl
+		localCache.set key3, val, 100, ( err, res )->
+			assert.isNull( err, err )
+			assert.ok( res )
+
+			# check the key3 immediately
+			localCache.get key3, ( err, res )->
+				assert.isNull( err, err )
+				pred = {}
+				pred[ key3 ] = val
+				assert.eql( pred, res )
+
+				# check ttl with false key
+				localCache.ttl ( key3 + "false" ), 0.3, ( err, setted )->
+					assert.isNull( err, err )
+					assert.equal(false, setted)
+
+					# check ttl with false key
+				localCache.ttl key3, 0.3, ( err, setted )->
+					assert.isNull( err, err )
+					assert.ok(setted)
+
+				# check existens
+				localCache.get key3, ( err, res )->
+					pred = {}
+					pred[ key3 ] = val
+					assert.eql( pred, res )
+
+				# run general checkdata after ttl
+				setTimeout( ->
+					localCache._checkData( false )
+					
+					# deep dirty check if key is deleted
+					assert.isUndefined( localCache.data[ key3 ] )
+
+				, 500 )
+		
+
+		# set a key with default ttl = 0
+		localCache.set key4, val, 100, ( err, res )->
+			assert.isNull( err, err )
+			assert.ok( res )
+
+			# check the key4 immediately
+			localCache.get key4, ( err, res )->
+				assert.isNull( err, err )
+				pred = {}
+				pred[ key4 ] = val
+				assert.eql( pred, res )
+
+				# check ttl with false key
+				localCache.ttl ( key4 + "false" ), ( err, setted )->
+					assert.isNull( err, err )
+					assert.equal(false, setted)
+
+					# check ttl with false key
+				localCache.ttl key4, ( err, setted )->
+					assert.isNull( err, err )
+					assert.ok(setted)
+
+					# deep dirty check if key is deleted
+					assert.isUndefined( localCache.data[ key4 ] )
+
+		# set a key with default ttl
+		localCacheTTL.set key5, val, 100, ( err, res )->
+			assert.isNull( err, err )
+			assert.ok( res )
+
+			# check the key5 immediately
+			localCacheTTL.get key5, ( err, res )->
+				assert.isNull( err, err )
+				pred = {}
+				pred[ key5 ] = val
+				assert.eql( pred, res )
+
+				# check ttl with false key
+				localCacheTTL.ttl ( key5 + "false" ), ( err, setted )->
+					assert.isNull( err, err )
+					assert.equal(false, setted)
+
+					# check ttl with false key
+				localCacheTTL.ttl key5, ( err, setted )->
+					assert.isNull( err, err )
+					assert.ok(setted)
+
+				# check existens
+				localCacheTTL.get key5, ( err, res )->
+					pred = {}
+					pred[ key5 ] = val
+					assert.eql( pred, res )
+
+				# run general checkdata after ttl
+				setTimeout( ->
+					localCacheTTL._checkData( false )
+					
+					# deep dirty check if key is deleted
+					assert.isUndefined( localCacheTTL.data[ key5 ] )
+					
+				, 500 )
+
+
+
+
 		
 	

@@ -159,6 +159,54 @@ module.exports = class NodeCache
 		cb( null, delCount )
 		return
 	
+	# ## ttl
+	#
+	# reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 it's similar to `.del()`
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String ): cache key to reset the ttl value
+	# * `ttl` ( Number ): ( optional -> options.stdTTL || 0 ) The time to live in seconds
+	# * `cb` ( Function ): Callback function
+	#
+	# **Return**
+	# 
+	# ( Boolen ): key found and ttl set
+	#
+	# **Example:**
+	#     
+	#     myCache.ttl( "myKey" ) // will set ttl to default ttl
+	#     
+	#     myCache.ttl( "myKey", 1000, ( err, keyFound )->
+	#       console.log( err, success ) 
+	#
+	ttl: =>
+		# change args if only key and callback are passed
+		[ key, args... ] = arguments
+		for arg in args
+			switch typeof arg
+				when "number" then ttl = arg
+				when "function" then cb = arg
+		
+		cb or= ->
+		ttl or= @options.stdTTL
+		if not key
+			cb( null, false )
+
+		# check for existend data and update the ttl value
+		if @data[ key ]? and @_check( key, @data[ key ] )
+			# on ttl = 0  delete the key. otherwise reset the value
+			if ttl > 0
+				@data[ key ] = @_wrap( @data[ key ].v, ttl )
+			else
+				@del( key )
+			cb( null, true )
+		else
+			# return false if key has not been found
+			cb( null, false )
+
+		return
+
 	# ## getStats
 	#
 	# get the stats
