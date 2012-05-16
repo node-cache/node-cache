@@ -2,6 +2,7 @@
 	"name": "node-cache",
 	"description": "Simple and fast NodeJS internal caching.",
 	"keywords": [ "cache", "caching", "local", "variable", "coffee", "coffee-script", "underscore", "multi" ],
+	"tags": [ "cache", "caching", "local", "variable", "coffee", "coffee-script", "underscore", "multi" ],
 	"version": "0.3.0",
 	"author": "tcs-de <github@tcs.de>",
 	"main": "./index.js",
