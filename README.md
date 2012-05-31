@@ -1,3 +1,8 @@
+node-cache
+===========
+
+[![Build Status](https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master)](http://travis-ci.org/tcs-de/nodecache)
+
 # Simple and fast NodeJS internal caching.
 
 A simple caching module that has `set`, `get` and `delete` methods and works a little bit like memcached.
