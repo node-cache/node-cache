@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>node-cache by tcs-de</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>node-cache</h1>
+        <p>a simple in memory node internal caching module</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/tcs-de/nodecache" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/tcs-de/nodecache/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/tcs-de/nodecache/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>node-cache</h1>
+
+<p><a href="http://travis-ci.org/tcs-de/nodecache"><img src="https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master" alt="Build Status"></a></p>
+
+<h1>Simple and fast NodeJS internal caching.</h1>
+
+<p>A simple caching module that has <code>set</code>, <code>get</code> and <code>delete</code> methods and works a little bit like memcached.
+Keys can have a timeout after which they expire and are cleaned from the cache.<br>
+All keys are stored in a single object so the practical limit is at around 1m keys.</p>
+
+<p><em>Written in coffee-script</em></p>
+
+<h1>Install</h1>
+
+<div class="highlight">
+<pre>  npm install node-cache
+</pre>
+</div>
+
+
+<p>Or just require the <code>node_cache.js</code> file to get the superclass</p>
+
+<h1>Examples:</h1>
+
+<h2>Initialize (INIT):</h2>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">NodeCache</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"node-cache"</span> <span class="p">);</span>
+<span class="kd">var</span> <span class="nx">myCache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">();</span>
+</pre>
+</div>
+
+
+<h3>Options</h3>
+
+<ul>
+<li>
+<code>stdTTL</code>: the standard ttl as number in seconds for every generated cache element. Default = 0 = unlimited</li>
+<li>
+<code>checkperiod</code>: The period in seconds as number for the automatc delete check intervall. 0 = no periodic check </li>
+</ul><div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">NodeCache</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"node-cache"</span> <span class="p">);</span>
+<span class="kd">var</span> <span class="nx">myCacheOptions</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">(</span> <span class="p">{</span> <span class="nx">stdTTL</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">checkperiod</span><span class="o">:</span> <span class="mi">120</span> <span class="p">}</span> <span class="p">);</span>
+</pre>
+</div>
+
+
+<h2>Store a key (SET):</h2>
+
+<p><code>myCache.set( key, val, [ ttl ], callback )</code></p>
+
+<p>Sets a <code>key</code> <code>value</code> pair. It is possible to define a <code>ttl</code> (in seconds).<br>
+Returns <code>true</code> on success.</p>
+
+<div class="highlight">
+<pre><span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">my</span><span class="o">:</span> <span class="s2">"Special"</span><span class="p">,</span> <span class="nx">variable</span><span class="o">:</span> <span class="mi">42</span> <span class="p">};</span>
+<span class="nx">myCache</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="s2">"myKey"</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">success</span> <span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="o">&amp;&amp;</span> <span class="nx">success</span> <span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">success</span> <span class="p">);</span>
+    <span class="c1">// true</span>
+    <span class="c1">// ... do something ...</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Retrieve a key (GET):</h2>
+
+<p><code>myCache.get( key, callback )</code></p>
+
+<p>Gets a saved value from the cache.
+Returns an empty object <code>{}</code> if not found or expired.
+If the value was found it returns an object with the <code>key</code> <code>value</code> pair.</p>
+
+<div class="highlight">
+<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">"myKey"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+    <span class="c1">// { "myKey": { my: "Special", variable: 42 } }</span>
+    <span class="c1">// ... do something ...</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Get multiple keys (MGET):</h2>
+
+<p><code>myCache.get( [ key1, key2, ... ,keyn ], callback )</code></p>
+
+<p>Gets multiple saved values from the cache.
+Returns an empty object <code>{}</code> if not found or expired.
+If the value was found it returns an object with the <code>key</code> <code>value</code> pair.</p>
+
+<div class="highlight">
+<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span> <span class="p">],</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+    <span class="cm">/*</span>
+<span class="cm">      {</span>
+<span class="cm">        "myKeyA": { my: "Special", variable: 123 },</span>
+<span class="cm">        "myKeyB": { the: "Glory", answer: 42 }</span>
+<span class="cm">      }</span>
+<span class="cm">    */</span>
+    <span class="c1">// ... do something ...</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Delete a key (DEL):</h2>
+
+<p><code>myCache.del( key, callback )</code></p>
+
+<p>Delete a key. Returns the number of deleted entries. A delete will never fail.</p>
+
+<pre><code>myCache.del( "myKey", function( err, count ){
+  if( !err ){
+    console.log( count ); // 1
+    // ... do something ...
+  }
+});
+</code></pre>
+
+<h2>Delete multiple keys (MDEL):</h2>
+
+<p><code>myCache.del( [ key1, key2, ... ,keyn ], callback )</code></p>
+
+<p>Delete multiple keys. Returns the number of deleted entries. A delete will never fail.</p>
+
+<div class="highlight">
+<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span> <span class="p">],</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">count</span> <span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">count</span> <span class="p">);</span> <span class="c1">// 2</span>
+    <span class="c1">// ... do something ...</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Change TTL (TTL):</h2>
+
+<p><code>myCache.ttl( key, ttl, callback )</code></p>
+
+<p>Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.<br>
+If the ttl-argument isnt passed the default-TTL will be used.</p>
+
+<div class="highlight">
+<pre><span class="nx">myCache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">(</span> <span class="p">{</span> <span class="nx">stdTTL</span><span class="o">:</span> <span class="mi">100</span> <span class="p">}</span> <span class="p">)</span>
+<span class="nx">myCache</span><span class="p">.</span><span class="nx">ttl</span><span class="p">(</span> <span class="s2">"existendKey"</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">changed</span> <span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">changed</span> <span class="p">);</span> <span class="c1">// true</span>
+    <span class="c1">// ... do something ...</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">myCache</span><span class="p">.</span><span class="nx">ttl</span><span class="p">(</span> <span class="s2">"missingKey"</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">changed</span> <span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">changed</span> <span class="p">);</span> <span class="c1">// false</span>
+    <span class="c1">// ... do something ...</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">myCache</span><span class="p">.</span><span class="nx">ttl</span><span class="p">(</span> <span class="s2">"existendKey"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">changed</span> <span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">changed</span> <span class="p">);</span> <span class="c1">// true</span>
+    <span class="c1">// ... do something ...</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Statistics (STATS):</h2>
+
+<p><code>myCache.getStats()</code></p>
+
+<p>Returns the statistics.  </p>
+
+<div class="highlight">
+<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">getStats</span><span class="p">();</span>
+  <span class="cm">/*</span>
+<span class="cm">    {</span>
+<span class="cm">      keys: 0,    // global key count</span>
+<span class="cm">      hits: 0,    // global hit count</span>
+<span class="cm">      misses: 0,  // global miss count</span>
+<span class="cm">      ksize: 0,   // global key size count</span>
+<span class="cm">      vsize: 0    // global value size count</span>
+<span class="cm">    }</span>
+<span class="cm">  */</span>
+</pre>
+</div>
+
+
+<h2>Flush all data (FLUSH):</h2>
+
+<p><code>myCache.flushAll()</code></p>
+
+<p>Flush all data.  </p>
+
+<div class="highlight">
+<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">flushAll</span><span class="p">();</span>
+<span class="nx">myCache</span><span class="p">.</span><span class="nx">getStats</span><span class="p">();</span>
+  <span class="cm">/*</span>
+<span class="cm">    {</span>
+<span class="cm">      keys: 0,    // global key count</span>
+<span class="cm">      hits: 0,    // global hit count</span>
+<span class="cm">      misses: 0,  // global miss count</span>
+<span class="cm">      ksize: 0,   // global key size count</span>
+<span class="cm">      vsize: 0    // global value size count</span>
+<span class="cm">    }</span>
+<span class="cm">  */</span>
+</pre>
+</div>
+
+
+<h1>Work in progress</h1>
+
+<p><code>nodecache</code> is work in progress. Your ideas, suggestions etc. are very welcome.</p>
+
+<h1>License</h1>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2010 TCS &lt;dev (at) tcs.de&gt;</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/tcs-de">tcs-de</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-32491479-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
