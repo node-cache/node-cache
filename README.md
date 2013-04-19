@@ -11,19 +11,19 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 
 *Written in coffee-script*
 
-## Install
+# Install
 
-<pre>
+```bash
   npm install node-cache
-</pre>
+```
 
 Or just require the `node_cache.js` file to get the superclass
 
-## Examples:
+# Examples:
 
-### Initialize:
+## Initialize (INIT):
 
-```
+```js
 var NodeCache = require( "node-cache" );
 var myCache = new NodeCache();
 ```
@@ -33,19 +33,19 @@ var myCache = new NodeCache();
 - `stdTTL`: the standard ttl as number in seconds for every generated cache element. Default = 0 = unlimited
 - `checkperiod`: The period in seconds as number for the automatc delete check intervall. 0 = no periodic check 
 
-```
+```js
 var NodeCache = require( "node-cache" );
 var myCacheOptions = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 ```
 
-### Store a key (SET):
+## Store a key (SET):
 
 `myCache.set( key, val, [ ttl ], callback )`
 
 Sets a `key` `value` pair. It is possible to define a `ttl` (in seconds).  
 Returns `true` on success.
 
-```
+```js
 obj = { my: "Special", variable: 42 };
 myCache.set( "myKey", obj, function( err, success ){
   if( !err && success ){
@@ -56,7 +56,7 @@ myCache.set( "myKey", obj, function( err, success ){
 });
 ```
 
-### Retrieve a key (GET):
+## Retrieve a key (GET):
 
 `myCache.get( key, callback )`
 
@@ -64,7 +64,7 @@ Gets a saved value from the cache.
 Returns an empty object `{}` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
 
-```
+```js
 myCache.get( "myKey", function( err, value ){
   if( !err ){
     console.log( value );
@@ -74,7 +74,7 @@ myCache.get( "myKey", function( err, value ){
 });
 ```
 
-### Retrieve multiple keys (GET):
+## Get multiple keys (MGET):
 
 `myCache.get( [ key1, key2, ... ,keyn ], callback )`
 
@@ -82,7 +82,7 @@ Gets multiple saved values from the cache.
 Returns an empty object `{}` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
 
-```
+```js
 myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
   if( !err ){
     console.log( value );
@@ -97,7 +97,7 @@ myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
 });
 ```
 
-### Delete a key
+## Delete a key (DEL):
 
 `myCache.del( key, callback )`
 
@@ -112,13 +112,13 @@ myCache.del( "myKey", function( err, count ){
 });
 ```
 
-### Delete multiple keys
+## Delete multiple keys (MDEL):
 
 `myCache.del( [ key1, key2, ... ,keyn ], callback )`
 
 Delete multiple keys. Returns the number of deleted entries. A delete will never fail.
 
-```
+```js
 myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
   if( !err ){
     console.log( count ); // 2
@@ -127,14 +127,14 @@ myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
 });
 ```
 
-### Change TTL
+## Change TTL (TTL):
 
 `myCache.ttl( key, ttl, callback )`
 
 Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.  
 If the ttl-argument isnt passed the default-TTL will be used.
 
-```
+```js
 myCache = new NodeCache( { stdTTL: 100 } )
 myCache.ttl( "existendKey", 100, function( err, changed ){
   if( !err ){
@@ -158,13 +158,13 @@ myCache.ttl( "existendKey", function( err, changed ){
 });
 ```
 
-### Statistics
+## Statistics (STATS):
 
 `myCache.getStats()`
 
 Returns the statistics.  
 
-```
+```js
 myCache.getStats();
   /*
     {
@@ -177,13 +177,13 @@ myCache.getStats();
   */
 ```
 
-### Flush all data
+## Flush all data (FLUSH):
 
 `myCache.flushAll()`
 
 Flush all data.  
 
-```
+```js
 myCache.flushAll();
 myCache.getStats();
   /*
@@ -197,11 +197,11 @@ myCache.getStats();
   */
 ```
 
-## Work in progress
+# Work in progress
 
 `nodecache` is work in progress. Your ideas, suggestions etc. are very welcome.
 
-## License 
+# License 
 
 (The MIT License)
 
