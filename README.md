@@ -35,7 +35,7 @@ var myCache = new NodeCache();
 
 ```js
 var NodeCache = require( "node-cache" );
-var myCacheOptions = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
+var myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 ```
 
 ## Store a key (SET):
