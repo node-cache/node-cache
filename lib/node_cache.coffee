@@ -1,7 +1,8 @@
 _ = require( "underscore" )
+EventEmitter = require('events').EventEmitter
 
 # generate superclass
-module.exports = class NodeCache
+module.exports = class NodeCache extends EventEmitter
 	constructor: ( @options = {} )->
 
 		# container for cached dtaa
@@ -29,7 +30,7 @@ module.exports = class NodeCache
 			vsize: 0
 		
 		# initalize checking period
-		@_checkData()
+		@_checkData() 
 
 	# ## get
 	#
@@ -111,6 +112,8 @@ module.exports = class NodeCache
 			@stats.ksize += @_getKeyLength( key ) 
 			@stats.keys++
 		
+		@emit( "set", key, value )
+
 		# return true
 		cb( null, true )
 		return
@@ -152,6 +155,7 @@ module.exports = class NodeCache
 				# delete the value
 				delete @data[ key ]
 				# return true
+				@emit( "del", key )
 			else
 				# if the key has not been found return an error
 				@stats.misses++
@@ -268,6 +272,8 @@ module.exports = class NodeCache
 		@_killCheckPeriod()
 		@_checkData( _startPeriod )
 
+		@emit( "flush" )
+
 		return
 	
 	# ## _checkData
@@ -298,6 +304,7 @@ module.exports = class NodeCache
 		# data is invalid if the ttl is to old and is not 0
 		if data.t < now and data.t isnt 0
 			@del( key )
+			@emit( "expired", key )
 			false
 		else
 			true

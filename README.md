@@ -197,9 +197,56 @@ myCache.getStats();
   */
 ```
 
-# Work in progress
+# Events
 
-`nodecache` is work in progress. Your ideas, suggestions etc. are very welcome.
+## set
+
+Fired when a key has been added or changed.
+You will get the `key` and the `value` as callback argument.
+
+```js
+myCache.on( "set", function( key, value ){
+	// ... do something ...  
+});
+```
+
+## del
+
+Fired when a key has been removed manually or due to expiry.
+You will get the `key` as callback argument.
+
+```js
+myCache.on( "del", function( key ){
+	// ... do something ...  
+});
+```
+
+## expired
+
+Fired when a key expires.
+You will get the `key` as callback argument.
+
+```js
+myCache.on( "expired", function( key ){
+	// ... do something ...  
+});
+```
+
+## flush
+
+Fired when the cache has been flushed.
+
+```js
+myCache.on( "flush", function(){
+	// ... do something ...  
+});
+```
+
+## Release History
+|Version|Date|Description|
+|:--:|:--:|:--|
+|v0.4.0|2013-10-02|Added nodecache events|
+|v0.3.2|2012-05-31|Added Travis tests|
 
 # License 
 

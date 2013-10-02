@@ -39,6 +39,12 @@ module.exports =
 		value2 = randomString( 100 )
 		key = randomString( 10 )
 
+
+		localCache.once "del", ( _key )->
+			assert.equal( _key, key )
+			return
+
+
 		# test insert
 		localCache.set key, value, 0, ( err, res )->
 			assert.isNull( err, err )
@@ -61,6 +67,7 @@ module.exports =
 				assert.isNull( err, err )
 				assert.eql {}, res
 			
+
 			# try to delete an undefined key
 			localCache.del "xxx", ( err, res )->
 				n++
@@ -86,6 +93,7 @@ module.exports =
 
 			# try to delete the defined key
 			localCache.del key, ( err, res )->
+				localCache.removeAllListeners( "del" )
 				n++
 				assert.isNull( err, err )
 				assert.equal 1, res
@@ -323,7 +331,7 @@ module.exports =
 				assert.eql( pred, res )
 		
 		# set another key
-		localCache.set key2, val, 0.8, ( err, res )->
+		localCache.set key2, val, 0.4, ( err, res )->
 			assert.isNull( err, err )
 			assert.ok( res )
 
@@ -361,13 +369,23 @@ module.exports =
 				pred[ key2 ] = val
 				assert.eql( pred, res )
 				assert.eql( pred, res )
-		, 600 )
+		, 300 )
 
 		# test the automatic check
 		setTimeout( ->
 			startKeys = localCache.getStats().keys
 
 			key = "autotest"
+
+			_testExpired = ( _key )=>
+				assert.equal( _key, key )
+				return
+
+			_testSet = ( _key )=>
+				assert.equal( _key, key )
+				return
+
+			localCache.once "set", _testSet
 
 			# inset a value with ttl
 			localCache.set key, val, 0.5, ( err, res )->
@@ -380,13 +398,18 @@ module.exports =
 					pred = {}
 					pred[ key ] = val
 					assert.eql( pred, res )
-					
+						
+					localCache.on "expired", _testExpired
+
 					# run general checkdata after ttl
 					setTimeout( ->
 						localCache._checkData( false )
 						
 						# deep dirty check if key is deleted
 						assert.isUndefined( localCache.data[ key ] )
+
+						localCache.removeAllListeners( "set" )
+						localCache.removeAllListeners( "expired" )
 
 					, 700 )
 
