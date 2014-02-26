@@ -245,6 +245,7 @@ myCache.on( "flush", function(){
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|v0.4.1|2013-10-02|Added the value to `expired` event|
 |v0.4.0|2013-10-02|Added nodecache events|
 |v0.3.2|2012-05-31|Added Travis tests|
 
