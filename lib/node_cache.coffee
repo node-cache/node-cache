@@ -304,7 +304,7 @@ module.exports = class NodeCache extends EventEmitter
 		# data is invalid if the ttl is to old and is not 0
 		if data.t < now and data.t isnt 0
 			@del( key )
-			@emit( "expired", key )
+			@emit( "expired", key, @_unwrap(data) )
 			false
 		else
 			true

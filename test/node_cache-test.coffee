@@ -377,8 +377,9 @@ module.exports =
 
 			key = "autotest"
 
-			_testExpired = ( _key )=>
+			_testExpired = ( _key, _val )=>
 				assert.equal( _key, key )
+				assert.equal( _val, val )
 				return
 
 			_testSet = ( _key )=>
