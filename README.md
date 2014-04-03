@@ -2,6 +2,11 @@ node-cache
 ===========
 
 [![Build Status](https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master)](http://travis-ci.org/tcs-de/nodecache)
+[![Build Status](https://david-dm.org/tcs-de/nodecache.png)](https://david-dm.org/tcs-de/nodecache)
+[![NPM version](https://badge.fury.io/js/node-cache.png)](http://badge.fury.io/js/node-cache)
+
+
+[![NPM](https://nodei.co/npm/node-cache.png?downloads=true&stars=true)](https://nodei.co/npm/node-cache/)
 
 # Simple and fast NodeJS internal caching.
 
@@ -248,6 +253,8 @@ myCache.on( "flush", function(){
 |v0.4.1|2013-10-02|Added the value to `expired` event|
 |v0.4.0|2013-10-02|Added nodecache events|
 |v0.3.2|2012-05-31|Added Travis tests|
+
+[![NPM](https://nodei.co/npm-dl/node-cache.png?months=6)](https://nodei.co/npm/node-cache/)
 
 # License 
 
