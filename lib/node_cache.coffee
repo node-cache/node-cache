@@ -340,7 +340,10 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method to extract get the value out of the wrapped value
 	_unwrap: ( value )=>
-		value.v or null
+		if value.v is 0 
+			0
+		else
+			value.v or null
 	
 	# ## _getKeyLength
 	#
@@ -379,5 +382,5 @@ module.exports = class NodeCache extends EventEmitter
 			cb( error, null )
 			return
 		else
-			# if no callbach is defined return the error object
+			# if no callback is defined return the error object
 			error
