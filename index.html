@@ -39,11 +39,17 @@
         <ul></ul>
       </nav>
       <section>
-        <h1>node-cache</h1>
+        <h1>
+<a name="node-cache" class="anchor" href="#node-cache"><span class="octicon octicon-link"></span></a>node-cache</h1>
 
-<p><a href="http://travis-ci.org/tcs-de/nodecache"><img src="https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master" alt="Build Status"></a></p>
+<p><a href="http://travis-ci.org/tcs-de/nodecache"><img src="https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master" alt="Build Status"></a>
+<a href="https://david-dm.org/tcs-de/nodecache"><img src="https://david-dm.org/tcs-de/nodecache.png" alt="Build Status"></a>
+<a href="http://badge.fury.io/js/node-cache"><img src="https://badge.fury.io/js/node-cache.png" alt="NPM version"></a></p>
 
-<h1>Simple and fast NodeJS internal caching.</h1>
+<p><a href="https://nodei.co/npm/node-cache/"><img src="https://nodei.co/npm/node-cache.png?downloads=true&amp;stars=true" alt="NPM"></a></p>
+
+<h1>
+<a name="simple-and-fast-nodejs-internal-caching" class="anchor" href="#simple-and-fast-nodejs-internal-caching"><span class="octicon octicon-link"></span></a>Simple and fast NodeJS internal caching.</h1>
 
 <p>A simple caching module that has <code>set</code>, <code>get</code> and <code>delete</code> methods and works a little bit like memcached.
 Keys can have a timeout after which they expire and are cleaned from the cache.<br>
@@ -51,50 +57,45 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 
 <p><em>Written in coffee-script</em></p>
 
-<h1>Install</h1>
+<h1>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h1>
 
-<div class="highlight">
-<pre>  npm install node-cache
-</pre>
-</div>
-
+<div class="highlight highlight-bash"><pre>  npm install node-cache
+</pre></div>
 
 <p>Or just require the <code>node_cache.js</code> file to get the superclass</p>
 
-<h1>Examples:</h1>
+<h1>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples:</h1>
 
-<h2>Initialize (INIT):</h2>
+<h2>
+<a name="initialize-init" class="anchor" href="#initialize-init"><span class="octicon octicon-link"></span></a>Initialize (INIT):</h2>
 
-<div class="highlight">
-<pre><span class="kd">var</span> <span class="nx">NodeCache</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"node-cache"</span> <span class="p">);</span>
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">NodeCache</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"node-cache"</span> <span class="p">);</span>
 <span class="kd">var</span> <span class="nx">myCache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">();</span>
-</pre>
-</div>
+</pre></div>
 
-
-<h3>Options</h3>
+<h3>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
 
 <ul>
 <li>
 <code>stdTTL</code>: the standard ttl as number in seconds for every generated cache element. Default = 0 = unlimited</li>
 <li>
-<code>checkperiod</code>: The period in seconds as number for the automatc delete check intervall. 0 = no periodic check </li>
-</ul><div class="highlight">
-<pre><span class="kd">var</span> <span class="nx">NodeCache</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"node-cache"</span> <span class="p">);</span>
-<span class="kd">var</span> <span class="nx">myCacheOptions</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">(</span> <span class="p">{</span> <span class="nx">stdTTL</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">checkperiod</span><span class="o">:</span> <span class="mi">120</span> <span class="p">}</span> <span class="p">);</span>
-</pre>
-</div>
+<code>checkperiod</code>: The period in seconds, as a number, used for the automatic delete check interval. 0 = no periodic check </li>
+</ul><div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">NodeCache</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"node-cache"</span> <span class="p">);</span>
+<span class="kd">var</span> <span class="nx">myCache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">(</span> <span class="p">{</span> <span class="nx">stdTTL</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">checkperiod</span><span class="o">:</span> <span class="mi">120</span> <span class="p">}</span> <span class="p">);</span>
+</pre></div>
 
+<h2>
+<a name="store-a-key-set" class="anchor" href="#store-a-key-set"><span class="octicon octicon-link"></span></a>Store a key (SET):</h2>
 
-<h2>Store a key (SET):</h2>
-
-<p><code>myCache.set( key, val, [ ttl ], callback )</code></p>
+<p><code>myCache.set( key, val, [ ttl ], [callback] )</code></p>
 
 <p>Sets a <code>key</code> <code>value</code> pair. It is possible to define a <code>ttl</code> (in seconds).<br>
 Returns <code>true</code> on success.</p>
 
-<div class="highlight">
-<pre><span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">my</span><span class="o">:</span> <span class="s2">"Special"</span><span class="p">,</span> <span class="nx">variable</span><span class="o">:</span> <span class="mi">42</span> <span class="p">};</span>
+<div class="highlight highlight-js"><pre><span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">my</span><span class="o">:</span> <span class="s2">"Special"</span><span class="p">,</span> <span class="nx">variable</span><span class="o">:</span> <span class="mi">42</span> <span class="p">};</span>
 <span class="nx">myCache</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="s2">"myKey"</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">success</span> <span class="p">){</span>
   <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="o">&amp;&amp;</span> <span class="nx">success</span> <span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">success</span> <span class="p">);</span>
@@ -102,40 +103,51 @@ Returns <code>true</code> on success.</p>
     <span class="c1">// ... do something ...</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
-</div>
+</pre></div>
 
+<p><strong>Since <code>1.0.0</code></strong>:<br>
+Callback is now optional. Yo Can also use a sync syntax.</p>
 
-<h2>Retrieve a key (GET):</h2>
+<div class="highlight highlight-js"><pre><span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">my</span><span class="o">:</span> <span class="s2">"Special"</span><span class="p">,</span> <span class="nx">variable</span><span class="o">:</span> <span class="mi">42</span> <span class="p">};</span>
+<span class="nx">success</span> <span class="o">=</span> <span class="nx">myCache</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="s2">"myKey"</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="mi">10000</span> <span class="p">);</span>
+<span class="c1">// true</span>
+</pre></div>
 
-<p><code>myCache.get( key, callback )</code></p>
+<h2>
+<a name="retrieve-a-key-get" class="anchor" href="#retrieve-a-key-get"><span class="octicon octicon-link"></span></a>Retrieve a key (GET):</h2>
+
+<p><code>myCache.get( key, [callback] )</code></p>
 
 <p>Gets a saved value from the cache.
 Returns an empty object <code>{}</code> if not found or expired.
 If the value was found it returns an object with the <code>key</code> <code>value</code> pair.</p>
 
-<div class="highlight">
-<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">"myKey"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">"myKey"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
   <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
     <span class="c1">// { "myKey": { my: "Special", variable: 42 } }</span>
     <span class="c1">// ... do something ...</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
-</div>
+</pre></div>
 
+<p><strong>Since <code>1.0.0</code></strong>:<br>
+Callback is now optional. Yo Can also use a sync syntax.</p>
 
-<h2>Get multiple keys (MGET):</h2>
+<div class="highlight highlight-js"><pre><span class="nx">value</span> <span class="o">=</span> <span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">"myKey"</span> <span class="p">);</span>
+<span class="c1">// { "myKey": { my: "Special", variable: 42 } }</span>
+</pre></div>
 
-<p><code>myCache.get( [ key1, key2, ... ,keyn ], callback )</code></p>
+<h2>
+<a name="get-multiple-keys-mget" class="anchor" href="#get-multiple-keys-mget"><span class="octicon octicon-link"></span></a>Get multiple keys (MGET):</h2>
+
+<p><code>myCache.get( [ key1, key2, ... ,keyn ], [callback] )</code></p>
 
 <p>Gets multiple saved values from the cache.
 Returns an empty object <code>{}</code> if not found or expired.
 If the value was found it returns an object with the <code>key</code> <code>value</code> pair.</p>
 
-<div class="highlight">
-<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span> <span class="p">],</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span> <span class="p">],</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
   <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
     <span class="cm">/*</span>
@@ -147,13 +159,24 @@ If the value was found it returns an object with the <code>key</code> <code>valu
     <span class="c1">// ... do something ...</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
-</div>
+</pre></div>
 
+<p><strong>Since <code>1.0.0</code></strong>:<br>
+Callback is now optional. Yo Can also use a sync syntax.</p>
 
-<h2>Delete a key (DEL):</h2>
+<div class="highlight highlight-js"><pre><span class="nx">value</span> <span class="o">=</span> <span class="nx">myCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span> <span class="p">]</span> <span class="p">);</span>
+<span class="cm">/*</span>
+<span class="cm">  {</span>
+<span class="cm">    "myKeyA": { my: "Special", variable: 123 },</span>
+<span class="cm">    "myKeyB": { the: "Glory", answer: 42 }</span>
+<span class="cm">  }</span>
+<span class="cm">*/</span>
+</pre></div>
 
-<p><code>myCache.del( key, callback )</code></p>
+<h2>
+<a name="delete-a-key-del" class="anchor" href="#delete-a-key-del"><span class="octicon octicon-link"></span></a>Delete a key (DEL):</h2>
+
+<p><code>myCache.del( key, [callback] )</code></p>
 
 <p>Delete a key. Returns the number of deleted entries. A delete will never fail.</p>
 
@@ -165,32 +188,44 @@ If the value was found it returns an object with the <code>key</code> <code>valu
 });
 </code></pre>
 
-<h2>Delete multiple keys (MDEL):</h2>
+<p><strong>Since <code>1.0.0</code></strong>:<br>
+Callback is now optional. Yo Can also use a sync syntax.</p>
 
-<p><code>myCache.del( [ key1, key2, ... ,keyn ], callback )</code></p>
+<div class="highlight highlight-js"><pre><span class="nx">value</span> <span class="o">=</span> <span class="nx">myCache</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span> <span class="nx">myKeyA</span><span class="err">"</span> <span class="p">);</span>
+<span class="c1">// 1</span>
+</pre></div>
+
+<h2>
+<a name="delete-multiple-keys-mdel" class="anchor" href="#delete-multiple-keys-mdel"><span class="octicon octicon-link"></span></a>Delete multiple keys (MDEL):</h2>
+
+<p><code>myCache.del( [ key1, key2, ... ,keyn ], [callback] )</code></p>
 
 <p>Delete multiple keys. Returns the number of deleted entries. A delete will never fail.</p>
 
-<div class="highlight">
-<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span> <span class="p">],</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">count</span> <span class="p">){</span>
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span> <span class="p">],</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">count</span> <span class="p">){</span>
   <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">count</span> <span class="p">);</span> <span class="c1">// 2</span>
     <span class="c1">// ... do something ...</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
-</div>
+</pre></div>
 
+<p><strong>Since <code>1.0.0</code></strong>:<br>
+Callback is now optional. Yo Can also use a sync syntax.</p>
 
-<h2>Change TTL (TTL):</h2>
+<div class="highlight highlight-js"><pre><span class="nx">value</span> <span class="o">=</span> <span class="nx">myCache</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span> <span class="p">[</span> <span class="s2">"myKeyA"</span><span class="p">,</span> <span class="s2">"myKeyB"</span><span class="p">,</span> <span class="s2">"notExistendKey"</span> <span class="p">]</span> <span class="p">);</span>
+<span class="c1">// 2</span>
+</pre></div>
 
-<p><code>myCache.ttl( key, ttl, callback )</code></p>
+<h2>
+<a name="change-ttl-ttl" class="anchor" href="#change-ttl-ttl"><span class="octicon octicon-link"></span></a>Change TTL (TTL):</h2>
+
+<p><code>myCache.ttl( key, ttl, [callback] )</code></p>
 
 <p>Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.<br>
-If the ttl-argument isnt passed the default-TTL will be used.</p>
+If the ttl-argument isn't passed the default-TTL will be used.</p>
 
-<div class="highlight">
-<pre><span class="nx">myCache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">(</span> <span class="p">{</span> <span class="nx">stdTTL</span><span class="o">:</span> <span class="mi">100</span> <span class="p">}</span> <span class="p">)</span>
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeCache</span><span class="p">(</span> <span class="p">{</span> <span class="nx">stdTTL</span><span class="o">:</span> <span class="mi">100</span> <span class="p">}</span> <span class="p">)</span>
 <span class="nx">myCache</span><span class="p">.</span><span class="nx">ttl</span><span class="p">(</span> <span class="s2">"existendKey"</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">changed</span> <span class="p">){</span>
   <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">err</span> <span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">changed</span> <span class="p">);</span> <span class="c1">// true</span>
@@ -211,18 +246,23 @@ If the ttl-argument isnt passed the default-TTL will be used.</p>
     <span class="c1">// ... do something ...</span>
   <span class="p">}</span>
 <span class="p">});</span>
-</pre>
-</div>
+</pre></div>
 
+<p><strong>Since <code>1.0.0</code></strong>:<br>
+Callback is now optional. Yo Can also use a sync syntax.</p>
 
-<h2>Statistics (STATS):</h2>
+<div class="highlight highlight-js"><pre><span class="nx">value</span> <span class="o">=</span> <span class="nx">myCache</span><span class="p">.</span><span class="nx">ttl</span><span class="p">(</span> <span class="s2">"existendKey"</span><span class="p">,</span> <span class="mi">100</span> <span class="p">);</span>
+<span class="c1">// true</span>
+</pre></div>
+
+<h2>
+<a name="statistics-stats" class="anchor" href="#statistics-stats"><span class="octicon octicon-link"></span></a>Statistics (STATS):</h2>
 
 <p><code>myCache.getStats()</code></p>
 
 <p>Returns the statistics.  </p>
 
-<div class="highlight">
-<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">getStats</span><span class="p">();</span>
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">getStats</span><span class="p">();</span>
   <span class="cm">/*</span>
 <span class="cm">    {</span>
 <span class="cm">      keys: 0,    // global key count</span>
@@ -232,18 +272,16 @@ If the ttl-argument isnt passed the default-TTL will be used.</p>
 <span class="cm">      vsize: 0    // global value size count</span>
 <span class="cm">    }</span>
 <span class="cm">  */</span>
-</pre>
-</div>
+</pre></div>
 
-
-<h2>Flush all data (FLUSH):</h2>
+<h2>
+<a name="flush-all-data-flush" class="anchor" href="#flush-all-data-flush"><span class="octicon octicon-link"></span></a>Flush all data (FLUSH):</h2>
 
 <p><code>myCache.flushAll()</code></p>
 
 <p>Flush all data.  </p>
 
-<div class="highlight">
-<pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">flushAll</span><span class="p">();</span>
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">flushAll</span><span class="p">();</span>
 <span class="nx">myCache</span><span class="p">.</span><span class="nx">getStats</span><span class="p">();</span>
   <span class="cm">/*</span>
 <span class="cm">    {</span>
@@ -254,15 +292,90 @@ If the ttl-argument isnt passed the default-TTL will be used.</p>
 <span class="cm">      vsize: 0    // global value size count</span>
 <span class="cm">    }</span>
 <span class="cm">  */</span>
-</pre>
-</div>
+</pre></div>
 
+<h1>
+<a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h1>
 
-<h1>Work in progress</h1>
+<h2>
+<a name="set" class="anchor" href="#set"><span class="octicon octicon-link"></span></a>set</h2>
 
-<p><code>nodecache</code> is work in progress. Your ideas, suggestions etc. are very welcome.</p>
+<p>Fired when a key has been added or changed.
+You will get the <code>key</code> and the <code>value</code> as callback argument.</p>
 
-<h1>License</h1>
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s2">"set"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
+    <span class="c1">// ... do something ...  </span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="del" class="anchor" href="#del"><span class="octicon octicon-link"></span></a>del</h2>
+
+<p>Fired when a key has been removed manually or due to expiry.
+You will get the <code>key</code> as callback argument.</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s2">"del"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">key</span> <span class="p">){</span>
+    <span class="c1">// ... do something ...  </span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="expired" class="anchor" href="#expired"><span class="octicon octicon-link"></span></a>expired</h2>
+
+<p>Fired when a key expires.
+You will get the <code>key</code> and <code>value</code> as callback argument.</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s2">"expired"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">){</span>
+    <span class="c1">// ... do something ...  </span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="flush" class="anchor" href="#flush"><span class="octicon octicon-link"></span></a>flush</h2>
+
+<p>Fired when the cache has been flushed.</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">myCache</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s2">"flush"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="c1">// ... do something ...  </span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="release-history" class="anchor" href="#release-history"><span class="octicon octicon-link"></span></a>Release History</h2>
+
+<table>
+<thead><tr>
+<th align="center">Version</th>
+<th align="center">Date</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="center">v1.0.0</td>
+<td align="center">2014-04-09</td>
+<td align="left">Made <code>callback</code>s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Push : Bugfix for the value <code>0</code>
+</td>
+</tr>
+<tr>
+<td align="center">v0.4.1</td>
+<td align="center">2013-10-02</td>
+<td align="left">Added the value to <code>expired</code> event</td>
+</tr>
+<tr>
+<td align="center">v0.4.0</td>
+<td align="center">2013-10-02</td>
+<td align="left">Added nodecache events</td>
+</tr>
+<tr>
+<td align="center">v0.3.2</td>
+<td align="center">2012-05-31</td>
+<td align="left">Added Travis tests</td>
+</tr>
+</tbody>
+</table><p><a href="https://nodei.co/npm/node-cache/"><img src="https://nodei.co/npm-dl/node-cache.png?months=6" alt="NPM"></a></p>
+
+<h1>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
 
 <p>(The MIT License)</p>
 
@@ -289,10 +402,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/tcs-de">tcs-de</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
