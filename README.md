@@ -61,8 +61,7 @@ myCache.set( "myKey", obj, function( err, success ){
 });
 ```
 
-*Since `0.5.0`*
-
+**Since `1.0.0`**:  
 Callback is now optional. Yo Can also use a sync syntax.
 
 ```js
@@ -90,8 +89,7 @@ myCache.get( "myKey", function( err, value ){
 });
 ```
 
-*Since `0.5.0`*
-
+**Since `1.0.0`**:  
 Callback is now optional. Yo Can also use a sync syntax.
 
 ```js
@@ -122,8 +120,7 @@ myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
 });
 ```
 
-*Since `0.5.0`*
-
+**Since `1.0.0`**:  
 Callback is now optional. Yo Can also use a sync syntax.
 
 ```js
@@ -151,8 +148,7 @@ myCache.del( "myKey", function( err, count ){
 });
 ```
 
-*Since `0.5.0`*
-
+**Since `1.0.0`**:  
 Callback is now optional. Yo Can also use a sync syntax.
 
 ```js
@@ -175,8 +171,7 @@ myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
 });
 ```
 
-*Since `0.5.0`*
-
+**Since `1.0.0`**:  
 Callback is now optional. Yo Can also use a sync syntax.
 
 ```js
@@ -215,8 +210,7 @@ myCache.ttl( "existendKey", function( err, changed ){
 });
 ```
 
-*Since `0.5.0`*
-
+**Since `1.0.0`**:  
 Callback is now optional. Yo Can also use a sync syntax.
 
 ```js
@@ -311,7 +305,7 @@ myCache.on( "flush", function(){
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
-|v1.0.0|2014-04-09|Made `callback`s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Bugfix for the value `0`|
+|v1.0.0|2014-04-09|Made `callback`s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Push : Bugfix for the value `0`|
 |v0.4.1|2013-10-02|Added the value to `expired` event|
 |v0.4.0|2013-10-02|Added nodecache events|
 |v0.3.2|2012-05-31|Added Travis tests|
