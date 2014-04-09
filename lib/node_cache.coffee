@@ -39,7 +39,7 @@ module.exports = class NodeCache extends EventEmitter
 	# **Parameters:**
 	#
 	# * `key` ( String | String[] ): cache key or an array of keys
-	# * `cb` ( Function ): Callback function
+	# * `[cb]` ( Function ): Callback function
 	# 
 	# **Example:**
 	#     
@@ -63,8 +63,8 @@ module.exports = class NodeCache extends EventEmitter
 				@stats.misses++
 
 		# return all found keys
-		cb( null, oRet )
-		return
+		cb( null, oRet ) if cb?
+		return oRet
 	
 	# ## set
 	#
@@ -75,7 +75,7 @@ module.exports = class NodeCache extends EventEmitter
 	# * `key` ( String ): cache key
 	# * `value` ( Any ): A element to cache. If the option `option.forceString` is `true` the module trys to translate it to a serialized JSON
 	# * `[ ttl ]` ( Number | String ): ( optional ) The time to live in seconds.
-	# * `cb` ( Function ): Callback function
+	# * `[cb]` ( Function ): Callback function
 	# 
 	# **Example:**
 	#     
@@ -85,7 +85,7 @@ module.exports = class NodeCache extends EventEmitter
 	#     myCache.set "myKey", "my_String Value", "10h", ( err, success )->
 	#       console.log( err, success ) 
 	#
-	set: ( key, value, ttl, cb=-> )=>
+	set: ( key, value, ttl, cb )=>
 		# internal helper variables
 		existend = false
 		
@@ -115,8 +115,8 @@ module.exports = class NodeCache extends EventEmitter
 		@emit( "set", key, value )
 
 		# return true
-		cb( null, true )
-		return
+		cb( null, true ) if cb?
+		return true
 	
 	# ## del
 	#
@@ -125,7 +125,7 @@ module.exports = class NodeCache extends EventEmitter
 	# **Parameters:**
 	#
 	# * `key` ( String | String[] ): cache key to delete or a array of cache keys
-	# * `cb` ( Function ): Callback function
+	# * `[cb]` ( Function ): Callback function
 	#
 	# **Return**
 	# 
@@ -138,7 +138,7 @@ module.exports = class NodeCache extends EventEmitter
 	#     myCache.del( "myKey", ( err, success )->
 	#       console.log( err, success ) 
 	#
-	del: ( keys, cb=-> )=>
+	del: ( keys, cb )=>
 		# convert a string to an array of one key
 		if _.isString( keys )
 			keys = [ keys ]
@@ -160,8 +160,9 @@ module.exports = class NodeCache extends EventEmitter
 				# if the key has not been found return an error
 				@stats.misses++
 		
-		cb( null, delCount )
-		return
+
+		cb( null, delCount ) if cb?
+		return delCount
 	
 	# ## ttl
 	#
@@ -171,7 +172,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# * `key` ( String ): cache key to reset the ttl value
 	# * `ttl` ( Number ): ( optional -> options.stdTTL || 0 ) The time to live in seconds
-	# * `cb` ( Function ): Callback function
+	# * `[cb]` ( Function ): Callback function
 	#
 	# **Return**
 	# 
@@ -192,10 +193,10 @@ module.exports = class NodeCache extends EventEmitter
 				when "number" then ttl = arg
 				when "function" then cb = arg
 		
-		cb or= ->
 		ttl or= @options.stdTTL
 		if not key
-			cb( null, false )
+			cb( null, false ) if cb?
+			return false
 
 		# check for existend data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
@@ -204,10 +205,12 @@ module.exports = class NodeCache extends EventEmitter
 				@data[ key ] = @_wrap( @data[ key ].v, ttl )
 			else
 				@del( key )
-			cb( null, true )
+			cb( null, true ) if cb?
+			return true
 		else
 			# return false if key has not been found
-			cb( null, false )
+			cb( null, false ) if cb?
+			return false
 
 		return
 
@@ -299,10 +302,8 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method the check the value. If it's not valid any moe delete it
 	_check: ( key, data )=>
-		now = new Date().getTime()
-
 		# data is invalid if the ttl is to old and is not 0
-		if data.t < now and data.t isnt 0
+		if data.t < Date.now() and data.t isnt 0
 			@del( key )
 			@emit( "expired", key, @_unwrap(data) )
 			false
@@ -314,7 +315,7 @@ module.exports = class NodeCache extends EventEmitter
 	# internal method to wrap a value in an object with some metadata
 	_wrap: ( value, ttl )=>
 		# define the time to live
-		now = new Date().getTime()
+		now = Date.now()
 		livetime = 0
 
 		ttlMultiplicator = 1000
@@ -340,10 +341,9 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method to extract get the value out of the wrapped value
 	_unwrap: ( value )=>
-		if value.v is 0 
-			0
-		else
-			value.v or null
+		if value.v? 
+			return value.v
+		return null
 	
 	# ## _getKeyLength
 	#
@@ -373,14 +373,16 @@ module.exports = class NodeCache extends EventEmitter
 	# internal method to handle an error message
 	_error: ( type, data = {}, cb )=>
 		# generate the error object
-		error = 
-			errorcode: type
-			msg: "-"
-			data: data
+		error = new Error()
+		error.name = type
+		error.errorcode = type
+		error.msg = "-"
+		error.data = data
+
 		if cb and _.isFunction( cb )
 			# return the error
 			cb( error, null )
 			return
 		else
 			# if no callback is defined return the error object
-			error
+			return error

@@ -45,7 +45,7 @@ var myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 
 ## Store a key (SET):
 
-`myCache.set( key, val, [ ttl ], callback )`
+`myCache.set( key, val, [ ttl ], [callback] )`
 
 Sets a `key` `value` pair. It is possible to define a `ttl` (in seconds).  
 Returns `true` on success.
@@ -61,9 +61,20 @@ myCache.set( "myKey", obj, function( err, success ){
 });
 ```
 
+*Since `0.5.0`*
+
+Callback is now optional. Yo Can also use a sync syntax.
+
+```js
+obj = { my: "Special", variable: 42 };
+success = myCache.set( "myKey", obj, 10000 );
+// true
+```
+
+
 ## Retrieve a key (GET):
 
-`myCache.get( key, callback )`
+`myCache.get( key, [callback] )`
 
 Gets a saved value from the cache.
 Returns an empty object `{}` if not found or expired.
@@ -79,9 +90,18 @@ myCache.get( "myKey", function( err, value ){
 });
 ```
 
+*Since `0.5.0`*
+
+Callback is now optional. Yo Can also use a sync syntax.
+
+```js
+value = myCache.get( "myKey" );
+// { "myKey": { my: "Special", variable: 42 } }
+```
+
 ## Get multiple keys (MGET):
 
-`myCache.get( [ key1, key2, ... ,keyn ], callback )`
+`myCache.get( [ key1, key2, ... ,keyn ], [callback] )`
 
 Gets multiple saved values from the cache.
 Returns an empty object `{}` if not found or expired.
@@ -102,9 +122,23 @@ myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
 });
 ```
 
+*Since `0.5.0`*
+
+Callback is now optional. Yo Can also use a sync syntax.
+
+```js
+value = myCache.get( [ "myKeyA", "myKeyB" ] );
+/*
+  {
+    "myKeyA": { my: "Special", variable: 123 },
+    "myKeyB": { the: "Glory", answer: 42 }
+  }
+*/
+```
+
 ## Delete a key (DEL):
 
-`myCache.del( key, callback )`
+`myCache.del( key, [callback] )`
 
 Delete a key. Returns the number of deleted entries. A delete will never fail.
 
@@ -117,9 +151,18 @@ myCache.del( "myKey", function( err, count ){
 });
 ```
 
+*Since `0.5.0`*
+
+Callback is now optional. Yo Can also use a sync syntax.
+
+```js
+value = myCache.del( myKeyA" );
+// 1
+```
+
 ## Delete multiple keys (MDEL):
 
-`myCache.del( [ key1, key2, ... ,keyn ], callback )`
+`myCache.del( [ key1, key2, ... ,keyn ], [callback] )`
 
 Delete multiple keys. Returns the number of deleted entries. A delete will never fail.
 
@@ -132,9 +175,18 @@ myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
 });
 ```
 
+*Since `0.5.0`*
+
+Callback is now optional. Yo Can also use a sync syntax.
+
+```js
+value = myCache.del( [ "myKeyA", "myKeyB", "notExistendKey" ] );
+// 2
+```
+
 ## Change TTL (TTL):
 
-`myCache.ttl( key, ttl, callback )`
+`myCache.ttl( key, ttl, [callback] )`
 
 Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.  
 If the ttl-argument isn't passed the default-TTL will be used.
@@ -161,6 +213,15 @@ myCache.ttl( "existendKey", function( err, changed ){
     // ... do something ...
   }
 });
+```
+
+*Since `0.5.0`*
+
+Callback is now optional. Yo Can also use a sync syntax.
+
+```js
+value = myCache.ttl( "existendKey", 100 );
+// true
 ```
 
 ## Statistics (STATS):
@@ -250,6 +311,7 @@ myCache.on( "flush", function(){
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|v1.0.0|2014-04-09|Made `callback`s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Bugfix for the value `0`|
 |v0.4.1|2013-10-02|Added the value to `expired` event|
 |v0.4.0|2013-10-02|Added nodecache events|
 |v0.3.2|2012-05-31|Added Travis tests|

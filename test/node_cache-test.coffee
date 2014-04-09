@@ -29,7 +29,7 @@ ks = []
 # define tests
 module.exports = 
 	"general": (beforeExit, assert) ->
-		console.log "START GENERAL TEST"
+		console.log "\nSTART GENERAL TEST"
 
 		n = 0
 
@@ -107,11 +107,106 @@ module.exports =
 					assert.isNull( err, err )
 					assert.eql {}, res
 
+			# set a key with 0
+			localCache.set "zero", 0, 0, ( err, res )->
+				n++
+				assert.isNull( err, err )
+				assert.ok( res, err )
+
+			# get a key with 0
+			localCache.get "zero", ( err, res )->
+				n++
+				assert.isNull( err, err )
+				assert.eql { "zero": 0 }, res
+
 		beforeExit ->
-			assert.equal( 8, n, "not exited" )
+			assert.equal( 10, n, "not exited" )
+
+	"general sync": (beforeExit, assert) ->
+		console.log "\nSTART GENERAL TEST SYNC"
+
+		n = 0
+
+		start = _.clone( localCache.getStats() )
+		
+		value = randomString( 100 )
+		value2 = randomString( 100 )
+		key = randomString( 10 )
+
+		localCache.once "del", ( _key )->
+			assert.equal( _key, key )
+			return
+
+		# test insert
+		assert.ok localCache.set( key, value, 0 )
+		n++
+
+		# check stats
+		assert.equal 1, localCache.getStats().keys - start.keys
+
+		# try to get
+		res = localCache.get( key )
+		n++
+		# generate a predicted value
+		pred = {}
+		pred[ key ] = value
+		assert.eql pred, res
+
+		# get an undefined key
+		res = localCache.get( "xxx" )
+		n++
+		assert.eql {}, res
+
+		# try to delete an undefined key
+		res = localCache.del( "xxx" )
+		n++
+		assert.equal( 0, res )
+		
+		# test update
+		res = localCache.set( key, value2, 0 )
+		n++
+		assert.ok( res, res )
+			
+		# check update
+		res = localCache.get( key )
+		n++
+		# generate a predicted value
+		pred = {}
+		pred[ key ] = value2
+		assert.eql pred, res
+
+		# check if stats didn't changed
+		assert.equal 1, localCache.getStats().keys - start.keys
+
+		# try to delete the defined key
+		res = localCache.del( key )
+		localCache.removeAllListeners( "del" )
+		n++
+		assert.equal 1, res
+
+		# check stats
+		assert.equal 0, localCache.getStats().keys - start.keys
+
+		# try to get the deleted key
+		res = localCache.get( key )
+		n++
+		assert.eql {}, res
+
+		# set a key with 0
+		res = localCache.set( "zero", 0, 0 )
+		n++
+		assert.ok( res, res )
+
+		# get a key with 0
+		res = localCache.get( "zero" )
+		n++
+		assert.eql { "zero": 0 }, res
+
+		beforeExit ->
+			assert.equal( 10, n, "not exited" )
 	
 	"flush": (beforeExit, assert) ->
-		console.log "START FLUSH TEST"
+		console.log "\nSTART FLUSH TEST"
 		n = 0
 		count = 100
 		startKeys = localCache.getStats().keys
@@ -146,7 +241,7 @@ module.exports =
 	"many": (beforeExit, assert) ->
 		n = 0
 		count = 100000
-		console.log "START MANY TEST/BENCHMARK.\nSet, Get and check #{count} elements"
+		console.log "\nSTART MANY TEST/BENCHMARK.\nSet, Get and check #{count} elements"
 		val = randomString( 20 )
 		ks = []
 		for i in [1..count]
@@ -155,28 +250,29 @@ module.exports =
 		
 		time = new Date().getTime()
 		for key in ks	
-			localCache.set key, val, 0, ( err, res )->
-				assert.isNull( err, err )
-				return
+			assert.ok localCache.set( key, val, 0 )
+
+		_dur =  new Date().getTime() - time
+		console.log( "BENCHMARK for SET:", "#{_dur}ms", " ( #{_dur/count}ms per item ) " )
 		
-		console.log( "TIME-SET:", new Date().getTime() - time )
 		time = new Date().getTime()
 		for key in ks
-			localCache.get key, ( err, res )->
-				n++
-				pred = {}
-				pred[ key ] = val
-				assert.eql pred, res
+			n++
+			pred = {}
+			pred[ key ] = val
+			_res = localCache.get( key )
+			assert.eql pred, _res
 		
-		console.log( "TIME-GET:", new Date().getTime() - time )
-		console.log( "MANY STATS:", localCache.getStats() )
+		_dur = new Date().getTime() - time
+		console.log( "BENCHMARK for GET:", "#{_dur}ms", " ( #{_dur/count}ms per item ) " )
+		console.log( "BENCHMARK STATS:", localCache.getStats() )
 		
 		beforeExit ->
 			assert.equal( n, count )
 			
 
 	"delete": (beforeExit, assert) ->
-		console.log "START DELETE TEST"
+		console.log "\nSTART DELETE TEST"
 		n = 0
 		count = 10000
 		startKeys = localCache.getStats().keys
@@ -205,7 +301,7 @@ module.exports =
 			assert.equal( n, count * 2)
 	
 	"stats": (beforeExit, assert) ->
-		console.log "START STATS TEST"
+		console.log "\nSTART STATS TEST"
 		n = 0
 		start = _.clone( localCache.getStats() )
 		count = 5
@@ -260,7 +356,7 @@ module.exports =
 			assert.equal( n, count*5 )
 	
 	"multi": (beforeExit, assert) ->
-		console.log "START MULTI TEST"
+		console.log "\nSTART MULTI TEST"
 		n = 0
 		count = 100
 		startKeys = localCache.getStats().keys
@@ -308,7 +404,7 @@ module.exports =
 			assert.equal( n, count + 3)
 	
 	"ttl": (beforeExit, assert) ->
-		console.log "START TTL TEST"
+		console.log "\nSTART TTL TEST"
 
 		val = randomString( 20 )
 		key = randomString( 7 )
