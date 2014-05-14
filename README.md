@@ -62,7 +62,7 @@ myCache.set( "myKey", obj, function( err, success ){
 ```
 
 **Since `1.0.0`**:  
-Callback is now optional. Yo Can also use a sync syntax.
+Callback is now optional. You can also use synchronous syntax.
 
 ```js
 obj = { my: "Special", variable: 42 };
@@ -90,7 +90,7 @@ myCache.get( "myKey", function( err, value ){
 ```
 
 **Since `1.0.0`**:  
-Callback is now optional. Yo Can also use a sync syntax.
+Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.get( "myKey" );
@@ -121,7 +121,7 @@ myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
 ```
 
 **Since `1.0.0`**:  
-Callback is now optional. Yo Can also use a sync syntax.
+Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.get( [ "myKeyA", "myKeyB" ] );
@@ -149,7 +149,7 @@ myCache.del( "myKey", function( err, count ){
 ```
 
 **Since `1.0.0`**:  
-Callback is now optional. Yo Can also use a sync syntax.
+Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.del( myKeyA" );
@@ -172,7 +172,7 @@ myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
 ```
 
 **Since `1.0.0`**:  
-Callback is now optional. Yo Can also use a sync syntax.
+Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.del( [ "myKeyA", "myKeyB", "notExistendKey" ] );
@@ -211,7 +211,7 @@ myCache.ttl( "existendKey", function( err, changed ){
 ```
 
 **Since `1.0.0`**:  
-Callback is now optional. Yo Can also use a sync syntax.
+Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.ttl( "existendKey", 100 );
