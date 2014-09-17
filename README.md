@@ -5,8 +5,7 @@ node-cache
 [![Build Status](https://david-dm.org/tcs-de/nodecache.png)](https://david-dm.org/tcs-de/nodecache)
 [![NPM version](https://badge.fury.io/js/node-cache.png)](http://badge.fury.io/js/node-cache)
 
-
-[![NPM](https://nodei.co/npm/node-cache.png?downloads=true&stars=true)](https://nodei.co/npm/node-cache/)
+[![NPM](https://nodei.co/npm/node-cache.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/node-cache/)
 
 # Simple and fast NodeJS internal caching.
 
