@@ -1,9 +1,9 @@
 {
 	"name": "node-cache",
 	"description": "Simple and fast NodeJS internal caching. Node internal in memory cache like memcached.",
-	"keywords": [ "cache", "caching", "local", "variable", "multi", "memory", "internal", "node", "memcached", "object", "" ],
-	"tags": [ "cache", "caching", "local", "variable", "multi", "memory", "internal", "node", "memcached", "object", "" ],
-	"version": "1.0.1",
+	"keywords": [ "cache", "caching", "local", "variable", "multi", "memory", "internal", "node", "memcached", "object" ],
+	"tags": [ "cache", "caching", "local", "variable", "multi", "memory", "internal", "node", "memcached", "object" ],
+	"version": "1.0.2",
 	"author": "tcs-de <github@tcs.de>",
 	"main": "./index.js",
 	"homepage": "https://github.com/tcs-de/nodecache",
