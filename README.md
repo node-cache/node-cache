@@ -304,6 +304,7 @@ myCache.on( "flush", function(){
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|v1.0.1|2014-09-17|Small change for better ttl handling|
 |v1.0.0|2014-04-09|Made `callback`s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Push : Bugfix for the value `0`|
 |v0.4.1|2013-10-02|Added the value to `expired` event|
 |v0.4.0|2013-10-02|Added nodecache events|

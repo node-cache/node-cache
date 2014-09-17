@@ -303,12 +303,15 @@ module.exports = class NodeCache extends EventEmitter
 	# internal method the check the value. If it's not valid any moe delete it
 	_check: ( key, data )=>
 		# data is invalid if the ttl is to old and is not 0
+		#console.log data.t < Date.now(), data.t, Date.now()
 		if data.t < Date.now() and data.t isnt 0
-			@del( key )
-			@emit( "expired", key, @_unwrap(data) )
-			false
+			process.nextTick =>
+				@del( key )
+				@emit( "expired", key, @_unwrap(data) )
+				return
+			return false
 		else
-			true
+			return true
 	
 	# ## _wrap
 	#

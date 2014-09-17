@@ -412,6 +412,7 @@ module.exports =
 		key3 = randomString( 7 )
 		key4 = randomString( 7 )
 		key5 = randomString( 7 )
+		_keys = [ key, key2, key3, key4, key5 ]
 		n = 0
 
 		# set a key with ttl
@@ -427,7 +428,7 @@ module.exports =
 				assert.eql( pred, res )
 		
 		# set another key
-		localCache.set key2, val, 0.4, ( err, res )->
+		localCache.set key2, val, 0.3, ( err, res )->
 			assert.isNull( err, err )
 			assert.ok( res )
 
@@ -465,50 +466,52 @@ module.exports =
 				pred[ key2 ] = val
 				assert.eql( pred, res )
 				assert.eql( pred, res )
-		, 300 )
+		, 250 )
 
 		# test the automatic check
 		setTimeout( ->
-			startKeys = localCache.getStats().keys
+			process.nextTick ->
+				startKeys = localCache.getStats().keys
 
-			key = "autotest"
+				key = "autotest"
 
-			_testExpired = ( _key, _val )=>
-				assert.equal( _key, key )
-				assert.equal( _val, val )
-				return
+				_testExpired = ( _key, _val )=>
+					if _key not in _keys
+						assert.equal( _key, key )
+						assert.equal( _val, val )
+					return
 
-			_testSet = ( _key )=>
-				assert.equal( _key, key )
-				return
+				_testSet = ( _key )=>
+					assert.equal( _key, key )
+					return
 
-			localCache.once "set", _testSet
+				localCache.once "set", _testSet
 
-			# inset a value with ttl
-			localCache.set key, val, 0.5, ( err, res )->
-				assert.isNull( err, err )
-				assert.ok( res )
-				assert.equal( startKeys + 1, localCache.getStats().keys )
+				# inset a value with ttl
+				localCache.set key, val, 0.5, ( err, res )->
+					assert.isNull( err, err )
+					assert.ok( res )
+					assert.equal( startKeys + 1, localCache.getStats().keys )
 
-				# check existens
-				localCache.get key, ( err, res )->
-					pred = {}
-					pred[ key ] = val
-					assert.eql( pred, res )
-						
-					localCache.on "expired", _testExpired
+					# check existens
+					localCache.get key, ( err, res )->
+						pred = {}
+						pred[ key ] = val
+						assert.eql( pred, res )
+							
+						localCache.on "expired", _testExpired
 
-					# run general checkdata after ttl
-					setTimeout( ->
-						localCache._checkData( false )
-						
-						# deep dirty check if key is deleted
-						assert.isUndefined( localCache.data[ key ] )
+						# run general checkdata after ttl
+						setTimeout( ->
+							localCache._checkData( false )
+							
+							# deep dirty check if key is deleted
+							assert.isUndefined( localCache.data[ key ] )
 
-						localCache.removeAllListeners( "set" )
-						localCache.removeAllListeners( "expired" )
+							localCache.removeAllListeners( "set" )
+							localCache.removeAllListeners( "expired" )
 
-					, 700 )
+						, 700 )
 
 		, 1000 )
 
@@ -542,10 +545,14 @@ module.exports =
 
 				# run general checkdata after ttl
 				setTimeout( ->
-					localCache._checkData( false )
+					# check existens
+					assert.eql( localCache.get( key3 ), {} )
+
+					#localCache._checkData( false )
 					
 					# deep dirty check if key is deleted
 					assert.isUndefined( localCache.data[ key3 ] )
+					return
 
 				, 500 )
 		
@@ -605,6 +612,9 @@ module.exports =
 
 				# run general checkdata after ttl
 				setTimeout( ->
+					# check existens
+					assert.eql( localCache.get( key5 ), {} )
+
 					localCacheTTL._checkData( false )
 					
 					# deep dirty check if key is deleted
