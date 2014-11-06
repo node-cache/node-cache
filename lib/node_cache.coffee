@@ -367,9 +367,14 @@ module.exports = class NodeCache extends EventEmitter
 		else if _.isArray( value )
 			# if the data is an Array multiply each element with a defined default length
 			@options.arrayValueSize * value.length
-		else
+		else if _.isNumber( value )
+			8
+		else if _.isObject( value )
 			# if the data is an Object multiply each element with a defined default length
 			@options.objectValueSize * _.size( value )
+		else
+			# default fallback
+			0
 	
 	# ## _error
 	#
