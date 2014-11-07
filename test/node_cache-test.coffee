@@ -407,11 +407,11 @@ module.exports =
 		console.log "\nSTART TTL TEST"
 
 		val = randomString( 20 )
-		key = randomString( 7 )
-		key2 = randomString( 7 )
-		key3 = randomString( 7 )
-		key4 = randomString( 7 )
-		key5 = randomString( 7 )
+		key = "k1_" + randomString( 7 )
+		key2 = "k2_" + randomString( 7 )
+		key3 = "k3_" + randomString( 7 )
+		key4 = "k4_" + randomString( 7 )
+		key5 = "k5_" + randomString( 7 )
 		_keys = [ key, key2, key3, key4, key5 ]
 		n = 0
 

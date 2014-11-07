@@ -304,6 +304,7 @@ myCache.on( "flush", function(){
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|v1.0.3|2014-11-07|fix for setting numeric values. Thanks to [kaspars](https://github.com/kaspars) + optimized key ckeck.|
 |v1.0.2|2014-09-17|Small change for better ttl handling|
 |v1.0.1|2014-05-22|Readme typos. Thanks to [mjschranz](https://github.com/mjschranz)|
 |v1.0.0|2014-04-09|Made `callback`s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Push : Bugfix for the value `0`|
