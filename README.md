@@ -151,7 +151,7 @@ myCache.del( "myKey", function( err, count ){
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
-value = myCache.del( myKeyA" );
+value = myCache.del( "myKeyA" );
 // 1
 ```
 
