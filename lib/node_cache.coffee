@@ -304,11 +304,9 @@ module.exports = class NodeCache extends EventEmitter
 	_check: ( key, data )=>
 		# data is invalid if the ttl is to old and is not 0
 		#console.log data.t < Date.now(), data.t, Date.now()
-		if data.t < Date.now() and data.t isnt 0
-			process.nextTick =>
-				@del( key )
-				@emit( "expired", key, @_unwrap(data) )
-				return
+		if data.t isnt 0 and data.t < Date.now()
+			@del( key )
+			@emit( "expired", key, @_unwrap(data) )
 			return false
 		else
 			return true
@@ -367,9 +365,14 @@ module.exports = class NodeCache extends EventEmitter
 		else if _.isArray( value )
 			# if the data is an Array multiply each element with a defined default length
 			@options.arrayValueSize * value.length
-		else
+		else if _.isNumber( value )
+			8
+		else if _.isObject( value )
 			# if the data is an Object multiply each element with a defined default length
 			@options.objectValueSize * _.size( value )
+		else
+			# default fallback
+			0
 	
 	# ## _error
 	#
