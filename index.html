@@ -78,9 +78,12 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 
 <ul>
 <li>
-<code>stdTTL</code>: the standard ttl as number in seconds for every generated cache element. Default = 0 = unlimited</li>
+<code>stdTTL</code>: <em>(default: <code>0</code>)</em> the standard ttl as number in seconds for every generated cache element.<br>
+<code>0</code> = unlimited</li>
 <li>
-<code>checkperiod</code>: The period in seconds, as a number, used for the automatic delete check interval. 0 = no periodic check </li>
+<code>checkperiod</code>: <em>(default: <code>600</code>)</em> The period in seconds, as a number, used for the automatic delete check interval.<br>
+<code>0</code> = no periodic check.<br>
+<strong>Note:</strong> If you use <code>checkperiod &gt; 0</code> you script will not exit at the end, because a internal timeout will allways be active.</li>
 </ul>
 
 <div class="highlight highlight-js"><pre><span class="pl-s">var</span> NodeCache <span class="pl-k">=</span> <span class="pl-s3">require</span>( <span class="pl-s1"><span class="pl-pds">"</span>node-cache<span class="pl-pds">"</span></span> );
@@ -375,6 +378,56 @@ You will get the <code>key</code> and <code>value</code> as callback argument.</
 </table>
 
 <p><a href="https://nodei.co/npm/node-cache/"><img src="https://nodei.co/npm-dl/node-cache.png?months=6" alt="NPM"></a></p>
+
+<h2>
+<a id="other-projects" class="anchor" href="#other-projects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other projects</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><a href="https://github.com/smrchy/rsmq"><strong>rsmq</strong></a></td>
+<td align="left">A really simple message queue based on Redis</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/smrchy/redis-sessions"><strong>redis-sessions</strong></a></td>
+<td align="left">An advanced session store for NodeJS and Redis</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/mpneuried/connect-redis-sessions"><strong>connect-redis-sessions</strong></a></td>
+<td align="left">A connect or express middleware to simply use the <a href="https://github.com/smrchy/redis-sessions">redis sessions</a>. With <a href="https://github.com/smrchy/redis-sessions">redis sessions</a> you can handle multiple sessions per user_id.</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/mpneuried/redis-heartbeat"><strong>redis-heartbeat</strong></a></td>
+<td align="left">Pulse a heartbeat to redis. This can be used to detach or attach servers to nginx or similar problems.</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/mpneuried/systemhealth"><strong>systemhealth</strong></a></td>
+<td align="left">Node module to run simple custom checks for your machine or it's connections. It will use <a href="https://github.com/mpneuried/redis-heartbeat">redis-heartbeat</a> to send the current state to redis.</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/smrchy/task-queue-worker"><strong>task-queue-worker</strong></a></td>
+<td align="left">A powerful tool for background processing of tasks that are run by making standard http requests.</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/mpneuried/soyer"><strong>soyer</strong></a></td>
+<td align="left">Soyer is small lib for serverside use of Google Closure Templates with node.js.</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/mpneuried/grunt-soy-compile"><strong>grunt-soy-compile</strong></a></td>
+<td align="left">Compile Goggle Closure Templates ( SOY ) templates inclding the handling of XLIFF language files.</td>
+</tr>
+<tr>
+<td align="left"><a href="https://github.com/mpneuried/backlunr"><strong>backlunr</strong></a></td>
+<td align="left">A solution to bring Backbone Collections together with the browser fulltext search engine Lunr.js</td>
+</tr>
+</tbody>
+</table>
 
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
