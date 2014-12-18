@@ -13,8 +13,6 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout after which they expire and are cleaned from the cache.  
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
-*Written in coffee-script*
-
 # Install
 
 ```bash
@@ -332,11 +330,9 @@ myCache.on( "flush", function(){
 |[**backlunr**](https://github.com/mpneuried/backlunr)|A solution to bring Backbone Collections together with the browser fulltext search engine Lunr.js|
 
 
-# License 
+# The MIT License (MIT)
 
-(The MIT License)
-
-Copyright (c) 2010 TCS &lt;dev (at) tcs.de&gt;
+Copyright © 2013 Mathias Peter, http://www.tcs.de
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
