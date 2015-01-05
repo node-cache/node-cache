@@ -57,9 +57,7 @@ module.exports =
 			localCache.get key, ( err, res )->
 				n++
 				# generate a predicted value
-				pred = {}
-				pred[ key ] = value
-				assert.eql pred, res
+				assert.eql value, res
 				return
 
 			# try to get
@@ -72,8 +70,10 @@ module.exports =
 			# get an undefined key
 			localCache.get "xxx", ( err, res )->
 				n++
-				assert.isNull( err, err )
-				assert.eql {}, res
+				assert.isNotNull( err, err )
+				assert.eql( err.constructor.name, "Error" )
+				assert.eql "ENOTFOUND", err.name
+				assert.isUndefined( res, res )
 				return
 			
 
@@ -94,8 +94,7 @@ module.exports =
 				localCache.get key, ( err, res )->
 					n++
 					# generate a predicted value
-					pred = {}
-					pred[ key ] = value2
+					pred = value2
 					assert.eql pred, res
 
 					# check if stats didn't changed
@@ -116,8 +115,10 @@ module.exports =
 				# try to get the deleted key
 				localCache.get key, ( err, res )->
 					n++
-					assert.isNull( err, err )
-					assert.eql {}, res
+					assert.isNotNull( err, err )
+					assert.eql( err.constructor.name, "Error" )
+					assert.eql "ENOTFOUND", err.name
+					assert.isUndefined( res, res )
 					return
 
 				# set a key with 0
@@ -131,7 +132,7 @@ module.exports =
 				localCache.get "zero", ( err, res )->
 					n++
 					assert.isNull( err, err )
-					assert.eql { "zero": 0 }, res
+					assert.eql 0, res
 					return
 				return
 			return
@@ -165,9 +166,7 @@ module.exports =
 		# try to get
 		res = localCache.get( key )
 		# generate a predicted value
-		pred = {}
-		pred[ key ] = value
-		assert.eql pred, res
+		assert.eql value, res
 
 		res = localCache.keys()
 		pred = [ key ] 
@@ -175,7 +174,9 @@ module.exports =
 
 		# get an undefined key
 		res = localCache.get( "xxx" )
-		assert.eql {}, res
+		console.log "error", res instanceof Error
+		assert.eql res.constructor.name, "Error"
+		assert.eql res.name, "ENOTFOUND"
 
 		# try to delete an undefined key
 		res = localCache.del( "xxx" )
@@ -188,9 +189,7 @@ module.exports =
 		# check update
 		res = localCache.get( key )
 		# generate a predicted value
-		pred = {}
-		pred[ key ] = value2
-		assert.eql pred, res
+		assert.eql value2, res
 
 		# check if stats didn't changed
 		assert.equal 1, localCache.getStats().keys - start.keys
@@ -205,7 +204,8 @@ module.exports =
 
 		# try to get the deleted key
 		res = localCache.get( key )
-		assert.eql {}, res
+		assert.eql res.constructor.name, "Error"
+		assert.eql res.name, "ENOTFOUND"
 
 		# set a key with 0
 		res = localCache.set( "zero", 0, 0 )
@@ -213,7 +213,7 @@ module.exports =
 
 		# get a key with 0
 		res = localCache.get( "zero" )
-		assert.eql { "zero": 0 }, res
+		assert.eql 0, res
 		
 		return
 
@@ -256,6 +256,7 @@ module.exports =
 	"many": (beforeExit, assert) ->
 		n = 0
 		count = 100000
+
 		console.log "\nSTART MANY TEST/BENCHMARK.\nSet, Get and check #{count} elements"
 		val = randomString( 20 )
 		ks = []
@@ -273,10 +274,7 @@ module.exports =
 		time = new Date().getTime()
 		for key in ks
 			n++
-			pred = {}
-			pred[ key ] = val
-			_res = localCache.get( key )
-			assert.eql pred, _res
+			assert.eql val, localCache.get( key )
 		
 		_dur = new Date().getTime() - time
 		console.log( "BENCHMARK for GET:", "#{_dur}ms", " ( #{_dur/count}ms per item ) " )
@@ -344,28 +342,32 @@ module.exports =
 				n++
 				assert.isNull( err, err )
 				assert.ok( success )
+				return
 		
 		# get and remove `count` elements 
 		for i in [1..count]
 			localCache.get keys[ i ], ( err, res )->
 				n++
-				pred = {}
-				pred[ keys[ i ] ] = vals[ i ]
-				assert.eql( pred, res )
+				assert.eql( vals[ i ], res )
 				assert.isNull( err, err )
+				return
 
 			localCache.del keys[ i ], ( err, success )->
 				n++
 				assert.isNull( err, err )
 				assert.ok( success )
+				return
 		
 		# generate `count` misses
 		for i in [1..count]
 			# 4 char key should not exist
 			localCache.get "xxxx", ( err, res )->
 				++n
-				assert.isNull( err, err )
-				assert.eql( {}, res )
+				assert.isNotNull( err, err )
+				assert.eql( err.constructor.name, "Error" )
+				assert.eql "ENOTFOUND", err.name
+				assert.isUndefined( res, res )
+				return
 
 		end = localCache.getStats()
 		
@@ -379,6 +381,9 @@ module.exports =
 		beforeExit ->
 
 			assert.equal( n, count*5 )
+			return
+
+		return
 	
 	"multi": (beforeExit, assert) ->
 		console.log "\nSTART MULTI TEST"
@@ -407,26 +412,40 @@ module.exports =
 			pred[ key ] = val
 		
 		# try to get list
-		localCache.get getKeys, ( err, res )->
+		localCache.mget getKeys[ 0 ], ( err, res )->
+			n++
+			assert.isNotNull( err, err )
+			assert.eql( err.constructor.name, "Error" )
+			assert.eql "EKEYSTYPE", err.name
+			assert.isUndefined( res, res )
+			return
+
+		# try to get list
+		localCache.mget getKeys, ( err, res )->
 			n++
 			assert.isNull( err, err )
 			assert.eql( pred, res )
+			return
 		
 		# delete list of keys
 		localCache.del getKeys, ( err, res )->
 			n++
 			assert.isNull( err, err )
 			assert.equal( getKeys.length, res )
+			return
 		
 		# try to get list again. Empty result predicted
-		localCache.get getKeys, ( err, res )->
+		localCache.mget getKeys, ( err, res )->
 			n++
 			assert.isNull( err, err )
 			assert.eql( {}, res )
+			return
 		
 		beforeExit ->
 			# check  successfull runs
-			assert.equal( n, count + 3)
+			assert.equal( n, count + 4)
+			return
+		return
 	
 	"ttl": (beforeExit, assert) ->
 		console.log "\nSTART TTL TEST"
@@ -448,9 +467,9 @@ module.exports =
 			# check the key immediately
 			localCache.get key, ( err, res )->
 				assert.isNull( err, err )
-				pred = {}
-				pred[ key ] = val
-				assert.eql( pred, res )
+				assert.eql( val, res )
+				return
+			return
 		
 		# set another key
 		localCache.set key2, val, 0.3, ( err, res )->
@@ -460,26 +479,30 @@ module.exports =
 			# check the key immediately
 			localCache.get key2, ( err, res )->
 				assert.isNull( err, err )
-				pred = {}
-				pred[ key2 ] = val
-				assert.eql( pred, res )
+				assert.eql( val, res )
+				return
+			return
 
 		# check key before lifetime end
 		setTimeout( ->
 			++n;
 			localCache.get key, ( err, res )->
 				assert.isNull( err, err )
-				pred = {}
-				pred[ key ] = val
-				assert.eql( pred, res )
+				assert.eql( val, res )
+				return
+			return
 		, 400 )
 
 		# check key after lifetime end
 		setTimeout( ->
 			++n;
 			localCache.get key, ( err, res )->
-				assert.isNull( err, err )
-				assert.eql( {}, res )
+				assert.isNotNull( err, err )
+				assert.eql( err.constructor.name, "Error" )
+				assert.eql "ENOTFOUND", err.name
+				assert.isUndefined( res, res )
+				return
+			return
 		, 600 )
 
 		# check second key before lifetime end
@@ -487,10 +510,9 @@ module.exports =
 			++n;
 			localCache.get key2, ( err, res )->
 				assert.isNull( err, err )
-				pred = {}
-				pred[ key2 ] = val
-				assert.eql( pred, res )
-				assert.eql( pred, res )
+				assert.eql( val, res )
+				return
+			return
 		, 250 )
 
 		# test the automatic check
@@ -520,9 +542,7 @@ module.exports =
 
 					# check existens
 					localCache.get key, ( err, res )->
-						pred = {}
-						pred[ key ] = val
-						assert.eql( pred, res )
+						assert.eql( val, res )
 							
 						localCache.on "expired", _testExpired
 
@@ -535,9 +555,11 @@ module.exports =
 
 							localCache.removeAllListeners( "set" )
 							localCache.removeAllListeners( "expired" )
-
+							return
 						, 700 )
-
+					return
+				return
+			return
 		, 1000 )
 
 		# set a key with ttl
@@ -548,30 +570,32 @@ module.exports =
 			# check the key3 immediately
 			localCache.get key3, ( err, res )->
 				assert.isNull( err, err )
-				pred = {}
-				pred[ key3 ] = val
-				assert.eql( pred, res )
+				assert.eql( val, res )
 
 				# check ttl with false key
 				localCache.ttl ( key3 + "false" ), 0.3, ( err, setted )->
 					assert.isNull( err, err )
 					assert.equal(false, setted)
+					return
 
 					# check ttl with false key
 				localCache.ttl key3, 0.3, ( err, setted )->
 					assert.isNull( err, err )
 					assert.ok(setted)
+					return
 
 				# check existens
 				localCache.get key3, ( err, res )->
-					pred = {}
-					pred[ key3 ] = val
-					assert.eql( pred, res )
+					assert.eql( val, res )
+					return
 
 				# run general checkdata after ttl
 				setTimeout( ->
 					# check existens
-					assert.eql( localCache.get( key3 ), {} )
+					res = localCache.get( key3 )
+					assert.isNotNull( res, res )
+					assert.eql( res.constructor.name, "Error" )
+					assert.eql "ENOTFOUND", res.name
 
 					#localCache._checkData( false )
 					
@@ -580,6 +604,8 @@ module.exports =
 					return
 
 				, 500 )
+				return
+			return
 		
 
 		# set a key with default ttl = 0
@@ -590,9 +616,7 @@ module.exports =
 			# check the key4 immediately
 			localCache.get key4, ( err, res )->
 				assert.isNull( err, err )
-				pred = {}
-				pred[ key4 ] = val
-				assert.eql( pred, res )
+				assert.eql( val, res )
 
 				# check ttl with false key
 				localCache.ttl ( key4 + "false" ), ( err, setted )->
@@ -606,6 +630,9 @@ module.exports =
 
 					# deep dirty check if key is deleted
 					assert.isUndefined( localCache.data[ key4 ] )
+					return
+				return
+			return
 
 		# set a key with default ttl
 		localCacheTTL.set key5, val, 100, ( err, res )->
@@ -615,40 +642,39 @@ module.exports =
 			# check the key5 immediately
 			localCacheTTL.get key5, ( err, res )->
 				assert.isNull( err, err )
-				pred = {}
-				pred[ key5 ] = val
-				assert.eql( pred, res )
+				assert.eql( val, res )
 
 				# check ttl with false key
 				localCacheTTL.ttl ( key5 + "false" ), ( err, setted )->
 					assert.isNull( err, err )
 					assert.equal(false, setted)
+					return
 
 					# check ttl with false key
 				localCacheTTL.ttl key5, ( err, setted )->
 					assert.isNull( err, err )
 					assert.ok(setted)
+					return
 
 				# check existens
 				localCacheTTL.get key5, ( err, res )->
-					pred = {}
-					pred[ key5 ] = val
-					assert.eql( pred, res )
+					assert.eql( val, res )
+					return
 
 				# run general checkdata after ttl
 				setTimeout( ->
 					# check existens
-					assert.eql( localCache.get( key5 ), {} )
+					res = localCache.get( key5 )
+					assert.isNotNull( res, res )
+					assert.eql( res.constructor.name, "Error" )
+					assert.eql "ENOTFOUND", res.name
 
 					localCacheTTL._checkData( false )
 					
 					# deep dirty check if key is deleted
 					assert.isUndefined( localCacheTTL.data[ key5 ] )
-					
+					return
 				, 500 )
-
-
-
-
-		
-	
+				return
+			return
+		return

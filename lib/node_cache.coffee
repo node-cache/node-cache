@@ -45,11 +45,45 @@ module.exports = class NodeCache extends EventEmitter
 	#     
 	#     myCache.key "myKey", ( err, val )->
 	#       console.log( err, val )
+	#       return
 	#
-	get: ( keys, cb )=>
+	get: ( key, cb )=>
+		# get data and incremet stats
+		if @data[ key ]? and @_check( key, @data[ key ] )
+			@stats.hits++
+			_ret = @_unwrap( @data[ key ] )
+			# return data
+			cb( null, _ret ) if cb?
+			return _ret
+		else
+			# if not found return a error
+			@stats.misses++
+			_err = @_error( "ENOTFOUND", key: key )
+			cb( _err ) if cb?
+			return _err
+
+
+	# ## mget
+	#
+	# get multiple cached keys at once and change the stats
+	#
+	# **Parameters:**
+	#
+	# * `keys` ( String[] ): an array of keys
+	# * `[cb]` ( Function ): Callback function
+	# 
+	# **Example:**
+	#     
+	#     myCache.key [ "foo", "bar" ], ( err, val )->
+	#       console.log( err, val )
+	#       return
+	#
+	mget: ( keys, cb )=>
 		# convert a string to an array of one key
-		if _.isString( keys )
-			keys = [ keys ]
+		if not _.isArray( keys )
+			_err = @_error( "EKEYSTYPE" )
+			cb( _err ) if cb?
+			return _err
 		
 		# define return
 		oRet = {}
@@ -405,7 +439,7 @@ module.exports = class NodeCache extends EventEmitter
 		error = new Error()
 		error.name = type
 		error.errorcode = type
-		error.msg = "-"
+		error.msg = @_ERRORS[ type ] or "-"
 		error.data = data
 
 		if cb and _.isFunction( cb )
@@ -415,3 +449,7 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			# if no callback is defined return the error object
 			return error
+
+	_ERRORS:
+		"ENOTFOUND": "Key not found"
+		"EKEYSTYPE": "The keys argument has to be an array."
