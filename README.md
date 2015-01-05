@@ -32,8 +32,11 @@ var myCache = new NodeCache();
 
 ### Options
 
-- `stdTTL`: the standard ttl as number in seconds for every generated cache element. Default = 0 = unlimited
-- `checkperiod`: The period in seconds, as a number, used for the automatic delete check interval. 0 = no periodic check 
+- `stdTTL`: *(default: `0`)* the standard ttl as number in seconds for every generated cache element.  
+`0` = unlimited
+- `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.  
+`0` = no periodic check.  
+**Note:** If you use `checkperiod > 0` you script will not exit at the end, because a internal timeout will allways be active.
 
 ```js
 var NodeCache = require( "node-cache" );
@@ -351,11 +354,9 @@ myCache.on( "flush", function(){
 |[**backlunr**](https://github.com/mpneuried/backlunr)|A solution to bring Backbone Collections together with the browser fulltext search engine Lunr.js|
 
 
-# License 
+# The MIT License (MIT)
 
-(The MIT License)
-
-Copyright (c) 2010 TCS &lt;dev (at) tcs.de&gt;
+Copyright © 2013 Mathias Peter, http://www.tcs.de
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
