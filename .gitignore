@@ -2,3 +2,4 @@
 /nodecache.sublime-project
 /nodecache.sublime-workspace
 /node_modules
+/test/test-expire.js

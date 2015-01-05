@@ -13,8 +13,6 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout after which they expire and are cleaned from the cache.  
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
-*Written in coffee-script*
-
 # Install
 
 ```bash
@@ -217,6 +215,29 @@ value = myCache.ttl( "existendKey", 100 );
 // true
 ```
 
+## List keys (KEYS)
+
+`myCache.keys( [callback] )`
+
+Returns an array of all existing keys.  
+
+```js
+// async
+myCache.keys( function( err, mykeys ){
+  if( !err ){
+    console.log( mykeys );
+   // [ "all", "my", "keys", "foo", "bar" ]
+  }
+});
+
+// sync
+mykeys = myCache.keys();
+
+console.log( mykeys );
+// [ "all", "my", "keys", "foo", "bar" ]
+
+```
+
 ## Statistics (STATS):
 
 `myCache.getStats()`
@@ -304,6 +325,7 @@ myCache.on( "flush", function(){
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|v1.1.0|2014-11-07|added `.keys` method to list all existing keys|
 |v1.0.3|2014-11-07|fix for setting numeric values. Thanks to [kaspars](https://github.com/kaspars) + optimized key ckeck.|
 |v1.0.2|2014-09-17|Small change for better ttl handling|
 |v1.0.1|2014-05-22|Readme typos. Thanks to [mjschranz](https://github.com/mjschranz)|

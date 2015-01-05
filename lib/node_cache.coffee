@@ -214,6 +214,29 @@ module.exports = class NodeCache extends EventEmitter
 
 		return
 
+	# ## keys
+	#
+	# list all keys within this cache
+	#
+	# **Parameters:**
+	#
+	# * `[cb]` ( Function ): Callback function
+	#
+	# **Return**
+	# 
+	# ( Array ): An array of all keys
+	#
+	# **Example:**
+	#     
+	#     _keys = myCache.keys()
+	#     
+	#     # [ "foo", "bar", "fizz", "buzz", "anotherKeys" ]
+	#
+	keys: ( cb )=>
+		_keys = Object.keys( @data )
+		cb( null, _keys )if cb?
+		return _keys
+
 	# ## getStats
 	#
 	# get the stats

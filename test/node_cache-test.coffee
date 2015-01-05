@@ -60,12 +60,21 @@ module.exports =
 				pred = {}
 				pred[ key ] = value
 				assert.eql pred, res
+				return
+
+			# try to get
+			localCache.keys ( err, res )->
+				n++
+				pred = [ key ] 
+				assert.eql pred, res
+				return
 
 			# get an undefined key
 			localCache.get "xxx", ( err, res )->
 				n++
 				assert.isNull( err, err )
 				assert.eql {}, res
+				return
 			
 
 			# try to delete an undefined key
@@ -73,6 +82,7 @@ module.exports =
 				n++
 				assert.isNull( err, err )
 				assert.equal( 0, res )
+				return
 			
 			# test update
 			localCache.set key, value2, 0, ( err, res )->
@@ -90,6 +100,8 @@ module.exports =
 
 					# check if stats didn't changed
 					assert.equal 1, localCache.getStats().keys - start.keys
+					return
+				return
 
 			# try to delete the defined key
 			localCache.del key, ( err, res )->
@@ -106,26 +118,33 @@ module.exports =
 					n++
 					assert.isNull( err, err )
 					assert.eql {}, res
+					return
 
-			# set a key with 0
-			localCache.set "zero", 0, 0, ( err, res )->
-				n++
-				assert.isNull( err, err )
-				assert.ok( res, err )
+				# set a key with 0
+				localCache.set "zero", 0, 0, ( err, res )->
+					n++
+					assert.isNull( err, err )
+					assert.ok( res, err )
+					return
 
-			# get a key with 0
-			localCache.get "zero", ( err, res )->
-				n++
-				assert.isNull( err, err )
-				assert.eql { "zero": 0 }, res
+				# get a key with 0
+				localCache.get "zero", ( err, res )->
+					n++
+					assert.isNull( err, err )
+					assert.eql { "zero": 0 }, res
+					return
+				return
+			return
 
 		beforeExit ->
-			assert.equal( 10, n, "not exited" )
+			assert.equal( 11, n, "not exited" )
+			return
+		return
 
 	"general sync": (beforeExit, assert) ->
 		console.log "\nSTART GENERAL TEST SYNC"
 
-		n = 0
+		localCache.flushAll()
 
 		start = _.clone( localCache.getStats() )
 		
@@ -139,37 +158,35 @@ module.exports =
 
 		# test insert
 		assert.ok localCache.set( key, value, 0 )
-		n++
 
 		# check stats
 		assert.equal 1, localCache.getStats().keys - start.keys
 
 		# try to get
 		res = localCache.get( key )
-		n++
 		# generate a predicted value
 		pred = {}
 		pred[ key ] = value
 		assert.eql pred, res
 
+		res = localCache.keys()
+		pred = [ key ] 
+		assert.eql pred, res
+
 		# get an undefined key
 		res = localCache.get( "xxx" )
-		n++
 		assert.eql {}, res
 
 		# try to delete an undefined key
 		res = localCache.del( "xxx" )
-		n++
 		assert.equal( 0, res )
 		
 		# test update
 		res = localCache.set( key, value2, 0 )
-		n++
 		assert.ok( res, res )
 			
 		# check update
 		res = localCache.get( key )
-		n++
 		# generate a predicted value
 		pred = {}
 		pred[ key ] = value2
@@ -181,7 +198,6 @@ module.exports =
 		# try to delete the defined key
 		res = localCache.del( key )
 		localCache.removeAllListeners( "del" )
-		n++
 		assert.equal 1, res
 
 		# check stats
@@ -189,22 +205,18 @@ module.exports =
 
 		# try to get the deleted key
 		res = localCache.get( key )
-		n++
 		assert.eql {}, res
 
 		# set a key with 0
 		res = localCache.set( "zero", 0, 0 )
-		n++
 		assert.ok( res, res )
 
 		# get a key with 0
 		res = localCache.get( "zero" )
-		n++
 		assert.eql { "zero": 0 }, res
+		
+		return
 
-		beforeExit ->
-			assert.equal( 10, n, "not exited" )
-	
 	"flush": (beforeExit, assert) ->
 		console.log "\nSTART FLUSH TEST"
 		n = 0
@@ -237,6 +249,9 @@ module.exports =
 		beforeExit ->
 			# check  successfull runs
 			assert.equal( n, count + 0 )
+			return
+
+		return
 
 	"many": (beforeExit, assert) ->
 		n = 0
@@ -268,7 +283,15 @@ module.exports =
 		console.log( "BENCHMARK STATS:", localCache.getStats() )
 		
 		beforeExit ->
+			_stats = localCache.getStats()
+			_keys = localCache.keys()
+			assert.eql _stats.keys, _keys.length
+			console.log _stats
+			assert.eql ( count - 10000 + 100 ), _keys.length
+
 			assert.equal( n, count )
+			return
+		return
 			
 
 	"delete": (beforeExit, assert) ->
@@ -299,6 +322,8 @@ module.exports =
 		beforeExit ->
 			# check  successfull runs
 			assert.equal( n, count * 2)
+			return
+		return
 	
 	"stats": (beforeExit, assert) ->
 		console.log "\nSTART STATS TEST"
