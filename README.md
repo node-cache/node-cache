@@ -327,9 +327,8 @@ myCache.on( "flush", function(){
 
 ## Benchmarks
 
-
 After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
-But be carefull with this results, because it has been executed on travis machines, so it not garantied, that it'll executed on similar hardware.
+But be carefull with this results, because it has been executed on travis machines, so it is not guaranteed, that was executed on similar hardware.
 
 **node.js `0.10.36`**  
 SET: `324`ms ( `3.24`ns per item )  
