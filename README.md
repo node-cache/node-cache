@@ -331,17 +331,17 @@ myCache.on( "flush", function(){
 After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
 But be carefull with this results, because it has been executed on travis machines, so it not garantied, that it'll executed on similar hardware.
 
-**node.js `0.10.36`**
-SET: `324`ms ( `3.24`ns per item )
-GET: `7956`ms ( `79.56`ns per item ) 
+**node.js `0.10.36`**  
+SET: `324`ms ( `3.24`ns per item )  
+GET: `7956`ms ( `79.56`ns per item )   
 
-**ode.js `0.12.0`**
-SET: `432`ms ( `4.32`ns per item )
-GET: `42767`ms ( `427.67`ns per item ) 
+**node.js `0.12.0`**  
+SET: `432`ms ( `4.32`ns per item )  
+GET: `42767`ms ( `427.67`ns per item )   
 
-**io.js `v1.1.0`**
-SET: `510`ms ( `5.1`ns per item )
-GET: `1535`ms ( `15.35`ns per item ) 
+**io.js `v1.1.0`**  
+SET: `510`ms ( `5.1`ns per item )  
+GET: `1535`ms ( `15.35`ns per item )   
 
 ## Release History
 |Version|Date|Description|
