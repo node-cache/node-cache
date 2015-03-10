@@ -280,6 +280,12 @@ myCache.getStats();
   */
 ```
 
+## Close the cache:
+`myCache.close()`
+
+This will clear the interval timeout which is set on checkperiod option.
+
+
 # Events
 
 ## set
