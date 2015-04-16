@@ -296,10 +296,10 @@ myCache.on( "set", function( key, value ){
 ## del
 
 Fired when a key has been removed manually or due to expiry.
-You will get the `key` as callback argument.
+You will get the `key` and `value` as callback arguments.
 
 ```js
-myCache.on( "del", function( key ){
+myCache.on( "del", function( key, value ){
 	// ... do something ...  
 });
 ```
