@@ -1,3 +1,5 @@
+os:
+  - linux
 language: node_js
 node_js:
   - 0.6
@@ -5,3 +7,6 @@ node_js:
   - 0.10
   - 0.12
   - iojs
+install: npm install --production
+before_script:
+  - "npm install -g expresso"

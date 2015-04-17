@@ -13,6 +13,14 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout after which they expire and are cleaned from the cache.  
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
+# :warning: Breaking changes in version 2.x :warning:
+
+Due to the [Issue #11](https://github.com/tcs-de/nodecache/issues/11) the return format of the `.get()` method has been changed!
+
+Instead of returning an object with the key `{ "myKey": "myValue" }` it returns the value itself `"myValue"`.
+
+
+
 # Install
 
 ```bash
@@ -76,15 +84,17 @@ success = myCache.set( "myKey", obj, 10000 );
 `myCache.get( key, [callback] )`
 
 Gets a saved value from the cache.
-Returns an empty object `{}` if not found or expired.
+Returns an Error with the name `ENOTFOUND` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
 
 ```js
 myCache.get( "myKey", function( err, value ){
   if( !err ){
     console.log( value );
-    // { "myKey": { my: "Special", variable: 42 } }
+    //{ my: "Special", variable: 42 }
     // ... do something ...
+  } else if( err.name === "ENOTFOUND" ){
+    // key not found
   }
 });
 ```
@@ -94,19 +104,26 @@ Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.get( "myKey" );
-// { "myKey": { my: "Special", variable: 42 } }
+if ( !value instanceof Error ){
+  // handle miss!
+}
+// { my: "Special", variable: 42 }
 ```
+
+**Since `2.0.0`**:  
+
+The return format changed to the simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )*.
 
 ## Get multiple keys (MGET):
 
-`myCache.get( [ key1, key2, ... ,keyn ], [callback] )`
+`myCache.mget( [ key1, key2, ... ,keyn ], [callback] )`
 
 Gets multiple saved values from the cache.
 Returns an empty object `{}` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
 
 ```js
-myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
+myCache.mget( [ "myKeyA", "myKeyB" ], function( err, value ){
   if( !err ){
     console.log( value );
     /*
@@ -124,7 +141,7 @@ myCache.get( [ "myKeyA", "myKeyB" ], function( err, value ){
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
-value = myCache.get( [ "myKeyA", "myKeyB" ] );
+value = myCache.mget( [ "myKeyA", "myKeyB" ] );
 /*
   {
     "myKeyA": { my: "Special", variable: 123 },
@@ -132,6 +149,10 @@ value = myCache.get( [ "myKeyA", "myKeyB" ] );
   }
 */
 ```
+
+**Since `2.0.0`**:  
+
+The method for mget changed from `.get( [ "a", "b" ] )` to `.mget( [ "a", "b" ] )`
 
 ## Delete a key (DEL):
 
@@ -355,14 +376,15 @@ GET: `1535`ms ( `15.35`ns per item )
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
-|v1.1.0|2014-11-07|added `.keys` method to list all existing keys|
-|v1.0.3|2014-11-07|fix for setting numeric values. Thanks to [kaspars](https://github.com/kaspars) + optimized key ckeck.|
-|v1.0.2|2014-09-17|Small change for better ttl handling|
-|v1.0.1|2014-05-22|Readme typos. Thanks to [mjschranz](https://github.com/mjschranz)|
-|v1.0.0|2014-04-09|Made `callback`s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Push : Bugfix for the value `0`|
-|v0.4.1|2013-10-02|Added the value to `expired` event|
-|v0.4.0|2013-10-02|Added nodecache events|
-|v0.3.2|2012-05-31|Added Travis tests|
+|2.0.0|2015-01-05|changed return format of `.get()` with a error return on a miss and added the `.mget()` method. *Side effect: Performance of .get() up to 330 times faster!*|
+|1.1.0|2015-01-05|added `.keys()` method to list all existing keys|
+|1.0.3|2014-11-07|fix for setting numeric values. Thanks to [kaspars](https://github.com/kaspars) + optimized key ckeck.|
+|1.0.2|2014-09-17|Small change for better ttl handling|
+|1.0.1|2014-05-22|Readme typos. Thanks to [mjschranz](https://github.com/mjschranz)|
+|1.0.0|2014-04-09|Made `callback`s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Push : Bugfix for the value `0`|
+|0.4.1|2013-10-02|Added the value to `expired` event|
+|0.4.0|2013-10-02|Added nodecache events|
+|0.3.2|2012-05-31|Added Travis tests|
 
 [![NPM](https://nodei.co/npm-dl/node-cache.png?months=6)](https://nodei.co/npm/node-cache/)
 
