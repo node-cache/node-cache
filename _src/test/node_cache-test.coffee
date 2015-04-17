@@ -1,7 +1,7 @@
 # define runtime environment
-_ = require( "underscore" )
+_ = require( "lodash" )
 
-VCache = require "../lib/node_cache"
+VCache = require "../"
 localCache = new VCache( stdTTL: 0 )
 localCacheTTL = new VCache( stdTTL: 0.3, checkperiod: 0 )
 # just for testing disable the check period
@@ -29,7 +29,9 @@ ks = []
 # define tests
 module.exports = 
 	"general": (beforeExit, assert) ->
-		console.log "\nSTART GENERAL TEST"
+		console.log "\nSTART GENERAL TEST: "+ VCache.version
+
+
 
 		n = 0
 

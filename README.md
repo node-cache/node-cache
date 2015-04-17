@@ -13,11 +13,11 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout after which they expire and are cleaned from the cache.  
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
-# :warning: Breaking changes by version 2.x :warning:
+# :warning: Breaking changes in version 2.x :warning:
 
 Due to the [Issue #11](https://github.com/tcs-de/nodecache/issues/11) the return format of the `.get()` method has been changed!
 
-Instead of returning a object with the key `{ "myKey": "myValue" }` it returns the value itself `"myValue"`.
+Instead of returning an object with the key `{ "myKey": "myValue" }` it returns the value itself `"myValue"`.
 
 
 

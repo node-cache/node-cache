@@ -1,4 +1,4 @@
-_ = require( "underscore" )
+_ = require( "lodash" )
 EventEmitter = require('events').EventEmitter
 
 # generate superclass

@@ -1,5 +1,12 @@
+os:
+  - linux
 language: node_js
 node_js:
   - 0.6
   - 0.8
   - 0.10
+  - 0.12
+  - iojs
+before_script:
+  - "npm install -g grunt-cli"
+  - "grunt build"
