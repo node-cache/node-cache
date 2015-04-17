@@ -4,45 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>node-cache by tcs-de</title>
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-
+    <div class="wrapper">
       <header>
         <h1>node-cache</h1>
         <p>a simple in memory node internal caching module</p>
+
+        <p class="view"><a href="https://github.com/tcs-de/nodecache">View the Project on GitHub <small>tcs-de/nodecache</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/tcs-de/nodecache/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tcs-de/nodecache/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tcs-de/nodecache">View On <strong>GitHub</strong></a></li>
+        </ul>
       </header>
-
-      <div id="banner">
-        <span id="logo"></span>
-
-        <a href="https://github.com/tcs-de/nodecache" class="button fork"><strong>View On GitHub</strong></a>
-        <div class="downloads">
-          <span>Downloads:</span>
-          <ul>
-            <li><a href="https://github.com/tcs-de/nodecache/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/tcs-de/nodecache/tarball/master" class="button">TAR</a></li>
-          </ul>
-        </div>
-      </div><!-- end banner -->
-
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
       <section>
-        <h1>
-<a id="node-cache" class="anchor" href="#node-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>node-cache</h1>
-
-<p><a href="http://travis-ci.org/tcs-de/nodecache"><img src="https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master" alt="Build Status"></a>
+        <p><a href="http://travis-ci.org/tcs-de/nodecache"><img src="https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master" alt="Build Status"></a>
 <a href="https://david-dm.org/tcs-de/nodecache"><img src="https://david-dm.org/tcs-de/nodecache.png" alt="Build Status"></a>
 <a href="http://badge.fury.io/js/node-cache"><img src="https://badge.fury.io/js/node-cache.png" alt="NPM version"></a></p>
 
@@ -54,6 +40,14 @@
 <p>A simple caching module that has <code>set</code>, <code>get</code> and <code>delete</code> methods and works a little bit like memcached.
 Keys can have a timeout after which they expire and are cleaned from the cache.<br>
 All keys are stored in a single object so the practical limit is at around 1m keys.</p>
+
+<h1>
+<a id="warning-breaking-changes-in-version-2x-warning" class="anchor" href="#warning-breaking-changes-in-version-2x-warning" aria-hidden="true"><span class="octicon octicon-link"></span></a><img class="emoji" title=":warning:" alt=":warning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/26a0.png" height="20" width="20" align="absmiddle"> Breaking changes in version 2.x <img class="emoji" title=":warning:" alt=":warning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/26a0.png" height="20" width="20" align="absmiddle">
+</h1>
+
+<p>Due to the <a href="https://github.com/tcs-de/nodecache/issues/11">Issue #11</a> the return format of the <code>.get()</code> method has been changed!</p>
+
+<p>Instead of returning an object with the key <code>{ "myKey": "myValue" }</code> it returns the value itself <code>"myValue"</code>.</p>
 
 <h1>
 <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h1>
@@ -68,8 +62,8 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 <h2>
 <a id="initialize-init" class="anchor" href="#initialize-init" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initialize (INIT):</h2>
 
-<div class="highlight highlight-js"><pre><span class="pl-s">var</span> NodeCache <span class="pl-k">=</span> <span class="pl-s3">require</span>( <span class="pl-s1"><span class="pl-pds">"</span>node-cache<span class="pl-pds">"</span></span> );
-<span class="pl-s">var</span> myCache <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">NodeCache</span>();</pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> NodeCache <span class="pl-k">=</span> <span class="pl-c1">require</span>( <span class="pl-s"><span class="pl-pds">"</span>node-cache<span class="pl-pds">"</span></span> );
+<span class="pl-k">var</span> myCache <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">NodeCache</span>();</pre></div>
 
 <h3>
 <a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h3>
@@ -81,11 +75,11 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 <li>
 <code>checkperiod</code>: <em>(default: <code>600</code>)</em> The period in seconds, as a number, used for the automatic delete check interval.<br>
 <code>0</code> = no periodic check.<br>
-<strong>Note:</strong> If you use <code>checkperiod &gt; 0</code> you script will not exit at the end, because a internal timeout will allways be active.</li>
+<strong>Note:</strong> If you use <code>checkperiod &gt; 0</code> you script will not exit at the end, because a internal timeout will always be active.</li>
 </ul>
 
-<div class="highlight highlight-js"><pre><span class="pl-s">var</span> NodeCache <span class="pl-k">=</span> <span class="pl-s3">require</span>( <span class="pl-s1"><span class="pl-pds">"</span>node-cache<span class="pl-pds">"</span></span> );
-<span class="pl-s">var</span> myCache <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">NodeCache</span>( { stdTTL<span class="pl-k">:</span> <span class="pl-c1">100</span>, checkperiod<span class="pl-k">:</span> <span class="pl-c1">120</span> } );</pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> NodeCache <span class="pl-k">=</span> <span class="pl-c1">require</span>( <span class="pl-s"><span class="pl-pds">"</span>node-cache<span class="pl-pds">"</span></span> );
+<span class="pl-k">var</span> myCache <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">NodeCache</span>( { stdTTL<span class="pl-k">:</span> <span class="pl-c1">100</span>, checkperiod<span class="pl-k">:</span> <span class="pl-c1">120</span> } );</pre></div>
 
 <h2>
 <a id="store-a-key-set" class="anchor" href="#store-a-key-set" aria-hidden="true"><span class="octicon octicon-link"></span></a>Store a key (SET):</h2>
@@ -95,10 +89,10 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 <p>Sets a <code>key</code> <code>value</code> pair. It is possible to define a <code>ttl</code> (in seconds).<br>
 Returns <code>true</code> on success.</p>
 
-<div class="highlight highlight-js"><pre>obj <span class="pl-k">=</span> { my<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">"</span>Special<span class="pl-pds">"</span></span>, variable<span class="pl-k">:</span> <span class="pl-c1">42</span> };
-myCache.set( <span class="pl-s1"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span>, obj, <span class="pl-st">function</span>( <span class="pl-vpf">err</span>, <span class="pl-vpf">success</span> ){
+<div class="highlight highlight-js"><pre>obj <span class="pl-k">=</span> { my<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Special<span class="pl-pds">"</span></span>, variable<span class="pl-k">:</span> <span class="pl-c1">42</span> };
+myCache.set( <span class="pl-s"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span>, obj, <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">success</span> ){
   <span class="pl-k">if</span>( <span class="pl-k">!</span>err <span class="pl-k">&amp;&amp;</span> success ){
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>( success );
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>( success );
     <span class="pl-c">// true</span>
     <span class="pl-c">// ... do something ...</span>
   }
@@ -107,8 +101,8 @@ myCache.set( <span class="pl-s1"><span class="pl-pds">"</span>myKey<span class="
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>obj <span class="pl-k">=</span> { my<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">"</span>Special<span class="pl-pds">"</span></span>, variable<span class="pl-k">:</span> <span class="pl-c1">42</span> };
-success <span class="pl-k">=</span> myCache.set( <span class="pl-s1"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span>, obj, <span class="pl-c1">10000</span> );
+<div class="highlight highlight-js"><pre>obj <span class="pl-k">=</span> { my<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Special<span class="pl-pds">"</span></span>, variable<span class="pl-k">:</span> <span class="pl-c1">42</span> };
+success <span class="pl-k">=</span> myCache.set( <span class="pl-s"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span>, obj, <span class="pl-c1">10000</span> );
 <span class="pl-c">// true</span></pre></div>
 
 <h2>
@@ -117,35 +111,51 @@ success <span class="pl-k">=</span> myCache.set( <span class="pl-s1"><span class
 <p><code>myCache.get( key, [callback] )</code></p>
 
 <p>Gets a saved value from the cache.
-Returns an empty object <code>{}</code> if not found or expired.
+Returns a <code>undefined</code> if not found or expired.
 If the value was found it returns an object with the <code>key</code> <code>value</code> pair.</p>
 
-<div class="highlight highlight-js"><pre>myCache.get( <span class="pl-s1"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>( <span class="pl-vpf">err</span>, <span class="pl-vpf">value</span> ){
+<div class="highlight highlight-js"><pre>myCache.get( <span class="pl-s"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">value</span> ){
   <span class="pl-k">if</span>( <span class="pl-k">!</span>err ){
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>( value );
-    <span class="pl-c">// { "myKey": { my: "Special", variable: 42 } }</span>
-    <span class="pl-c">// ... do something ...</span>
+    <span class="pl-k">if</span>(value <span class="pl-k">==</span> <span class="pl-c1">undefined</span>){
+      <span class="pl-c">// key not found</span>
+    }<span class="pl-k">else</span>{
+      <span class="pl-en">console</span><span class="pl-c1">.log</span>( value );
+      <span class="pl-c">//{ my: "Special", variable: 42 }</span>
+      <span class="pl-c">// ... do something ...</span>
+    }
   }
 });</pre></div>
 
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.get( <span class="pl-s1"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span> );
-<span class="pl-c">// { "myKey": { my: "Special", variable: 42 } }</span></pre></div>
+<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.get( <span class="pl-s"><span class="pl-pds">"</span>myKey<span class="pl-pds">"</span></span> );
+<span class="pl-k">if</span> ( value <span class="pl-k">==</span> <span class="pl-c1">undefined</span> ){
+  <span class="pl-c">// handle miss!</span>
+}
+<span class="pl-c">// { my: "Special", variable: 42 }</span></pre></div>
+
+<p><strong>Since <code>2.0.0</code></strong>:  </p>
+
+<p>The return format changed to the simple value and a <code>ENOTFOUND</code> error if not found <em>( as <code>callback( err )</code> or on sync call as result instance of <code>Error</code> )</em>.</p>
+
+<p><strong>Since <code>2.1.0</code></strong>: </p>
+
+<p>The return format changed to the simple value, but a due to discussion in #11 a miss shouldn't return an error.
+So until 2.1.0 it'll return a <code>undefined</code>.</p>
 
 <h2>
 <a id="get-multiple-keys-mget" class="anchor" href="#get-multiple-keys-mget" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get multiple keys (MGET):</h2>
 
-<p><code>myCache.get( [ key1, key2, ... ,keyn ], [callback] )</code></p>
+<p><code>myCache.mget( [ key1, key2, ... ,keyn ], [callback] )</code></p>
 
 <p>Gets multiple saved values from the cache.
 Returns an empty object <code>{}</code> if not found or expired.
 If the value was found it returns an object with the <code>key</code> <code>value</code> pair.</p>
 
-<div class="highlight highlight-js"><pre>myCache.get( [ <span class="pl-s1"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span> ], <span class="pl-st">function</span>( <span class="pl-vpf">err</span>, <span class="pl-vpf">value</span> ){
+<div class="highlight highlight-js"><pre>myCache.mget( [ <span class="pl-s"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span> ], <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">value</span> ){
   <span class="pl-k">if</span>( <span class="pl-k">!</span>err ){
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>( value );
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>( value );
     <span class="pl-c">/*</span>
 <span class="pl-c">      {</span>
 <span class="pl-c">        "myKeyA": { my: "Special", variable: 123 },</span>
@@ -159,13 +169,17 @@ If the value was found it returns an object with the <code>key</code> <code>valu
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.get( [ <span class="pl-s1"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span> ] );
+<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.mget( [ <span class="pl-s"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span> ] );
 <span class="pl-c">/*</span>
 <span class="pl-c">  {</span>
 <span class="pl-c">    "myKeyA": { my: "Special", variable: 123 },</span>
 <span class="pl-c">    "myKeyB": { the: "Glory", answer: 42 }</span>
 <span class="pl-c">  }</span>
 <span class="pl-c">*/</span></pre></div>
+
+<p><strong>Since <code>2.0.0</code></strong>:  </p>
+
+<p>The method for mget changed from <code>.get( [ "a", "b" ] )</code> to <code>.mget( [ "a", "b" ] )</code></p>
 
 <h2>
 <a id="delete-a-key-del" class="anchor" href="#delete-a-key-del" aria-hidden="true"><span class="octicon octicon-link"></span></a>Delete a key (DEL):</h2>
@@ -185,7 +199,7 @@ Callback is now optional. You can also use synchronous syntax.</p>
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( <span class="pl-s1"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span> );
+<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( <span class="pl-s"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span> );
 <span class="pl-c">// 1</span></pre></div>
 
 <h2>
@@ -195,9 +209,9 @@ Callback is now optional. You can also use synchronous syntax.</p>
 
 <p>Delete multiple keys. Returns the number of deleted entries. A delete will never fail.</p>
 
-<div class="highlight highlight-js"><pre>myCache.del( [ <span class="pl-s1"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span> ], <span class="pl-st">function</span>( <span class="pl-vpf">err</span>, <span class="pl-vpf">count</span> ){
+<div class="highlight highlight-js"><pre>myCache.del( [ <span class="pl-s"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span> ], <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">count</span> ){
   <span class="pl-k">if</span>( <span class="pl-k">!</span>err ){
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>( count ); <span class="pl-c">// 2</span>
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>( count ); <span class="pl-c">// 2</span>
     <span class="pl-c">// ... do something ...</span>
   }
 });</pre></div>
@@ -205,7 +219,7 @@ Callback is now optional. You can also use synchronous syntax.</p>
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( [ <span class="pl-s1"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>notExistendKey<span class="pl-pds">"</span></span> ] );
+<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( [ <span class="pl-s"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>notExistendKey<span class="pl-pds">"</span></span> ] );
 <span class="pl-c">// 2</span></pre></div>
 
 <h2>
@@ -217,23 +231,23 @@ Callback is now optional. You can also use synchronous syntax.</p>
 If the ttl-argument isn't passed the default-TTL will be used.</p>
 
 <div class="highlight highlight-js"><pre>myCache <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">NodeCache</span>( { stdTTL<span class="pl-k">:</span> <span class="pl-c1">100</span> } )
-myCache.ttl( <span class="pl-s1"><span class="pl-pds">"</span>existendKey<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span>, <span class="pl-st">function</span>( <span class="pl-vpf">err</span>, <span class="pl-vpf">changed</span> ){
+myCache.ttl( <span class="pl-s"><span class="pl-pds">"</span>existendKey<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span>, <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">changed</span> ){
   <span class="pl-k">if</span>( <span class="pl-k">!</span>err ){
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>( changed ); <span class="pl-c">// true</span>
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>( changed ); <span class="pl-c">// true</span>
     <span class="pl-c">// ... do something ...</span>
   }
 });
 
-myCache.ttl( <span class="pl-s1"><span class="pl-pds">"</span>missingKey<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span>, <span class="pl-st">function</span>( <span class="pl-vpf">err</span>, <span class="pl-vpf">changed</span> ){
+myCache.ttl( <span class="pl-s"><span class="pl-pds">"</span>missingKey<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span>, <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">changed</span> ){
   <span class="pl-k">if</span>( <span class="pl-k">!</span>err ){
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>( changed ); <span class="pl-c">// false</span>
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>( changed ); <span class="pl-c">// false</span>
     <span class="pl-c">// ... do something ...</span>
   }
 });
 
-myCache.ttl( <span class="pl-s1"><span class="pl-pds">"</span>existendKey<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>( <span class="pl-vpf">err</span>, <span class="pl-vpf">changed</span> ){
+myCache.ttl( <span class="pl-s"><span class="pl-pds">"</span>existendKey<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">changed</span> ){
   <span class="pl-k">if</span>( <span class="pl-k">!</span>err ){
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>( changed ); <span class="pl-c">// true</span>
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>( changed ); <span class="pl-c">// true</span>
     <span class="pl-c">// ... do something ...</span>
   }
 });</pre></div>
@@ -241,8 +255,30 @@ myCache.ttl( <span class="pl-s1"><span class="pl-pds">"</span>existendKey<span c
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.ttl( <span class="pl-s1"><span class="pl-pds">"</span>existendKey<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span> );
+<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.ttl( <span class="pl-s"><span class="pl-pds">"</span>existendKey<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span> );
 <span class="pl-c">// true</span></pre></div>
+
+<h2>
+<a id="list-keys-keys" class="anchor" href="#list-keys-keys" aria-hidden="true"><span class="octicon octicon-link"></span></a>List keys (KEYS)</h2>
+
+<p><code>myCache.keys( [callback] )</code></p>
+
+<p>Returns an array of all existing keys.  </p>
+
+<div class="highlight highlight-js"><pre><span class="pl-c">// async</span>
+myCache.keys( <span class="pl-k">function</span>( <span class="pl-smi">err</span>, <span class="pl-smi">mykeys</span> ){
+  <span class="pl-k">if</span>( <span class="pl-k">!</span>err ){
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>( mykeys );
+   <span class="pl-c">// [ "all", "my", "keys", "foo", "bar" ]</span>
+  }
+});
+
+<span class="pl-c">// sync</span>
+mykeys <span class="pl-k">=</span> myCache.keys();
+
+<span class="pl-en">console</span><span class="pl-c1">.log</span>( mykeys );
+<span class="pl-c">// [ "all", "my", "keys", "foo", "bar" ]</span>
+</pre></div>
 
 <h2>
 <a id="statistics-stats" class="anchor" href="#statistics-stats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Statistics (STATS):</h2>
@@ -281,6 +317,15 @@ myCache.getStats();
 <span class="pl-c">    }</span>
 <span class="pl-c">  */</span></pre></div>
 
+<h2>
+<a id="close-the-cache" class="anchor" href="#close-the-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>Close the cache:</h2>
+
+<p><code>myCache.close()</code></p>
+
+<p>This will clear the interval timeout which is set on check period option.</p>
+
+<div class="highlight highlight-js"><pre>myCache.<span class="pl-c1">close</span>();</pre></div>
+
 <h1>
 <a id="events" class="anchor" href="#events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h1>
 
@@ -290,7 +335,7 @@ myCache.getStats();
 <p>Fired when a key has been added or changed.
 You will get the <code>key</code> and the <code>value</code> as callback argument.</p>
 
-<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s1"><span class="pl-pds">"</span>set<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>( <span class="pl-vpf">key</span>, <span class="pl-vpf">value</span> ){
+<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s"><span class="pl-pds">"</span>set<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>( <span class="pl-smi">key</span>, <span class="pl-smi">value</span> ){
     <span class="pl-c">// ... do something ...  </span>
 });</pre></div>
 
@@ -298,9 +343,9 @@ You will get the <code>key</code> and the <code>value</code> as callback argumen
 <a id="del" class="anchor" href="#del" aria-hidden="true"><span class="octicon octicon-link"></span></a>del</h2>
 
 <p>Fired when a key has been removed manually or due to expiry.
-You will get the <code>key</code> as callback argument.</p>
+You will get the <code>key</code> and the deleted <code>value</code> as callback arguments.</p>
 
-<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s1"><span class="pl-pds">"</span>del<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>( <span class="pl-vpf">key</span> ){
+<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s"><span class="pl-pds">"</span>del<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>( <span class="pl-smi">key</span>, <span class="pl-smi">value</span> ){
     <span class="pl-c">// ... do something ...  </span>
 });</pre></div>
 
@@ -310,7 +355,7 @@ You will get the <code>key</code> as callback argument.</p>
 <p>Fired when a key expires.
 You will get the <code>key</code> and <code>value</code> as callback argument.</p>
 
-<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s1"><span class="pl-pds">"</span>expired<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>( <span class="pl-vpf">key</span>, <span class="pl-vpf">value</span> ){
+<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s"><span class="pl-pds">"</span>expired<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>( <span class="pl-smi">key</span>, <span class="pl-smi">value</span> ){
     <span class="pl-c">// ... do something ...  </span>
 });</pre></div>
 
@@ -319,9 +364,56 @@ You will get the <code>key</code> and <code>value</code> as callback argument.</
 
 <p>Fired when the cache has been flushed.</p>
 
-<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s1"><span class="pl-pds">"</span>flush<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>(){
+<div class="highlight highlight-js"><pre>myCache.on( <span class="pl-s"><span class="pl-pds">"</span>flush<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>(){
     <span class="pl-c">// ... do something ...  </span>
 });</pre></div>
+
+<h2>
+<a id="benchmarks" class="anchor" href="#benchmarks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benchmarks</h2>
+
+<h3>
+<a id="version-11x" class="anchor" href="#version-11x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 1.1.x</h3>
+
+<p>After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
+But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that was executed on similar hardware.</p>
+
+<p><strong>node.js <code>0.10.36</code></strong><br>
+SET: <code>324</code>ms ( <code>3.24</code>µs per item )<br>
+GET: <code>7956</code>ms ( <code>79.56</code>µs per item )   </p>
+
+<p><strong>node.js <code>0.12.0</code></strong><br>
+SET: <code>432</code>ms ( <code>4.32</code>µs per item )<br>
+GET: <code>42767</code>ms ( <code>427.67</code>µs per item )   </p>
+
+<p><strong>io.js <code>v1.1.0</code></strong><br>
+SET: <code>510</code>ms ( <code>5.1</code>µs per item )<br>
+GET: <code>1535</code>ms ( <code>15.35</code>µs per item )   </p>
+
+<h3>
+<a id="version-20x" class="anchor" href="#version-20x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 2.0.x</h3>
+
+<p>Again the same benchmarks by travis with version 2.0</p>
+
+<p><strong>node.js <code>0.6.21</code></strong><br>
+SET: <code>786</code>ms ( <code>7.86</code>µs per item )<br>
+GET: <code>56</code>ms ( <code>0.56</code>µs per item )   </p>
+
+<p><strong>node.js <code>0.10.36</code></strong><br>
+SET: <code>353</code>ms ( <code>3.53</code>µs per item )
+GET: <code>41</code>ms ( <code>0.41</code>µs per item )   </p>
+
+<p><strong>node.js <code>0.12.2</code></strong><br>
+SET: <code>327</code>ms ( <code>3.27</code>µs per item )<br>
+GET: <code>32</code>ms ( <code>0.32</code>µs per item )   </p>
+
+<p><strong>io.js <code>v1.7.1</code></strong><br>
+SET: <code>238</code>ms ( <code>2.38</code>µs per item )<br>
+GET: <code>34</code>ms ( <code>0.34</code>µs per item )  </p>
+
+<blockquote>
+<p>As you can see the version 2.0.x will increase the GET performance up to 200x in node 0.10.x.
+This is possible because the memory allocation for the object returned by 1.x is very expensive.</p>
+</blockquote>
 
 <h2>
 <a id="release-history" class="anchor" href="#release-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release History</h2>
@@ -336,39 +428,65 @@ You will get the <code>key</code> and <code>value</code> as callback argument.</
 </thead>
 <tbody>
 <tr>
-<td align="center">v1.0.3</td>
+<td align="center">2.1.1</td>
+<td align="center">2015-04-17</td>
+<td align="left">Passed old value to the <code>del</code> event. Thanks to <a href="https://github.com/qix">Qix</a> for the pull.</td>
+</tr>
+<tr>
+<td align="center">2.1.0</td>
+<td align="center">2015-04-17</td>
+<td align="left">Changed get miss to return <code>undefined</code> instead of an error. Thanks to all <a href="https://github.com/tcs-de/nodecache/issues/11">#11</a> contributors</td>
+</tr>
+<tr>
+<td align="center">2.0.1</td>
+<td align="center">2015-04-17</td>
+<td align="left">Added close function (Thanks to <a href="https://github.com/ownagedj">ownagedj</a>). Changed the development environment to use grunt.</td>
+</tr>
+<tr>
+<td align="center">2.0.0</td>
+<td align="center">2015-01-05</td>
+<td align="left">changed return format of <code>.get()</code> with a error return on a miss and added the <code>.mget()</code> method. <em>Side effect: Performance of .get() up to 330 times faster!</em>
+</td>
+</tr>
+<tr>
+<td align="center">1.1.0</td>
+<td align="center">2015-01-05</td>
+<td align="left">added <code>.keys()</code> method to list all existing keys</td>
+</tr>
+<tr>
+<td align="center">1.0.3</td>
 <td align="center">2014-11-07</td>
 <td align="left">fix for setting numeric values. Thanks to <a href="https://github.com/kaspars">kaspars</a> + optimized key ckeck.</td>
 </tr>
 <tr>
-<td align="center">v1.0.2</td>
+<td align="center">1.0.2</td>
 <td align="center">2014-09-17</td>
 <td align="left">Small change for better ttl handling</td>
 </tr>
 <tr>
-<td align="center">v1.0.1</td>
+<td align="center">1.0.1</td>
 <td align="center">2014-05-22</td>
 <td align="left">Readme typos. Thanks to <a href="https://github.com/mjschranz">mjschranz</a>
 </td>
 </tr>
 <tr>
-<td align="center">v1.0.0</td>
+<td align="center">1.0.0</td>
 <td align="center">2014-04-09</td>
 <td align="left">Made <code>callback</code>s optional. So it's now possible to use a syncron syntax. The old syntax should also work well. Push : Bugfix for the value <code>0</code>
 </td>
 </tr>
 <tr>
-<td align="center">v0.4.1</td>
+<td align="center">0.4.1</td>
 <td align="center">2013-10-02</td>
 <td align="left">Added the value to <code>expired</code> event</td>
 </tr>
 <tr>
-<td align="center">v0.4.0</td>
+<td align="center">0.4.0</td>
 <td align="center">2013-10-02</td>
 <td align="left">Added nodecache events</td>
 </tr>
 <tr>
-<td align="center">v0.3.2</td>
+<td align="center">0.3.2</td>
 <td align="center">2012-05-31</td>
 <td align="left">Added Travis tests</td>
 </tr>
@@ -390,7 +508,7 @@ You will get the <code>key</code> and <code>value</code> as callback argument.</
 <tbody>
 <tr>
 <td align="left"><a href="https://github.com/smrchy/rsmq"><strong>rsmq</strong></a></td>
-<td align="left">A really simple message queue based on Redis</td>
+<td align="left">A really simple message queue based on redis</td>
 </tr>
 <tr>
 <td align="left"><a href="https://github.com/smrchy/redis-sessions"><strong>redis-sessions</strong></a></td>
@@ -410,15 +528,15 @@ You will get the <code>key</code> and <code>value</code> as callback argument.</
 </tr>
 <tr>
 <td align="left"><a href="https://github.com/smrchy/task-queue-worker"><strong>task-queue-worker</strong></a></td>
-<td align="left">A powerful tool for background processing of tasks that are run by making standard http requests.</td>
+<td align="left">A powerful tool for background processing of tasks that are run by making standard http requests</td>
 </tr>
 <tr>
 <td align="left"><a href="https://github.com/mpneuried/soyer"><strong>soyer</strong></a></td>
-<td align="left">Soyer is small lib for serverside use of Google Closure Templates with node.js.</td>
+<td align="left">Soyer is small lib for server side use of Google Closure Templates with node.js.</td>
 </tr>
 <tr>
 <td align="left"><a href="https://github.com/mpneuried/grunt-soy-compile"><strong>grunt-soy-compile</strong></a></td>
-<td align="left">Compile Goggle Closure Templates ( SOY ) templates inclding the handling of XLIFF language files.</td>
+<td align="left">Compile Goggle Closure Templates ( SOY ) templates including the handling of XLIFF language files.</td>
 </tr>
 <tr>
 <td align="left"><a href="https://github.com/mpneuried/backlunr"><strong>backlunr</strong></a></td>
@@ -452,11 +570,11 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
       </section>
       <footer>
-        <p>Project maintained by <a href="https://github.com/tcs-de">tcs-de</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+        <p>This project is maintained by <a href="https://github.com/tcs-de">tcs-de</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
