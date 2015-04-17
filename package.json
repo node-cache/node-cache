@@ -27,7 +27,6 @@
 		"grunt-contrib-coffee": "0.13.x",
 		"grunt-include-replace": "3.0.x",
 		"grunt-run": "0.3.x",
-		"grunt-docker": "0.0.x",
 		"grunt-contrib-clean": "0.6.x"
 	}
 }
