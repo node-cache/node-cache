@@ -10,4 +10,3 @@ node_js:
 install: npm install --production
 before_script:
   - "npm install -g expresso"
-  - "grunt build"
