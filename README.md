@@ -395,12 +395,13 @@ GET: `32`ms ( `0.32`µs per item )
 SET: `238`ms ( `2.38`µs per item )  
 GET: `34`ms ( `0.34`µs per item )  
 
-> As you can see the version 2.0.x will increase the GET performance up to 200x.
+> As you can see the version 2.0.x will increase the GET performance up to 200x in node 0.10.x.
 This is possible because the memeroy allocation for the object returned by 1.x is very expensive.
 
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|2.0.1|2015-04-17|Added close function (Thanks to [ownagedj ](https://github.com/ownagedj)). Changed the development environment to use grunt.|
 |2.0.0|2015-01-05|changed return format of `.get()` with a error return on a miss and added the `.mget()` method. *Side effect: Performance of .get() up to 330 times faster!*|
 |1.1.0|2015-01-05|added `.keys()` method to list all existing keys|
 |1.0.3|2014-11-07|fix for setting numeric values. Thanks to [kaspars](https://github.com/kaspars) + optimized key ckeck.|
