@@ -358,20 +358,45 @@ myCache.on( "flush", function(){
 
 ## Benchmarks
 
+### Version 1.1.x
+
 After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
 But be carefull with this results, because it has been executed on travis machines, so it is not guaranteed, that was executed on similar hardware.
 
 **node.js `0.10.36`**  
-SET: `324`ms ( `3.24`ns per item )  
-GET: `7956`ms ( `79.56`ns per item )   
+SET: `324`ms ( `3.24`µs per item )  
+GET: `7956`ms ( `79.56`µs per item )   
 
 **node.js `0.12.0`**  
-SET: `432`ms ( `4.32`ns per item )  
-GET: `42767`ms ( `427.67`ns per item )   
+SET: `432`ms ( `4.32`µs per item )  
+GET: `42767`ms ( `427.67`µs per item )   
 
 **io.js `v1.1.0`**  
-SET: `510`ms ( `5.1`ns per item )  
-GET: `1535`ms ( `15.35`ns per item )   
+SET: `510`ms ( `5.1`µs per item )  
+GET: `1535`ms ( `15.35`µs per item )   
+
+### Version 2.0.x
+
+Again the same benchmarks by travis with version 2.0
+
+**node.js `0.6.21`**  
+SET: `786`ms ( `7.86`µs per item )  
+GET: `56`ms ( `0.56`µs per item )   
+
+**node.js `0.10.36`**  
+SET: `353`ms ( `3.53`µs per item )
+GET: `41`ms ( `0.41`µs per item )   
+
+**node.js `0.12.2`**  
+SET: `327`ms ( `3.27`µs per item )  
+GET: `32`ms ( `0.32`µs per item )   
+
+**io.js `v1.7.1`**  
+SET: `238`ms ( `2.38`µs per item )  
+GET: `34`ms ( `0.34`µs per item )  
+
+> As you can see the version 2.0.x will increase the GET performance up to 200x.
+This is possible because the memeroy allocation for the object returned by 1.x is very expensive.
 
 ## Release History
 |Version|Date|Description|
