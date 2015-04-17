@@ -301,6 +301,18 @@ module.exports = class NodeCache extends EventEmitter
 		@emit( "flush" )
 
 		return
+
+	# ## close
+	#
+	# This will clear the interval timeout which is set on checkperiod option.
+	#
+	# **Example:**
+	#     
+	#     myCache.close()
+	#     
+	close: =>
+		@_killCheckPeriod()
+		return
 	
 	# ## _checkData
 	#
