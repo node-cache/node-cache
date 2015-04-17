@@ -58,9 +58,8 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			# if not found return a error
 			@stats.misses++
-			_err = @_error( "ENOTFOUND", key: key )
-			cb( _err ) if cb?
-			return _err
+			cb( null, undefined ) if cb?
+			return undefined
 
 
 	# ## mget

@@ -72,9 +72,7 @@ module.exports =
 			# get an undefined key
 			localCache.get "xxx", ( err, res )->
 				n++
-				assert.isNotNull( err, err )
-				assert.eql( err.constructor.name, "Error" )
-				assert.eql "ENOTFOUND", err.name
+				assert.isNull( err, err )
 				assert.isUndefined( res, res )
 				return
 			
@@ -117,9 +115,7 @@ module.exports =
 				# try to get the deleted key
 				localCache.get key, ( err, res )->
 					n++
-					assert.isNotNull( err, err )
-					assert.eql( err.constructor.name, "Error" )
-					assert.eql "ENOTFOUND", err.name
+					assert.isNull( err, err )
 					assert.isUndefined( res, res )
 					return
 
@@ -176,9 +172,7 @@ module.exports =
 
 		# get an undefined key
 		res = localCache.get( "xxx" )
-		console.log "error", res instanceof Error
-		assert.eql res.constructor.name, "Error"
-		assert.eql res.name, "ENOTFOUND"
+		assert.isUndefined( res, res )
 
 		# try to delete an undefined key
 		res = localCache.del( "xxx" )
@@ -206,8 +200,7 @@ module.exports =
 
 		# try to get the deleted key
 		res = localCache.get( key )
-		assert.eql res.constructor.name, "Error"
-		assert.eql res.name, "ENOTFOUND"
+		assert.isUndefined( res, res )
 
 		# set a key with 0
 		res = localCache.set( "zero", 0, 0 )
@@ -365,9 +358,7 @@ module.exports =
 			# 4 char key should not exist
 			localCache.get "xxxx", ( err, res )->
 				++n
-				assert.isNotNull( err, err )
-				assert.eql( err.constructor.name, "Error" )
-				assert.eql "ENOTFOUND", err.name
+				assert.isNull( err, err )
 				assert.isUndefined( res, res )
 				return
 
@@ -499,9 +490,7 @@ module.exports =
 		setTimeout( ->
 			++n;
 			localCache.get key, ( err, res )->
-				assert.isNotNull( err, err )
-				assert.eql( err.constructor.name, "Error" )
-				assert.eql "ENOTFOUND", err.name
+				assert.isNull( err, err )
 				assert.isUndefined( res, res )
 				return
 			return
@@ -595,9 +584,7 @@ module.exports =
 				setTimeout( ->
 					# check existens
 					res = localCache.get( key3 )
-					assert.isNotNull( res, res )
-					assert.eql( res.constructor.name, "Error" )
-					assert.eql "ENOTFOUND", res.name
+					assert.isUndefined( res, res )
 
 					#localCache._checkData( false )
 					
@@ -667,10 +654,8 @@ module.exports =
 				setTimeout( ->
 					# check existens
 					res = localCache.get( key5 )
-					assert.isNotNull( res, res )
-					assert.eql( res.constructor.name, "Error" )
-					assert.eql "ENOTFOUND", res.name
-
+					assert.isUndefined( res, res )
+					
 					localCacheTTL._checkData( false )
 					
 					# deep dirty check if key is deleted

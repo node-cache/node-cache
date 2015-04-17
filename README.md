@@ -44,7 +44,7 @@ var myCache = new NodeCache();
 `0` = unlimited
 - `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.  
 `0` = no periodic check.  
-**Note:** If you use `checkperiod > 0` you script will not exit at the end, because a internal timeout will allways be active.
+**Note:** If you use `checkperiod > 0` you script will not exit at the end, because a internal timeout will always be active.
 
 ```js
 var NodeCache = require( "node-cache" );
@@ -84,17 +84,19 @@ success = myCache.set( "myKey", obj, 10000 );
 `myCache.get( key, [callback] )`
 
 Gets a saved value from the cache.
-Returns an Error with the name `ENOTFOUND` if not found or expired.
+Returns a `undefined` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
 
 ```js
 myCache.get( "myKey", function( err, value ){
   if( !err ){
-    console.log( value );
-    //{ my: "Special", variable: 42 }
-    // ... do something ...
-  } else if( err.name === "ENOTFOUND" ){
-    // key not found
+    if(value == undefined){
+      // key not found
+    }else{
+      console.log( value );
+      //{ my: "Special", variable: 42 }
+      // ... do something ...
+    }
   }
 });
 ```
@@ -104,7 +106,7 @@ Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.get( "myKey" );
-if ( !value instanceof Error ){
+if ( value == undefined ){
   // handle miss!
 }
 // { my: "Special", variable: 42 }
@@ -113,6 +115,11 @@ if ( !value instanceof Error ){
 **Since `2.0.0`**:  
 
 The return format changed to the simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )*.
+
+**Since `2.1.0`**: 
+
+The return format changed to the simple value, but a due to discussion in #11 a miss shouldn't return an error.
+So until 2.1.0 it'll return a `undefined`.
 
 ## Get multiple keys (MGET):
 
@@ -305,7 +312,7 @@ myCache.getStats();
 
 `myCache.close()`
 
-This will clear the interval timeout which is set on checkperiod option.
+This will clear the interval timeout which is set on check period option.
 
 ```js
 myCache.close();
@@ -361,7 +368,7 @@ myCache.on( "flush", function(){
 ### Version 1.1.x
 
 After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
-But be carefull with this results, because it has been executed on travis machines, so it is not guaranteed, that was executed on similar hardware.
+But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that was executed on similar hardware.
 
 **node.js `0.10.36`**  
 SET: `324`ms ( `3.24`µs per item )  
@@ -396,12 +403,13 @@ SET: `238`ms ( `2.38`µs per item )
 GET: `34`ms ( `0.34`µs per item )  
 
 > As you can see the version 2.0.x will increase the GET performance up to 200x in node 0.10.x.
-This is possible because the memeroy allocation for the object returned by 1.x is very expensive.
+This is possible because the memory allocation for the object returned by 1.x is very expensive.
 
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
-|2.0.1|2015-04-17|Added close function (Thanks to [ownagedj ](https://github.com/ownagedj)). Changed the development environment to use grunt.|
+|2.1.0|2015-04-17|Changed get miss to return `undefined` instead of an error. Thanks to all [#11](https://github.com/tcs-de/nodecache/issues/11) contributors |
+|2.0.1|2015-04-17|Added close function (Thanks to [ownagedj](https://github.com/ownagedj)). Changed the development environment to use grunt.|
 |2.0.0|2015-01-05|changed return format of `.get()` with a error return on a miss and added the `.mget()` method. *Side effect: Performance of .get() up to 330 times faster!*|
 |1.1.0|2015-01-05|added `.keys()` method to list all existing keys|
 |1.0.3|2014-11-07|fix for setting numeric values. Thanks to [kaspars](https://github.com/kaspars) + optimized key ckeck.|
@@ -418,14 +426,14 @@ This is possible because the memeroy allocation for the object returned by 1.x i
 
 |Name|Description|
 |:--|:--|
-|[**rsmq**](https://github.com/smrchy/rsmq)|A really simple message queue based on Redis|
+|[**rsmq**](https://github.com/smrchy/rsmq)|A really simple message queue based on redis|
 |[**redis-sessions**](https://github.com/smrchy/redis-sessions)|An advanced session store for NodeJS and Redis|
 |[**connect-redis-sessions**](https://github.com/mpneuried/connect-redis-sessions)|A connect or express middleware to simply use the [redis sessions](https://github.com/smrchy/redis-sessions). With [redis sessions](https://github.com/smrchy/redis-sessions) you can handle multiple sessions per user_id.|
 |[**redis-heartbeat**](https://github.com/mpneuried/redis-heartbeat)|Pulse a heartbeat to redis. This can be used to detach or attach servers to nginx or similar problems.|
 |[**systemhealth**](https://github.com/mpneuried/systemhealth)|Node module to run simple custom checks for your machine or it's connections. It will use [redis-heartbeat](https://github.com/mpneuried/redis-heartbeat) to send the current state to redis.|
-|[**task-queue-worker**](https://github.com/smrchy/task-queue-worker)|A powerful tool for background processing of tasks that are run by making standard http requests.|
-|[**soyer**](https://github.com/mpneuried/soyer)|Soyer is small lib for serverside use of Google Closure Templates with node.js.|
-|[**grunt-soy-compile**](https://github.com/mpneuried/grunt-soy-compile)|Compile Goggle Closure Templates ( SOY ) templates inclding the handling of XLIFF language files.|
+|[**task-queue-worker**](https://github.com/smrchy/task-queue-worker)|A powerful tool for background processing of tasks that are run by making standard http requests
+|[**soyer**](https://github.com/mpneuried/soyer)|Soyer is small lib for server side use of Google Closure Templates with node.js.|
+|[**grunt-soy-compile**](https://github.com/mpneuried/grunt-soy-compile)|Compile Goggle Closure Templates ( SOY ) templates including the handling of XLIFF language files.|
 |[**backlunr**](https://github.com/mpneuried/backlunr)|A solution to bring Backbone Collections together with the browser fulltext search engine Lunr.js|
 
 

@@ -69,9 +69,7 @@
         });
         localCache.get("xxx", function(err, res) {
           n++;
-          assert.isNotNull(err, err);
-          assert.eql(err.constructor.name, "Error");
-          assert.eql("ENOTFOUND", err.name);
+          assert.isNull(err, err);
           assert.isUndefined(res, res);
         });
         localCache.del("xxx", function(err, res) {
@@ -99,9 +97,7 @@
           assert.equal(0, localCache.getStats().keys - start.keys);
           localCache.get(key, function(err, res) {
             n++;
-            assert.isNotNull(err, err);
-            assert.eql(err.constructor.name, "Error");
-            assert.eql("ENOTFOUND", err.name);
+            assert.isNull(err, err);
             assert.isUndefined(res, res);
           });
           localCache.set("zero", 0, 0, function(err, res) {
@@ -139,9 +135,7 @@
       pred = [key];
       assert.eql(pred, res);
       res = localCache.get("xxx");
-      console.log("error", res instanceof Error);
-      assert.eql(res.constructor.name, "Error");
-      assert.eql(res.name, "ENOTFOUND");
+      assert.isUndefined(res, res);
       res = localCache.del("xxx");
       assert.equal(0, res);
       res = localCache.set(key, value2, 0);
@@ -154,8 +148,7 @@
       assert.equal(1, res);
       assert.equal(0, localCache.getStats().keys - start.keys);
       res = localCache.get(key);
-      assert.eql(res.constructor.name, "Error");
-      assert.eql(res.name, "ENOTFOUND");
+      assert.isUndefined(res, res);
       res = localCache.set("zero", 0, 0);
       assert.ok(res, res);
       res = localCache.get("zero");
@@ -286,9 +279,7 @@
       for (i = l = 1, ref2 = count; 1 <= ref2 ? l <= ref2 : l >= ref2; i = 1 <= ref2 ? ++l : --l) {
         localCache.get("xxxx", function(err, res) {
           ++n;
-          assert.isNotNull(err, err);
-          assert.eql(err.constructor.name, "Error");
-          assert.eql("ENOTFOUND", err.name);
+          assert.isNull(err, err);
           assert.isUndefined(res, res);
         });
       }
@@ -390,9 +381,7 @@
       setTimeout(function() {
         ++n;
         localCache.get(key, function(err, res) {
-          assert.isNotNull(err, err);
-          assert.eql(err.constructor.name, "Error");
-          assert.eql("ENOTFOUND", err.name);
+          assert.isNull(err, err);
           assert.isUndefined(res, res);
         });
       }, 600);
@@ -458,9 +447,7 @@
           });
           setTimeout(function() {
             res = localCache.get(key3);
-            assert.isNotNull(res, res);
-            assert.eql(res.constructor.name, "Error");
-            assert.eql("ENOTFOUND", res.name);
+            assert.isUndefined(res, res);
             assert.isUndefined(localCache.data[key3]);
           }, 500);
         });
@@ -501,9 +488,7 @@
           });
           setTimeout(function() {
             res = localCache.get(key5);
-            assert.isNotNull(res, res);
-            assert.eql(res.constructor.name, "Error");
-            assert.eql("ENOTFOUND", res.name);
+            assert.isUndefined(res, res);
             localCacheTTL._checkData(false);
             assert.isUndefined(localCacheTTL.data[key5]);
           }, 500);
