@@ -334,10 +334,10 @@ myCache.on( "set", function( key, value ){
 ## del
 
 Fired when a key has been removed manually or due to expiry.
-You will get the `key` as callback argument.
+You will get the `key` and the deleted `value` as callback arguments.
 
 ```js
-myCache.on( "del", function( key ){
+myCache.on( "del", function( key, value ){
 	// ... do something ...  
 });
 ```
@@ -408,6 +408,7 @@ This is possible because the memory allocation for the object returned by 1.x is
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|2.1.1|2015-04-17|Passed old value to the `del` event. Thanks to [Qix](https://github.com/qix) for the pull.|
 |2.1.0|2015-04-17|Changed get miss to return `undefined` instead of an error. Thanks to all [#11](https://github.com/tcs-de/nodecache/issues/11) contributors |
 |2.0.1|2015-04-17|Added close function (Thanks to [ownagedj](https://github.com/ownagedj)). Changed the development environment to use grunt.|
 |2.0.0|2015-01-05|changed return format of `.get()` with a error return on a miss and added the `.mget()` method. *Side effect: Performance of .get() up to 330 times faster!*|

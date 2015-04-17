@@ -50,8 +50,9 @@
       value = randomString(100);
       value2 = randomString(100);
       key = randomString(10);
-      localCache.once("del", function(_key) {
+      localCache.once("del", function(_key, _val) {
         assert.equal(_key, key);
+        assert.equal(_val, value2);
       });
       localCache.set(key, value, 0, function(err, res) {
         assert.isNull(err, err);
@@ -124,8 +125,9 @@
       value = randomString(100);
       value2 = randomString(100);
       key = randomString(10);
-      localCache.once("del", function(_key) {
+      localCache.once("del", function(_key, _val) {
         assert.equal(_key, key);
+        assert.equal(_val, value2);
       });
       assert.ok(localCache.set(key, value, 0));
       assert.equal(1, localCache.getStats().keys - start.keys);

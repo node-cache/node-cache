@@ -42,8 +42,9 @@ module.exports =
 		key = randomString( 10 )
 
 
-		localCache.once "del", ( _key )->
+		localCache.once "del", ( _key, _val )->
 			assert.equal( _key, key )
+			assert.equal( _val, value2 )
 			return
 
 
@@ -151,8 +152,9 @@ module.exports =
 		value2 = randomString( 100 )
 		key = randomString( 10 )
 
-		localCache.once "del", ( _key )->
+		localCache.once "del", ( _key, _val )->
 			assert.equal( _key, key )
+			assert.equal( _val, value2 )
 			return
 
 		# test insert

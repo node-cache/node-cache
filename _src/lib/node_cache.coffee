@@ -186,9 +186,10 @@ module.exports = class NodeCache extends EventEmitter
 				@stats.keys--
 				delCount++
 				# delete the value
+				oldVal = @data[ key ]
 				delete @data[ key ]
 				# return true
-				@emit( "del", key )
+				@emit( "del", key, oldVal.v )
 			else
 				# if the key has not been found return an error
 				@stats.misses++
