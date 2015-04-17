@@ -15,7 +15,7 @@
 		"node": ">= 0.4.6"
 	},
 	"scripts":{
-		"test": "grunt test"
+		"test": "expresso test/node_cache-test.js"
 	},
 	"dependencies": {
 		"lodash": "3.x || 2.x"

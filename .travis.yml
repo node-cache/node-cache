@@ -7,6 +7,7 @@ node_js:
   - 0.10
   - 0.12
   - iojs
+install: npm install --production
 before_script:
-  - "npm install -g grunt-cli"
+  - "npm install -g expresso"
   - "grunt build"
