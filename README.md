@@ -1,9 +1,9 @@
 node-cache
 ===========
 
-[![Build Status](https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master)](http://travis-ci.org/tcs-de/nodecache)
-[![Build Status](https://david-dm.org/tcs-de/nodecache.png)](https://david-dm.org/tcs-de/nodecache)
-[![NPM version](https://badge.fury.io/js/node-cache.png)](http://badge.fury.io/js/node-cache)
+[![Build Status](https://secure.travis-ci.org/tcs-de/nodecache.svg?branch=master)](http://travis-ci.org/tcs-de/nodecache)
+[![Build Status](https://david-dm.org/tcs-de/nodecache.svg)](https://david-dm.org/tcs-de/nodecache)
+[![NPM version](https://badge.fury.io/js/node-cache.svg)](http://badge.fury.io/js/node-cache)
 
 [![NPM](https://nodei.co/npm/node-cache.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/node-cache/)
 
