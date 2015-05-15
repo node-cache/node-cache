@@ -42,6 +42,66 @@
   ks = [];
 
   module.exports = {
+    "dropminhits": function(beforeExit, assert) {
+       console.log("\nSTART DROPMINHITS TEST");
+       var value = randomString(10);
+       var value2 = randomString(10);
+       var value3 = randomString(10);
+       var value4 = randomString(10);
+       var key = randomString(5);
+       var key2 = randomString(5);
+       var key3 = randomString(5);
+       var key4 = randomString(5);
+
+       localCache.set(key, value, 1, function(err, res) {
+           assert.isNull(err,err);
+       });
+
+       localCache.set(key2, value2, 1, function(err, res) {
+           assert.isNull(err,err);
+       });
+
+       localCache.set(key3, value3, 1, function(err, res) {
+          assert.isNull(err,err);
+       });
+
+       localCache.set(key4, value4, 1, function(err, res) {
+        assert.isNull(err,err);
+        localCache.get(key, function(err, res){
+          assert.isNull(err, err);
+        });
+        localCache.get(key2, function(err, res){
+          assert.isNull(err, err);
+        });
+        localCache.get(key, function(err, res){
+          assert.isNull(err, err)
+        });
+        localCache.dropMinHits(function(err, res) {
+          //Drop not "popular" items
+          assert.eql(res, [key3, key4]);
+
+          //Try to get value by dropped key3
+          localCache.get(key3, function(err, res){
+            assert.isUndefined(res,res);
+          });
+           
+          //Try to get value by dropped key4
+          localCache.get(key4, function(err, res){
+            assert.isUndefined(res, res);
+          });
+
+        });
+        assert.equal(localCache.getStats().keys,2);
+      });
+
+       localCache.del(key);
+       localCache.del(key2);
+       localCache.del(key3);
+       localCache.del(key4);
+    },
+
+
+
     "general": function(beforeExit, assert) {
       var key, n, start, value, value2;
       console.log("\nSTART GENERAL TEST: " + VCache.version);
@@ -496,7 +556,7 @@
           }, 500);
         });
       });
-    }
+    },
   };
 
 }).call(this);
