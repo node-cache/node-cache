@@ -39,12 +39,12 @@ var myCache = new NodeCache();
 ```
 
 ### Options
-
-- `stdTTL`: *(default: `0`)* the standard ttl as number in seconds for every generated cache element.  
+- `prefix`: *(default: `""`) The prefix to use when setting keys in the cache.
+- `stdTTL`: *(default: `0`)* The standard ttl as number in seconds for every generated cache element.  
 `0` = unlimited
 - `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.  
 `0` = no periodic check.  
-**Note:** If you use `checkperiod > 0` you script will not exit at the end, because a internal timeout will always be active.
+**Note:** If you use `checkperiod > 0` your script will not exit at the end, because an internal timeout will always be active.
 
 ```js
 var NodeCache = require( "node-cache" );

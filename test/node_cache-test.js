@@ -15,6 +15,11 @@
     checkperiod: 0
   });
 
+  localCachePrefix = new VCache({
+    prefix: "test-prefix:",
+    checkperiod: 0
+  });
+
   localCache._killCheckPeriod();
 
   randomString = function(length, withnumbers) {
@@ -494,6 +499,32 @@
             localCacheTTL._checkData(false);
             assert.isUndefined(localCacheTTL.data[key5]);
           }, 500);
+        });
+      });
+    },
+    "prefix": function(beforeExit, assert) {
+      var key = "my-test-key";
+      var value = "My test value";
+      console.log("\nSTART PREFIX TEST\n");
+      localCachePrefix.set(key, value, function(err, res) {
+        assert.isNull(err, err);
+        assert.equal(1, localCachePrefix.getStats().keys);
+        localCachePrefix.get(key, function(err, res) {
+          assert.eql(value, res);
+        });
+        localCachePrefix.keys(function(err, res) {
+          var pred;
+          pred = [key];
+          assert.eql(pred, res);
+          localCachePrefix.del(key, function(err, res) {
+            assert.isNull(err, err);
+            assert.equal(1, res);
+            localCachePrefix.keys(function(err, res) {
+              var pred;
+              pred = [];
+              assert.eql(pred, res);
+            });
+          });
         });
       });
     }
