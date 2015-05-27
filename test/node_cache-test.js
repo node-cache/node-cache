@@ -118,7 +118,7 @@
       });
     },
     "general sync": function(beforeExit, assert) {
-      var key, pred, res, start, value, value2;
+      var key, pred, res, res2, start, tObj, value, value2;
       console.log("\nSTART GENERAL TEST SYNC");
       localCache.flushAll();
       start = _.clone(localCache.getStats());
@@ -155,6 +155,21 @@
       assert.ok(res, res);
       res = localCache.get("zero");
       assert.eql(0, res);
+      tObj = {
+        a: 1,
+        b: {
+          x: 2,
+          y: 3
+        }
+      };
+      res = localCache.set("clone", tObj, 0);
+      assert.ok(res, res);
+      tObj.b.x = 666;
+      res = localCache.get("clone");
+      assert.equal(2, res.b.x);
+      res.b.y = 42;
+      res2 = localCache.get("clone");
+      assert.equal(3, res2.b.y);
     },
     "flush": function(beforeExit, assert) {
       var count, i, j, k, key, len, n, ref, startKeys, val;
@@ -399,19 +414,15 @@
           var _testExpired, _testSet, startKeys;
           startKeys = localCache.getStats().keys;
           key = "autotest";
-          _testExpired = (function(_this) {
-            return function(_key, _val) {
-              if (indexOf.call(_keys, _key) < 0) {
-                assert.equal(_key, key);
-                assert.equal(_val, val);
-              }
-            };
-          })(this);
-          _testSet = (function(_this) {
-            return function(_key) {
+          _testExpired = function(_key, _val) {
+            if (indexOf.call(_keys, _key) < 0) {
               assert.equal(_key, key);
-            };
-          })(this);
+              assert.equal(_val, val);
+            }
+          };
+          _testSet = function(_key) {
+            assert.equal(_key, key);
+          };
           localCache.once("set", _testSet);
           localCache.set(key, val, 0.5, function(err, res) {
             assert.isNull(err, err);

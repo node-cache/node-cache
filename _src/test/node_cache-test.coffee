@@ -212,6 +212,24 @@ module.exports =
 		res = localCache.get( "zero" )
 		assert.eql 0, res
 		
+		# set a key with 0
+		tObj =
+			a: 1
+			b:
+				x: 2
+				y: 3
+		res = localCache.set( "clone", tObj, 0 )
+		assert.ok( res, res )
+		
+		tObj.b.x = 666
+		res = localCache.get( "clone" )
+		assert.equal 2, res.b.x
+		
+		res.b.y = 42
+		
+		res2 = localCache.get( "clone" )
+		assert.equal 3, res2.b.y
+		
 		return
 
 	"flush": (beforeExit, assert) ->

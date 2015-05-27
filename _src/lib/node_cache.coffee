@@ -1,4 +1,5 @@
 _ = require( "lodash" )
+clone = require( "clone" )
 EventEmitter = require('events').EventEmitter
 
 # generate superclass
@@ -22,7 +23,7 @@ module.exports = class NodeCache extends EventEmitter
 		, @options )
 
 		# statistics container
-		@stats = 
+		@stats =
 			hits: 0
 			misses: 0
 			keys: 0
@@ -30,7 +31,7 @@ module.exports = class NodeCache extends EventEmitter
 			vsize: 0
 		
 		# initalize checking period
-		@_checkData() 
+		@_checkData()
 
 	# ## get
 	#
@@ -134,7 +135,7 @@ module.exports = class NodeCache extends EventEmitter
 		# remove existing data from stats
 		if @data[ key ]
 			existend = true
-			@stats.vsize -= @_getValLength( @_unwrap( @data[ key ] ) )
+			@stats.vsize -= @_getValLength( @_unwrap( @data[ key ], false ) )
 		
 		# set the value
 		@data[ key ] = @_wrap( value, ttl )
@@ -181,7 +182,7 @@ module.exports = class NodeCache extends EventEmitter
 			# only delete if existend
 			if @data[ key ]?
 				# calc the stats
-				@stats.vsize -= @_getValLength( @_unwrap( @data[ key ] ) )
+				@stats.vsize -= @_getValLength( @_unwrap( @data[ key ], false ) )
 				@stats.ksize -= @_getKeyLength( key )
 				@stats.keys--
 				delCount++
@@ -236,7 +237,7 @@ module.exports = class NodeCache extends EventEmitter
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			# on ttl = 0  delete the key. otherwise reset the value
 			if ttl > 0
-				@data[ key ] = @_wrap( @data[ key ].v, ttl )
+				@data[ key ] = @_wrap( @data[ key ].v, ttl, false )
 			else
 				@del( key )
 			cb( null, true ) if cb?
@@ -383,7 +384,7 @@ module.exports = class NodeCache extends EventEmitter
 	# ## _wrap
 	#
 	# internal method to wrap a value in an object with some metadata
-	_wrap: ( value, ttl )=>
+	_wrap: ( value, ttl, asClone = true )=>
 		# define the time to live
 		now = Date.now()
 		livetime = 0
@@ -402,17 +403,20 @@ module.exports = class NodeCache extends EventEmitter
 			else
 				livetime = now + ( @options.stdTTL * ttlMultiplicator )
 
-		# return teh wrapped value
+		# return the wrapped value
 		oReturn =
 			t: livetime
-			v: value
+			v: if asClone then clone( value ) else value
 	
 	# ## _unwrap
 	#
 	# internal method to extract get the value out of the wrapped value
-	_unwrap: ( value )->
+	_unwrap: ( value, asClone = true )->
 		if value.v?
-			return value.v
+			if asClone
+				return clone( value.v )
+			else
+				return value.v
 		return null
 	
 	# ## _getKeyLength

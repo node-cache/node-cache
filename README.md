@@ -408,6 +408,7 @@ This is possible because the memory allocation for the object returned by 1.x is
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|2.2.0|2015-05-27|Return a cloned version of the cached element and save a cloned version of a variable. **This is a breaking change, but it matches the general intension for a cache module**. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst))|
 |2.1.1|2015-04-17|Passed old value to the `del` event. Thanks to [Qix](https://github.com/qix) for the pull.|
 |2.1.0|2015-04-17|Changed get miss to return `undefined` instead of an error. Thanks to all [#11](https://github.com/tcs-de/nodecache/issues/11) contributors |
 |2.0.1|2015-04-17|Added close function (Thanks to [ownagedj](https://github.com/ownagedj)). Changed the development environment to use grunt.|
