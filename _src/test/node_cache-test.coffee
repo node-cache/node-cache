@@ -27,7 +27,7 @@ vs = []
 ks = []
 
 # define tests
-module.exports = 
+module.exports =
 	"general": (beforeExit, assert) ->
 		console.log "\nSTART GENERAL TEST: "+ VCache.version
 
@@ -66,7 +66,7 @@ module.exports =
 			# try to get
 			localCache.keys ( err, res )->
 				n++
-				pred = [ key ] 
+				pred = [ key ]
 				assert.eql pred, res
 				return
 
@@ -169,7 +169,7 @@ module.exports =
 		assert.eql value, res
 
 		res = localCache.keys()
-		pred = [ key ] 
+		pred = [ key ]
 		assert.eql pred, res
 
 		# get an undefined key
@@ -227,7 +227,7 @@ module.exports =
 			key = randomString( 7 )
 			ks.push key
 		
-		for key in ks	
+		for key in ks
 			localCache.set key, val, 0, ( err, res )->
 				n++
 				assert.isNull( err, err )
@@ -262,7 +262,7 @@ module.exports =
 			ks.push key
 		
 		time = new Date().getTime()
-		for key in ks	
+		for key in ks
 			assert.ok localCache.set( key, val, 0 )
 
 		_dur =  new Date().getTime() - time
@@ -393,7 +393,7 @@ module.exports =
 			key = randomString( 7 )
 			ks.push key
 		
-		for key in ks	
+		for key in ks
 			localCache.set key, val, 0, ( err, res )->
 				n++
 				assert.isNull( err, err )
@@ -480,7 +480,7 @@ module.exports =
 
 		# check key before lifetime end
 		setTimeout( ->
-			++n;
+			++n
 			localCache.get key, ( err, res )->
 				assert.isNull( err, err )
 				assert.eql( val, res )
@@ -490,7 +490,7 @@ module.exports =
 
 		# check key after lifetime end
 		setTimeout( ->
-			++n;
+			++n
 			localCache.get key, ( err, res )->
 				assert.isNull( err, err )
 				assert.isUndefined( res, res )
@@ -500,7 +500,7 @@ module.exports =
 
 		# check second key before lifetime end
 		setTimeout( ->
-			++n;
+			++n
 			localCache.get key2, ( err, res )->
 				assert.isNull( err, err )
 				assert.eql( val, res )
@@ -515,13 +515,13 @@ module.exports =
 
 				key = "autotest"
 
-				_testExpired = ( _key, _val )=>
+				_testExpired = ( _key, _val )->
 					if _key not in _keys
 						assert.equal( _key, key )
 						assert.equal( _val, val )
 					return
 
-				_testSet = ( _key )=>
+				_testSet = ( _key )->
 					assert.equal( _key, key )
 					return
 

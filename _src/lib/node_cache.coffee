@@ -124,7 +124,7 @@ module.exports = class NodeCache extends EventEmitter
 		
 		# force the data to string
 		if @options.forceString and not _.isString( value )
-			value = JSON.stringify( value ) 
+			value = JSON.stringify( value )
 
 		# remap the arguments if `ttl` is not passed
 		if arguments.length is 3 and _.isFunction( ttl )
@@ -142,7 +142,7 @@ module.exports = class NodeCache extends EventEmitter
 
 		# only add the keys and key-size if the key is new
 		if not existend
-			@stats.ksize += @_getKeyLength( key ) 
+			@stats.ksize += @_getKeyLength( key )
 			@stats.keys++
 		
 		@emit( "set", key, value )
@@ -321,7 +321,7 @@ module.exports = class NodeCache extends EventEmitter
 		@data = {}
 
 		# reset stats
-		@stats = 
+		@stats =
 			hits: 0
 			misses: 0
 			keys: 0
@@ -393,7 +393,7 @@ module.exports = class NodeCache extends EventEmitter
 		# use given ttl
 		if ttl is 0
 			livetime = 0
-		else if ttl 
+		else if ttl
 			livetime = now + ( ttl * ttlMultiplicator )
 		else
 			# use standard ttl
@@ -410,15 +410,15 @@ module.exports = class NodeCache extends EventEmitter
 	# ## _unwrap
 	#
 	# internal method to extract get the value out of the wrapped value
-	_unwrap: ( value )=>
-		if value.v? 
+	_unwrap: ( value )->
+		if value.v?
 			return value.v
 		return null
 	
 	# ## _getKeyLength
 	#
 	# internal method the calculate the key length
-	_getKeyLength: ( key )=>
+	_getKeyLength: ( key )->
 		key.length
 	
 	# ## _getValLength
