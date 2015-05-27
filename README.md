@@ -13,14 +13,6 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout after which they expire and are cleaned from the cache.  
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
-# :warning: Breaking changes in version 2.x :warning:
-
-Due to the [Issue #11](https://github.com/tcs-de/nodecache/issues/11) the return format of the `.get()` method has been changed!
-
-Instead of returning an object with the key `{ "myKey": "myValue" }` it returns the value itself `"myValue"`.
-
-
-
 # Install
 
 ```bash
@@ -363,6 +355,14 @@ myCache.on( "flush", function(){
 });
 ```
 
+
+## Breaking changes in version 2.x
+
+Due to the [Issue #11](https://github.com/tcs-de/nodecache/issues/11) the return format of the `.get()` method has been changed!
+
+Instead of returning an object with the key `{ "myKey": "myValue" }` it returns the value itself `"myValue"`.
+
+
 ## Benchmarks
 
 ### Version 1.1.x
@@ -402,8 +402,30 @@ GET: `32`ms ( `0.32`µs per item )
 SET: `238`ms ( `2.38`µs per item )  
 GET: `34`ms ( `0.34`µs per item )  
 
-> As you can see the version 2.0.x will increase the GET performance up to 200x in node 0.10.x.
+> As you can see the version 2.x will increase the GET performance up to 200x in node 0.10.x.
 This is possible because the memory allocation for the object returned by 1.x is very expensive.
+
+### Version 2.2.x 
+
+*see [travis](https://travis-ci.org/tcs-de/nodecache/builds/64225068)*
+
+**node.js `0.6.21`**  
+SET: `786`ms ( `7.64`µs per item )  
+GET: `56`ms ( `0.73`µs per item )   
+
+**node.js `0.10.38`**  
+SET: `353`ms ( `4.45`µs per item )
+GET: `41`ms ( `1.35`µs per item )   
+
+**node.js `0.12.4`**  
+SET: `327`ms ( `3.95`µs per item )  
+GET: `32`ms ( `0.66`µs per item )   
+
+**io.js `v2.1.0`**  
+SET: `238`ms ( `3.98`µs per item )  
+GET: `34`ms ( `0.64`µs per item )  
+
+> until the version 2.2.x the object cloning is included, so we lost a little bit of the performance
 
 ## Release History
 |Version|Date|Description|
