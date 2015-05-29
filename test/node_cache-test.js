@@ -208,7 +208,7 @@
       res = localCache.get("mulitC");
       assert.isUndefined(res, res);
       res = localCache.del(["mulitA", "mulitB", "mulitC"]);
-      assert.equal(3, res);
+      assert.equal(0, res);
       res = localCache.set("zero", 0, 0);
       assert.ok(res, res);
       res = localCache.get("zero");
