@@ -445,7 +445,7 @@ GET: `34`ms ( `0.67`µs per item )
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
-|3.0.0|2015-05-29|Return a cloned version of the cached element and save a cloned version of a variable. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst))|
+|3.0.0|2015-05-29|Return a cloned version of the cached element and save a cloned version of a variable. This can be disabled by setting the option `useClones:false`. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst) and for #30 to [Matthieu Sieben](https://github.com/matthieusieben))|
 |~~2.2.0~~|~~2015-05-27~~|REVOKED VERSION, because of conficts. See [Issue #30](https://github.com/tcs-de/nodecache/issues/30). So `2.2.0` is now `3.0.0`|
 |2.1.1|2015-04-17|Passed old value to the `del` event. Thanks to [Qix](https://github.com/qix) for the pull.|
 |2.1.0|2015-04-17|Changed get miss to return `undefined` instead of an error. Thanks to all [#11](https://github.com/tcs-de/nodecache/issues/11) contributors |
