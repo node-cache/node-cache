@@ -37,6 +37,8 @@ var myCache = new NodeCache();
 - `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.  
 `0` = no periodic check.  
 **Note:** If you use `checkperiod > 0` you script will not exit at the end, because a internal timeout will always be active.
+- `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.  
+**Note:** `true` is recommended, because it'll behave like a sever-based caching. You should set `false` if you want to save complex varibale types like functions, promises, regexp, ...
 
 ```js
 var NodeCache = require( "node-cache" );
@@ -356,12 +358,19 @@ myCache.on( "flush", function(){
 ```
 
 
-## Breaking changes in version 2.x
+## Breaking changes 
+
+### version `2.x`
 
 Due to the [Issue #11](https://github.com/tcs-de/nodecache/issues/11) the return format of the `.get()` method has been changed!
 
 Instead of returning an object with the key `{ "myKey": "myValue" }` it returns the value itself `"myValue"`.
 
+### version `3.x`
+
+Due to the [Issue #30](https://github.com/tcs-de/nodecache/issues/30) and [Issue #27](https://github.com/tcs-de/nodecache/issues/27) variables will now be cloned.  
+This chould break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.  
+You can disable the cloning by setting the option `useClones: false`. In this case it's compatible with version `2.x`.
 
 ## Benchmarks
 
@@ -405,9 +414,9 @@ GET: `34`ms ( `0.34`µs per item )
 > As you can see the version 2.x will increase the GET performance up to 200x in node 0.10.x.
 This is possible because the memory allocation for the object returned by 1.x is very expensive.
 
-### Version 2.2.x 
+### Version 3.0.x 
 
-*see [travis](https://travis-ci.org/tcs-de/nodecache/builds/64225068)*
+*see [travis results](https://travis-ci.org/tcs-de/nodecache/builds/64225068)*
 
 **node.js `0.6.21`**  
 SET: `786`ms ( `7.64`µs per item )  
@@ -425,12 +434,13 @@ GET: `32`ms ( `0.66`µs per item )
 SET: `238`ms ( `3.98`µs per item )  
 GET: `34`ms ( `0.64`µs per item )  
 
-> until the version 2.2.x the object cloning is included, so we lost a little bit of the performance
+> until the version 3.0.x the object cloning is included, so we lost a little bit of the performance
 
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
-|2.2.0|2015-05-27|Return a cloned version of the cached element and save a cloned version of a variable. **This is a breaking change, but it matches the general intension for a cache module**. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst))|
+|3.0.0|2015-05-29|Return a cloned version of the cached element and save a cloned version of a variable. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst))|
+|~~2.2.0~~|~~2015-05-27~~|REVOKED VERSION, because of conficts. See [Issue #30](https://github.com/tcs-de/nodecache/issues/30). So `2.2.0` is now `3.0.0`|
 |2.1.1|2015-04-17|Passed old value to the `del` event. Thanks to [Qix](https://github.com/qix) for the pull.|
 |2.1.0|2015-04-17|Changed get miss to return `undefined` instead of an error. Thanks to all [#11](https://github.com/tcs-de/nodecache/issues/11) contributors |
 |2.0.1|2015-04-17|Added close function (Thanks to [ownagedj](https://github.com/ownagedj)). Changed the development environment to use grunt.|

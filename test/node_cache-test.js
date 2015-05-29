@@ -1,5 +1,5 @@
 (function() {
-  var VCache, _, ks, localCache, localCacheTTL, randomString, vs,
+  var VCache, _, ks, localCache, localCacheNoClone, localCacheTTL, randomString, vs,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   _ = require("lodash");
@@ -8,6 +8,12 @@
 
   localCache = new VCache({
     stdTTL: 0
+  });
+
+  localCacheNoClone = new VCache({
+    stdTTL: 0,
+    useClones: false,
+    checkperiod: 0
   });
 
   localCacheTTL = new VCache({
@@ -43,7 +49,7 @@
 
   module.exports = {
     "general": function(beforeExit, assert) {
-      var key, n, start, value, value2;
+      var _err, key, n, p, q, start, value, value2;
       console.log("\nSTART GENERAL TEST: " + VCache.version);
       n = 0;
       start = _.clone(localCache.getStats());
@@ -113,8 +119,34 @@
           });
         });
       });
+      if (typeof Promise !== "undefined" && Promise !== null) {
+        p = new Promise(function(fulfill, reject) {
+          return fulfill('Some deferred value');
+        });
+        p.then(function(value) {
+          assert.eql(value, 'Some deferred value');
+        });
+        localCacheNoClone.set("promise", p);
+        q = localCacheNoClone.get("promise");
+        try {
+          q.then(function(value) {
+            n++;
+          });
+        } catch (_error) {
+          _err = _error;
+          assert.ok(false, _err);
+          return;
+        }
+      } else {
+        console.log("No Promise test, because not availible in this node version");
+      }
       beforeExit(function() {
-        assert.equal(11, n, "not exited");
+        var _count;
+        _count = 11;
+        if (typeof Promise !== "undefined" && Promise !== null) {
+          _count += 1;
+        }
+        assert.equal(_count, n, "not exited");
       });
     },
     "general sync": function(beforeExit, assert) {

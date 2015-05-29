@@ -3,6 +3,7 @@ _ = require( "lodash" )
 
 VCache = require "../"
 localCache = new VCache( stdTTL: 0 )
+localCacheNoClone = new VCache( stdTTL: 0, useClones: false, checkperiod: 0 )
 localCacheTTL = new VCache( stdTTL: 0.3, checkperiod: 0 )
 # just for testing disable the check period
 localCache._killCheckPeriod()
@@ -135,9 +136,32 @@ module.exports =
 					return
 				return
 			return
+		
+		if Promise?
+			p = new Promise (fulfill, reject)-> fulfill('Some deferred value')
+			p.then (value)->
+				assert.eql value, 'Some deferred value'
+				return
+			
+			localCacheNoClone.set( "promise", p )
+			q = localCacheNoClone.get( "promise" )
+			try
+				q.then (value)->
+					n++
+					return
+			catch _err
+				assert.ok false, _err
+				return
+			
+		else
+			console.log "No Promise test, because not availible in this node version"
 
 		beforeExit ->
-			assert.equal( 11, n, "not exited" )
+			_count = 11
+			if Promise?
+				_count += 1
+			
+			assert.equal( _count, n, "not exited" )
 			return
 		return
 

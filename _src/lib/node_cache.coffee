@@ -20,6 +20,8 @@ module.exports = class NodeCache extends EventEmitter
 			stdTTL: 0
 			# time in seconds to check all data and delete expired keys
 			checkperiod: 600
+			# en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference
+			useClones: true
 		, @options )
 
 		# statistics container
@@ -385,6 +387,8 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method to wrap a value in an object with some metadata
 	_wrap: ( value, ttl, asClone = true )=>
+		if not @options.useClones
+			asClone = false
 		# define the time to live
 		now = Date.now()
 		livetime = 0
@@ -412,6 +416,8 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method to extract get the value out of the wrapped value
 	_unwrap: ( value, asClone = true )->
+		if not @options.useClones
+			asClone = false
 		if value.v?
 			if asClone
 				return clone( value.v )
