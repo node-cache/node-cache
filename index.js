@@ -3,6 +3,6 @@
 
   exports = module.exports = require('./lib/node_cache');
 
-  exports.version = '2.2.0';
+  exports.version = '3.0.0';
 
 }).call(this);

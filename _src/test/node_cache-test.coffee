@@ -227,7 +227,41 @@ module.exports =
 		# try to get the deleted key
 		res = localCache.get( key )
 		assert.isUndefined( res, res )
-
+		
+		# set multiple keys to test the multi delete by array
+		res = localCache.set( "mulitA", 23 )
+		assert.ok( res, res )
+		res = localCache.set( "mulitB", 23 )
+		assert.ok( res, res )
+		res = localCache.set( "mulitC", 23 )
+		assert.ok( res, res )
+		
+		res = localCache.get( "mulitA" )
+		assert.equal( res, 23 )
+		res = localCache.get( "mulitB" )
+		assert.equal( res, 23 )
+		res = localCache.get( "mulitC" )
+		assert.equal( res, 23 )
+		
+		res = localCache.del( [ "mulitA", "mulitB" ] )
+		assert.equal( 2, res )
+		
+		# try to get the deleted key
+		res = localCache.get( "mulitA" )
+		assert.isUndefined( res, res )
+		res = localCache.get( "mulitB" )
+		assert.isUndefined( res, res )
+		res = localCache.get( "mulitC" )
+		assert.equal( res, 23 )
+		
+		res = localCache.del( [ "mulitC" ] )
+		assert.equal( 1, res )
+		res = localCache.get( "mulitC" )
+		assert.isUndefined( res, res )
+		
+		res = localCache.del( [ "mulitA", "mulitB", "mulitC" ] )
+		assert.equal( 0, res )
+		
 		# set a key with 0
 		res = localCache.set( "zero", 0, 0 )
 		assert.ok( res, res )

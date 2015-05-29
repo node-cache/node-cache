@@ -174,7 +174,7 @@ myCache.del( "myKey", function( err, count ){
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
-value = myCache.del( "myKeyA" );
+value = myCache.del( "A" );
 // 1
 ```
 
@@ -197,8 +197,14 @@ myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
-value = myCache.del( [ "myKeyA", "myKeyB", "notExistendKey" ] );
+value = myCache.del( "A" );
+// 1
+
+value = myCache.del( [ "B", "C" ] );
 // 2
+
+value = myCache.del( [ "A", "B", "C", "D" ] );
+// 1 - because A, B and C not exists
 ```
 
 ## Change TTL (TTL):
