@@ -11,10 +11,11 @@
 		"type": "git",
 		"url": "git://github.com/tcs-de/nodecache.git"
 	},
+	"license": "MIT",
 	"engines": {
 		"node": ">= 0.4.6"
 	},
-	"scripts":{
+	"scripts": {
 		"test": "expresso test/node_cache-test.js"
 	},
 	"dependencies": {
