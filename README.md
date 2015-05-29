@@ -383,7 +383,7 @@ You can disable the cloning by setting the option `useClones: false`. In this ca
 ### Version 1.1.x
 
 After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
-But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that was executed on similar hardware.
+But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that it was executed on similar hardware.
 
 **node.js `0.10.36`**  
 SET: `324`ms ( `3.24`µs per item )  
@@ -422,23 +422,23 @@ This is possible because the memory allocation for the object returned by 1.x is
 
 ### Version 3.0.x 
 
-*see [travis results](https://travis-ci.org/tcs-de/nodecache/builds/64225068)*
+*see [travis results](https://travis-ci.org/tcs-de/nodecache/builds/64560503)*
 
 **node.js `0.6.21`**  
-SET: `786`ms ( `7.64`µs per item )  
-GET: `56`ms ( `0.73`µs per item )   
+SET: `786`ms ( `7.24`µs per item )  
+GET: `56`ms ( `1.14`µs per item )   
 
 **node.js `0.10.38`**  
-SET: `353`ms ( `4.45`µs per item )
-GET: `41`ms ( `1.35`µs per item )   
+SET: `353`ms ( `5.41`µs per item )
+GET: `41`ms ( `1.23`µs per item )   
 
 **node.js `0.12.4`**  
-SET: `327`ms ( `3.95`µs per item )  
-GET: `32`ms ( `0.66`µs per item )   
+SET: `327`ms ( `4.63`µs per item )  
+GET: `32`ms ( `0.60`µs per item )   
 
 **io.js `v2.1.0`**  
-SET: `238`ms ( `3.98`µs per item )  
-GET: `34`ms ( `0.64`µs per item )  
+SET: `238`ms ( `4.06`µs per item )  
+GET: `34`ms ( `0.67`µs per item )  
 
 > until the version 3.0.x the object cloning is included, so we lost a little bit of the performance
 
