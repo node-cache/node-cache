@@ -8,6 +8,7 @@ module.exports = class NodeCache extends EventEmitter
 
 		# container for cached dtaa
 		@data = {}
+		@beingPrefetched = {}
 
 		# module options
 		@options = _.extend(
@@ -18,10 +19,14 @@ module.exports = class NodeCache extends EventEmitter
 			arrayValueSize: 40
 			# standard time to live in seconds. 0 = infinity;
 			stdTTL: 0
+			# standard prefetch at percent of ttl
+			stdPrefetch: 80
 			# time in seconds to check all data and delete expired keys
 			checkperiod: 600
 			# en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference
 			useClones: true
+			# en/disable prefetching based on percent of closeness to ttl
+			usePrefetch: false
 		, @options )
 
 		# statistics container
@@ -142,7 +147,8 @@ module.exports = class NodeCache extends EventEmitter
 		# set the value
 		@data[ key ] = @_wrap( value, ttl )
 		@stats.vsize += @_getValLength( value )
-
+		delete @beingPrefetched[ key ]
+		
 		# only add the keys and key-size if the key is new
 		if not existend
 			@stats.ksize += @_getKeyLength( key )
@@ -375,10 +381,13 @@ module.exports = class NodeCache extends EventEmitter
 	# internal method the check the value. If it's not valid any moe delete it
 	_check: ( key, data )=>
 		# data is invalid if the ttl is to old and is not 0
-		#console.log data.t < Date.now(), data.t, Date.now()
 		if data.t isnt 0 and data.t < Date.now()
 			@del( key )
 			@emit( "expired", key, @_unwrap(data) )
+			return false
+		else if data.t isnt 0 and @_shouldPrefetch(key) and @_ttlPercent(data.t,data.s) > @options.stdPrefetch
+			@beingPrefetched[ key ] = true
+			@emit( "prefetching", key, @_unwrap(data) )
 			return false
 		else
 			return true
@@ -411,7 +420,8 @@ module.exports = class NodeCache extends EventEmitter
 		oReturn =
 			t: livetime
 			v: if asClone then clone( value ) else value
-	
+			s: now
+
 	# ## _unwrap
 	#
 	# internal method to extract get the value out of the wrapped value
@@ -452,7 +462,19 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			# default fallback
 			0
-	
+
+	# ## _shouldPrefetch
+	#
+	# internal method to keep logic reading clean
+	_shouldPrefetch: ( key )=>
+		@options.usePrefetch and not @beingPrefetched[ key ]
+
+	# ## _ttlPercent
+	#
+	# internal method to calulate percent of closeness to ttl
+	_ttlPercent: ( ttl, start )=>
+		return ~~( 100 * ( Date.now() - start ) / ( ttl - start ) )
+
 	# ## _error
 	#
 	# internal method to handle an error message
