@@ -6,7 +6,7 @@
     <title>node-cache by tcs-de</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -28,9 +28,14 @@
         </ul>
       </header>
       <section>
-        <p><a href="http://travis-ci.org/tcs-de/nodecache"><img src="https://secure.travis-ci.org/tcs-de/nodecache.png?branch=master" alt="Build Status"></a>
-<a href="https://david-dm.org/tcs-de/nodecache"><img src="https://david-dm.org/tcs-de/nodecache.png" alt="Build Status"></a>
-<a href="http://badge.fury.io/js/node-cache"><img src="https://badge.fury.io/js/node-cache.png" alt="NPM version"></a></p>
+        <h1>
+<a id="node-cache" class="anchor" href="#node-cache" aria-hidden="true"><span class="octicon octicon-link"></span></a>node-cache</h1>
+
+<p><a href="http://travis-ci.org/tcs-de/nodecache"><img src="https://secure.travis-ci.org/tcs-de/nodecache.svg?branch=master" alt="Build Status"></a>
+<a href="https://david-dm.org/tcs-de/nodecache"><img src="https://david-dm.org/tcs-de/nodecache.svg" alt="Build Status"></a>
+<a href="http://badge.fury.io/js/node-cache"><img src="https://badge.fury.io/js/node-cache.svg" alt="NPM version"></a></p>
+
+<p><a href="https://gitter.im/tcs-de/nodecache?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a></p>
 
 <p><a href="https://nodei.co/npm/node-cache/"><img src="https://nodei.co/npm/node-cache.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
 
@@ -40,14 +45,6 @@
 <p>A simple caching module that has <code>set</code>, <code>get</code> and <code>delete</code> methods and works a little bit like memcached.
 Keys can have a timeout after which they expire and are cleaned from the cache.<br>
 All keys are stored in a single object so the practical limit is at around 1m keys.</p>
-
-<h1>
-<a id="warning-breaking-changes-in-version-2x-warning" class="anchor" href="#warning-breaking-changes-in-version-2x-warning" aria-hidden="true"><span class="octicon octicon-link"></span></a><img class="emoji" title=":warning:" alt=":warning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/26a0.png" height="20" width="20" align="absmiddle"> Breaking changes in version 2.x <img class="emoji" title=":warning:" alt=":warning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/26a0.png" height="20" width="20" align="absmiddle">
-</h1>
-
-<p>Due to the <a href="https://github.com/tcs-de/nodecache/issues/11">Issue #11</a> the return format of the <code>.get()</code> method has been changed!</p>
-
-<p>Instead of returning an object with the key <code>{ "myKey": "myValue" }</code> it returns the value itself <code>"myValue"</code>.</p>
 
 <h1>
 <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h1>
@@ -76,6 +73,9 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 <code>checkperiod</code>: <em>(default: <code>600</code>)</em> The period in seconds, as a number, used for the automatic delete check interval.<br>
 <code>0</code> = no periodic check.<br>
 <strong>Note:</strong> If you use <code>checkperiod &gt; 0</code> you script will not exit at the end, because a internal timeout will always be active.</li>
+<li>
+<code>useClones</code>: <em>(default: <code>true</code>)</em> en/disable cloning of variables. If <code>true</code> you'll get a copy of the cached variable. If <code>false</code> you'll save and get just the reference.<br>
+<strong>Note:</strong> <code>true</code> is recommended, because it'll behave like a sever-based caching. You should set <code>false</code> if you want to save complex varibale types like functions, promises, regexp, ...</li>
 </ul>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">var</span> NodeCache <span class="pl-k">=</span> <span class="pl-c1">require</span>( <span class="pl-s"><span class="pl-pds">"</span>node-cache<span class="pl-pds">"</span></span> );
@@ -199,7 +199,7 @@ Callback is now optional. You can also use synchronous syntax.</p>
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( <span class="pl-s"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span> );
+<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( <span class="pl-s"><span class="pl-pds">"</span>A<span class="pl-pds">"</span></span> );
 <span class="pl-c">// 1</span></pre></div>
 
 <h2>
@@ -219,8 +219,14 @@ Callback is now optional. You can also use synchronous syntax.</p>
 <p><strong>Since <code>1.0.0</code></strong>:<br>
 Callback is now optional. You can also use synchronous syntax.</p>
 
-<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( [ <span class="pl-s"><span class="pl-pds">"</span>myKeyA<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>myKeyB<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>notExistendKey<span class="pl-pds">"</span></span> ] );
-<span class="pl-c">// 2</span></pre></div>
+<div class="highlight highlight-js"><pre>value <span class="pl-k">=</span> myCache.del( <span class="pl-s"><span class="pl-pds">"</span>A<span class="pl-pds">"</span></span> );
+<span class="pl-c">// 1</span>
+
+value <span class="pl-k">=</span> myCache.del( [ <span class="pl-s"><span class="pl-pds">"</span>B<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>C<span class="pl-pds">"</span></span> ] );
+<span class="pl-c">// 2</span>
+
+value <span class="pl-k">=</span> myCache.del( [ <span class="pl-s"><span class="pl-pds">"</span>A<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>B<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>C<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>D<span class="pl-pds">"</span></span> ] );
+<span class="pl-c">// 1 - because A, B and C not exists</span></pre></div>
 
 <h2>
 <a id="change-ttl-ttl" class="anchor" href="#change-ttl-ttl" aria-hidden="true"><span class="octicon octicon-link"></span></a>Change TTL (TTL):</h2>
@@ -369,13 +375,32 @@ You will get the <code>key</code> and <code>value</code> as callback argument.</
 });</pre></div>
 
 <h2>
+<a id="breaking-changes" class="anchor" href="#breaking-changes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Breaking changes</h2>
+
+<h3>
+<a id="version-2x" class="anchor" href="#version-2x" aria-hidden="true"><span class="octicon octicon-link"></span></a>version <code>2.x</code>
+</h3>
+
+<p>Due to the <a href="https://github.com/tcs-de/nodecache/issues/11">Issue #11</a> the return format of the <code>.get()</code> method has been changed!</p>
+
+<p>Instead of returning an object with the key <code>{ "myKey": "myValue" }</code> it returns the value itself <code>"myValue"</code>.</p>
+
+<h3>
+<a id="version-3x" class="anchor" href="#version-3x" aria-hidden="true"><span class="octicon octicon-link"></span></a>version <code>3.x</code>
+</h3>
+
+<p>Due to the <a href="https://github.com/tcs-de/nodecache/issues/30">Issue #30</a> and <a href="https://github.com/tcs-de/nodecache/issues/27">Issue #27</a> variables will now be cloned.<br>
+This chould break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.<br>
+You can disable the cloning by setting the option <code>useClones: false</code>. In this case it's compatible with version <code>2.x</code>.</p>
+
+<h2>
 <a id="benchmarks" class="anchor" href="#benchmarks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benchmarks</h2>
 
 <h3>
 <a id="version-11x" class="anchor" href="#version-11x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 1.1.x</h3>
 
 <p>After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
-But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that was executed on similar hardware.</p>
+But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that it was executed on similar hardware.</p>
 
 <p><strong>node.js <code>0.10.36</code></strong><br>
 SET: <code>324</code>ms ( <code>3.24</code>µs per item )<br>
@@ -411,8 +436,33 @@ SET: <code>238</code>ms ( <code>2.38</code>µs per item )<br>
 GET: <code>34</code>ms ( <code>0.34</code>µs per item )  </p>
 
 <blockquote>
-<p>As you can see the version 2.0.x will increase the GET performance up to 200x in node 0.10.x.
+<p>As you can see the version 2.x will increase the GET performance up to 200x in node 0.10.x.
 This is possible because the memory allocation for the object returned by 1.x is very expensive.</p>
+</blockquote>
+
+<h3>
+<a id="version-30x" class="anchor" href="#version-30x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 3.0.x</h3>
+
+<p><em>see <a href="https://travis-ci.org/tcs-de/nodecache/builds/64560503">travis results</a></em></p>
+
+<p><strong>node.js <code>0.6.21</code></strong><br>
+SET: <code>786</code>ms ( <code>7.24</code>µs per item )<br>
+GET: <code>56</code>ms ( <code>1.14</code>µs per item )   </p>
+
+<p><strong>node.js <code>0.10.38</code></strong><br>
+SET: <code>353</code>ms ( <code>5.41</code>µs per item )
+GET: <code>41</code>ms ( <code>1.23</code>µs per item )   </p>
+
+<p><strong>node.js <code>0.12.4</code></strong><br>
+SET: <code>327</code>ms ( <code>4.63</code>µs per item )<br>
+GET: <code>32</code>ms ( <code>0.60</code>µs per item )   </p>
+
+<p><strong>io.js <code>v2.1.0</code></strong><br>
+SET: <code>238</code>ms ( <code>4.06</code>µs per item )<br>
+GET: <code>34</code>ms ( <code>0.67</code>µs per item )  </p>
+
+<blockquote>
+<p>until the version 3.0.x the object cloning is included, so we lost a little bit of the performance</p>
 </blockquote>
 
 <h2>
@@ -427,6 +477,17 @@ This is possible because the memory allocation for the object returned by 1.x is
 </tr>
 </thead>
 <tbody>
+<tr>
+<td align="center">3.0.0</td>
+<td align="center">2015-05-29</td>
+<td align="left">Return a cloned version of the cached element and save a cloned version of a variable. This can be disabled by setting the option <code>useClones:false</code>. (Thanks for #27 to <a href="https://github.com/cheshirecatalyst">cheshirecatalyst</a> and for #30 to <a href="https://github.com/matthieusieben">Matthieu Sieben</a>)</td>
+</tr>
+<tr>
+<td align="center"><del>2.2.0</del></td>
+<td align="center"><del>2015-05-27</del></td>
+<td align="left">REVOKED VERSION, because of conficts. See <a href="https://github.com/tcs-de/nodecache/issues/30">Issue #30</a>. So <code>2.2.0</code> is now <code>3.0.0</code>
+</td>
+</tr>
 <tr>
 <td align="center">2.1.1</td>
 <td align="center">2015-04-17</td>
