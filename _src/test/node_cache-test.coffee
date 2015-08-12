@@ -424,6 +424,10 @@ module.exports =
 				assert.eql( vals[ i ], res )
 				assert.isNull( err, err )
 				return
+			localCache.get keys[i], true # shouldn't inc stats
+			
+			localCache.get keys[i], true, (err, res) ->
+				 # shouldn't inc stats			
 
 			localCache.del keys[ i ], ( err, success )->
 				n++

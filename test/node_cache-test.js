@@ -345,6 +345,8 @@
           assert.eql(vals[i], res);
           assert.isNull(err, err);
         });
+        localCache.get(keys[i], true);
+        localCache.get(keys[i], true, function(err, res) {});
         localCache.del(keys[i], function(err, success) {
           n++;
           assert.isNull(err, err);

@@ -50,10 +50,16 @@ module.exports = class NodeCache extends EventEmitter
 	#       console.log( err, val )
 	#       return
 	#
-	get: ( key, cb )=>
+	get: ( key, skipStats, cb )=>
+		if typeof skipStats == "function"
+			cb = skipStats
+			skipStats = false
+		else
+			skipStats = !!skipStats
 		# get data and incremet stats
 		if @data[ key ]? and @_check( key, @data[ key ] )
-			@stats.hits++
+			if !skipStats
+				@stats.hits++
 			_ret = @_unwrap( @data[ key ] )
 			# return data
 			cb( null, _ret ) if cb?
