@@ -41,7 +41,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String | String[] ): cache key or an array of keys
+	# * `key` ( String ): cache key
 	# * `[cb]` ( Function ): Callback function
 	# 
 	# **Example:**
