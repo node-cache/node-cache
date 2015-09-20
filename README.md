@@ -21,7 +21,9 @@ All keys are stored in a single object so the practical limit is at around 1m ke
   npm install node-cache
 ```
 
-Or just require the `node_cache.js` file to get the superclass
+Or just require the `node_cache.js` file to get the superclass.
+
+Also, if you use TypeScript you can install TypeScript definition file using [DTSM](https://github.com/vvakame/dtsm), or [TSD](https://github.com/DefinitelyTyped/tsd), or just copy the [file](https://github.com/borisyankov/DefinitelyTyped/blob/master/node-cache/node-cache.d.ts) to your project.
 
 # Examples:
 
