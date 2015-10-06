@@ -6,7 +6,7 @@ EventEmitter = require('events').EventEmitter
 module.exports = class NodeCache extends EventEmitter
 	constructor: ( @options = {} )->
 
-		# container for cached dtaa
+		# container for cached data
 		@data = {}
 
 		# module options
@@ -41,7 +41,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String | String[] ): cache key or an array of keys
+	# * `key` ( String ): cache key
 	# * `[cb]` ( Function ): Callback function
 	# 
 	# **Example:**
@@ -162,11 +162,11 @@ module.exports = class NodeCache extends EventEmitter
 	
 	# ## del
 	#
-	# remove a key
+	# remove keys
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String | String[] ): cache key to delete or a array of cache keys
+	# * `keys` ( String | String[] ): cache key to delete or a array of cache keys
 	# * `[cb]` ( Function ): Callback function
 	#
 	# **Return**
@@ -177,8 +177,8 @@ module.exports = class NodeCache extends EventEmitter
 	#     
 	#     myCache.del( "myKey" )
 	#     
-	#     myCache.del( "myKey", ( err, success )->
-	#       console.log( err, success ) 
+	#     myCache.del( "myKey", ( err, delCount )->
+	#       console.log( err, delCount )
 	#
 	del: ( keys, cb )=>
 		# convert a string to an array of one key
