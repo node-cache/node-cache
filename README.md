@@ -38,9 +38,9 @@ var myCache = new NodeCache();
 `0` = unlimited
 - `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.  
 `0` = no periodic check.  
-**Note:** If you use `checkperiod > 0` you script will not exit at the end, because a internal timeout will always be active.
+**Note:** If you use `checkperiod > 0` you script will not exit at the end, because an internal timeout will always be active.
 - `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.  
-**Note:** `true` is recommended, because it'll behave like a sever-based caching. You should set `false` if you want to save complex varibale types like functions, promises, regexp, ...
+**Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save complex variable types like functions, promises, regexp, ...
 
 ```js
 var NodeCache = require( "node-cache" );
