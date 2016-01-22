@@ -109,12 +109,12 @@ if ( value == undefined ){
 
 **Since `2.0.0`**:  
 
-The return format changed to the simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )*.
+The return format changed to a simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )*.
 
 **Since `2.1.0`**: 
 
-The return format changed to the simple value, but a due to discussion in #11 a miss shouldn't return an error.
-So until 2.1.0 it'll return a `undefined`.
+The return format changed to a simple value, but a due to discussion in #11 a miss shouldn't return an error.
+So after 2.1.0 a miss returns `undefined`.
 
 ## Get multiple keys (MGET):
 
