@@ -49,13 +49,14 @@
 
   module.exports = {
     "general": function(beforeExit, assert) {
-      var _err, key, n, p, q, start, value, value2;
+      var _err, aKeyThatDoesNotExist, key, n, p, q, start, value, value2;
       console.log("\nSTART GENERAL TEST: " + VCache.version);
       n = 0;
       start = _.clone(localCache.getStats());
       value = randomString(100);
       value2 = randomString(100);
       key = randomString(10);
+      aKeyThatDoesNotExist = randomString(10);
       localCache.once("del", function(_key, _val) {
         assert.equal(_key, key);
         assert.equal(_val, value2);
@@ -67,6 +68,14 @@
         localCache.get(key, function(err, res) {
           n++;
           assert.eql(value, res);
+        });
+        localCache.has(key, function(err, exists) {
+          n++;
+          assert.eql(true, exists);
+        });
+        localCache.has(aKeyThatDoesNotExist, function(err, exists) {
+          n++;
+          assert.eql(false, exists);
         });
         localCache.keys(function(err, res) {
           var pred;
@@ -142,7 +151,7 @@
       }
       beforeExit(function() {
         var _count;
-        _count = 11;
+        _count = 13;
         if (typeof Promise !== "undefined" && Promise !== null) {
           _count += 1;
         }
