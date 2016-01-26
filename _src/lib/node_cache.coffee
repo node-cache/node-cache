@@ -35,6 +35,25 @@ module.exports = class NodeCache extends EventEmitter
 		# initalize checking period
 		@_checkData()
 
+	# ## has
+	#
+	# determines if a key has been set yet
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String ): cache key
+	# * `[cb]` ( Function ): Callback function
+	#
+	# **Example:**
+	#
+	#     myCache.has "myKey", ( err, exists )->
+	#       console.log( err, exists )
+	#
+	has: ( key, cb )=>
+		exists = !! @data[ key ] and @_check( key, @data[ key ] )
+		cb( null, exists ) if cb?
+		return exists
+
 	# ## get
 	#
 	# get a cached key and change the stats

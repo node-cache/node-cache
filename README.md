@@ -156,6 +156,28 @@ value = myCache.mget( [ "myKeyA", "myKeyB" ] );
 
 The method for mget changed from `.get( [ "a", "b" ] )` to `.mget( [ "a", "b" ] )`
 
+## Check if a key exists (HAS)
+
+`myCache.has ( key, [callback] )`
+
+Determines if the key is set in the cache.
+Returns true if the value is found, or false if the value was not set or has expired.
+
+```js
+myCache.set("myKey", "test value");
+myCache.has("myKey", function( err, value ) {
+  if ( !err ){
+    console.log( value );
+    /*
+      true
+    */
+  }
+});
+```
+
+**Since `3.0.2`**:
+Method added at version 3.0.2
+
 ## Delete a key (DEL):
 
 `myCache.del( key, [callback] )`

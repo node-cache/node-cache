@@ -42,6 +42,8 @@ module.exports =
 		value2 = randomString( 100 )
 		key = randomString( 10 )
 
+		aKeyThatDoesNotExist = randomString( 10 )
+
 
 		localCache.once "del", ( _key, _val )->
 			assert.equal( _key, key )
@@ -62,6 +64,18 @@ module.exports =
 				n++
 				# generate a predicted value
 				assert.eql value, res
+				return
+
+			# make sure exists
+			localCache.has key, ( err, exists )->
+				n++
+				assert.eql( true, exists )
+				return
+
+			# make sure missing key does not exist
+			localCache.has aKeyThatDoesNotExist, ( err, exists )->
+				n++
+				assert.eql( false, exists )
 				return
 
 			# try to get
@@ -157,7 +171,7 @@ module.exports =
 			console.log "No Promise test, because not availible in this node version"
 
 		beforeExit ->
-			_count = 11
+			_count = 13
 			if Promise?
 				_count += 1
 			
