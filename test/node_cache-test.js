@@ -61,6 +61,7 @@
         assert.equal(_val, value2);
       });
       localCache.set(key, value, 0, function(err, res) {
+        var error, errorHandlerCallback, originalThrowOnMissingValue;
         assert.isNull(err, err);
         n++;
         assert.equal(1, localCache.getStats().keys - start.keys);
@@ -79,6 +80,28 @@
           assert.isNull(err, err);
           assert.isUndefined(res, res);
         });
+        errorHandlerCallback = function(err, res) {
+          n++;
+          assert.eql(err.message, "Missing key xxx");
+        };
+        localCache.get("xxx", errorHandlerCallback, true);
+        try {
+          localCache.get("xxx", true);
+        } catch (_error) {
+          error = _error;
+          n++;
+          assert.eql(error.message, "Missing key xxx");
+        }
+        originalThrowOnMissingValue = localCache.options.throwOnMissing;
+        try {
+          localCache.options.throwOnMissing = true;
+          localCache.get("xxx");
+        } catch (_error) {
+          error = _error;
+          n++;
+          assert.eql(error.message, "Missing key xxx");
+        }
+        localCache.options.throwOnMissing = originalThrowOnMissingValue;
         localCache.del("xxx", function(err, res) {
           n++;
           assert.isNull(err, err);
@@ -142,7 +165,7 @@
       }
       beforeExit(function() {
         var _count;
-        _count = 11;
+        _count = 14;
         if (typeof Promise !== "undefined" && Promise !== null) {
           _count += 1;
         }
