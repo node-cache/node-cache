@@ -69,10 +69,11 @@ module.exports = class NodeCache extends EventEmitter
 			# if not found return a error
 			@stats.misses++
 			if @options.throwOnMissing or throwOnMissing
+				missingError = new Error("Missing key " + key)
 				if cb
-					cb( new Error("Missing key " + key), undefined )
+					cb( missingError, undefined )
 				else
-					throw new Error("Missing key " + key);
+					throw missingError;
 			else
 				cb( null, undefined ) if cb?
 			return undefined
