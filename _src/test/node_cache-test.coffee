@@ -77,7 +77,30 @@ module.exports =
 				assert.isNull( err, err )
 				assert.isUndefined( res, res )
 				return
-			
+
+			# catch an undefined key
+			errorHandlerCallback = ( err, res )->
+				n++
+				assert.eql( err.message, "Missing key xxx" )
+				return
+			localCache.get "xxx", errorHandlerCallback, true
+
+			# catch an undefined key without callback
+			try
+				localCache.get("xxx", true)
+			catch error
+				n++
+				assert.eql( error.message, "Missing key xxx" )
+
+			# throwOnMissing option triggers throwing error automatically
+			originalThrowOnMissingValue = localCache.options.throwOnMissing;
+			try
+				localCache.options.throwOnMissing = true
+				localCache.get("xxx")
+			catch error
+				n++
+				assert.eql( error.message, "Missing key xxx" )
+			localCache.options.throwOnMissing = originalThrowOnMissingValue;
 
 			# try to delete an undefined key
 			localCache.del "xxx", ( err, res )->
@@ -157,7 +180,7 @@ module.exports =
 			console.log "No Promise test, because not availible in this node version"
 
 		beforeExit ->
-			_count = 11
+			_count = 14
 			if Promise?
 				_count += 1
 			

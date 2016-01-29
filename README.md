@@ -38,6 +38,7 @@ var myCache = new NodeCache();
 `0` = unlimited
 - `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.  
 `0` = no periodic check.
+- `throwOnMissing`: *(default: `false`)* en/disable throwing or passing an error to the callback if attempting to `.get` a missing or expired value.
 - `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.  
 **Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save complex variable types like functions, promises, regexp, ...
 
@@ -45,6 +46,9 @@ var myCache = new NodeCache();
 var NodeCache = require( "node-cache" );
 var myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 ```
+
+**Since `3.0.2`**
+`throwOnMissing` option added
 
 ## Store a key (SET):
 

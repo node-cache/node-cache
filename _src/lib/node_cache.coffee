@@ -22,6 +22,8 @@ module.exports = class NodeCache extends EventEmitter
 			checkperiod: 600
 			# en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference
 			useClones: true
+			# en/disable throwing errors when trying to `.get` missing or expired values.
+			throwOnMissing: false
 		, @options )
 
 		# statistics container
@@ -50,7 +52,12 @@ module.exports = class NodeCache extends EventEmitter
 	#       console.log( err, val )
 	#       return
 	#
-	get: ( key, cb )=>
+	get: ( key, cb, throwOnMissing )=>
+		# handle passing in throwOnMissing without cb
+		if typeof cb == "boolean" and arguments.length == 2
+			throwOnMissing = cb
+			cb = undefined
+
 		# get data and incremet stats
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			@stats.hits++
@@ -61,7 +68,14 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			# if not found return a error
 			@stats.misses++
-			cb( null, undefined ) if cb?
+			if @options.throwOnMissing or throwOnMissing
+				missingError = new Error("Missing key " + key)
+				if cb
+					cb( missingError, undefined )
+				else
+					throw missingError;
+			else
+				cb( null, undefined ) if cb?
 			return undefined
 
 
