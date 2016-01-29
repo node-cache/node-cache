@@ -455,16 +455,16 @@ GET: `34`ms ( `0.67`µs per item )
 
 ### Version 3.1.x 
 
-**node.js `v0.10.41`**
-SET: `305ms`  ( 3.05µs per item )
+**node.js `v0.10.41`**  
+SET: `305ms`  ( 3.05µs per item )  
 GET: `104ms`  ( 1.04µs per item )
 
-**node.js `v0.12.9`**
-SET: `337ms`  ( 3.37µs per item )
+**node.js `v0.12.9`**  
+SET: `337ms`  ( 3.37µs per item )  
 GET: `167ms`  ( 1.67µs per item )
 
-**node.js `v4.2.6`**
-SET: `356ms`  ( 3.56µs per item )
+**node.js `v4.2.6`**  
+SET: `356ms`  ( 3.56µs per item )  
 GET: `83ms`  ( 0.83µs per item )
 
 > until the version 3.0.x the object cloning is included, so we lost a little bit of the performance
