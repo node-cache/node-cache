@@ -30,7 +30,7 @@ ks = []
 # define tests
 module.exports =
 	"general": (beforeExit, assert) ->
-		console.log "\nSTART GENERAL TEST: "+ VCache.version
+		console.log "\nSTART GENERAL TEST: `" + VCache.version + "` on node:`#{process.version}`"
 
 
 

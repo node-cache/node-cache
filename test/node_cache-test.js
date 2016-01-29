@@ -50,7 +50,7 @@
   module.exports = {
     "general": function(beforeExit, assert) {
       var _err, key, n, p, q, start, value, value2;
-      console.log("\nSTART GENERAL TEST: " + VCache.version);
+      console.log("\nSTART GENERAL TEST: `" + VCache.version + ("` on node:`" + process.version + "`"));
       n = 0;
       start = _.clone(localCache.getStats());
       value = randomString(100);

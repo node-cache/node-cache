@@ -451,14 +451,28 @@ GET: `32`ms ( `0.60`µs per item )
 
 **io.js `v2.1.0`**  
 SET: `238`ms ( `4.06`µs per item )  
-GET: `34`ms ( `0.67`µs per item )  
+GET: `34`ms ( `0.67`µs per item ) 
+
+### Version 3.1.x 
+
+**node.js `v0.10.41`**
+SET: `305ms`  ( 3.05µs per item )
+GET: `104ms`  ( 1.04µs per item )
+
+**node.js `v0.12.9`**
+SET: `337ms`  ( 3.37µs per item )
+GET: `167ms`  ( 1.67µs per item )
+
+**node.js `v4.2.6`**
+SET: `356ms`  ( 3.56µs per item )
+GET: `83ms`  ( 0.83µs per item )
 
 > until the version 3.0.x the object cloning is included, so we lost a little bit of the performance
 
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
-|3.1.0|2016-01-29|Added option `errorOnMissing` to throw/callback an error o a miss during a `.get( "key" )`. Thanks to [David Godfrey](https://github.com/david-byng) for the pull [#45](https://github.com/tcs-de/nodecache/pull/45).|
+|3.1.0|2016-01-29|Added option `errorOnMissing` to throw/callback an error o a miss during a `.get( "key" )`. Thanks to [David Godfrey](https://github.com/david-byng) for the pull [#45](https://github.com/tcs-de/nodecache/pull/45). Added docker files and a script to run test on different node versions locally|
 |3.0.1|2016-01-13|Added `.unref()` to the checkTimeout so until node `0.10` it's not necessary to call `.close()` when your script is done. Thanks to [Doug Moscrop](https://github.com/dougmoscrop) for the pull [#44](https://github.com/tcs-de/nodecache/pull/44).|
 |3.0.0|2015-05-29|Return a cloned version of the cached element and save a cloned version of a variable. This can be disabled by setting the option `useClones:false`. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst) and for #30 to [Matthieu Sieben](https://github.com/matthieusieben))|
 |~~2.2.0~~|~~2015-05-27~~|REVOKED VERSION, because of conficts. See [Issue #30](https://github.com/tcs-de/nodecache/issues/30). So `2.2.0` is now `3.0.0`|
