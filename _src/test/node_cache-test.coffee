@@ -72,7 +72,7 @@ module.exports =
 				return
 
 			# get an undefined key
-			localCache.get "xxx", ( err, res )->
+			localCache.get "yxx", ( err, res )->
 				n++
 				assert.isNull( err, err )
 				assert.isUndefined( res, res )
@@ -81,27 +81,30 @@ module.exports =
 			# catch an undefined key
 			errorHandlerCallback = ( err, res )->
 				n++
-				assert.eql( err.message, "Missing key xxx" )
+				assert.eql( err.name, "ENOTFOUND" )
+				assert.eql( err.message, "Key `xxx` not found" )
 				return
-			localCache.get "xxx", errorHandlerCallback, true
+			localCache.get( "xxx", errorHandlerCallback, true )
 
 			# catch an undefined key without callback
 			try
-				localCache.get("xxx", true)
-			catch error
+				localCache.get( "xxy", true )
+			catch err
 				n++
-				assert.eql( error.message, "Missing key xxx" )
+				assert.eql( err.name, "ENOTFOUND" )
+				assert.eql( err.message, "Key `xxy` not found" )
 
-			# throwOnMissing option triggers throwing error automatically
-			originalThrowOnMissingValue = localCache.options.throwOnMissing;
+			# errorOnMissing option triggers throwing error automatically
+			originalThrowOnMissingValue = localCache.options.errorOnMissing
+			localCache.options.errorOnMissing = true
 			try
-				localCache.options.throwOnMissing = true
-				localCache.get("xxx")
-			catch error
+				localCache.get( "xxz" )
+			catch err
 				n++
-				assert.eql( error.message, "Missing key xxx" )
-			localCache.options.throwOnMissing = originalThrowOnMissingValue;
-
+				assert.eql( err.name, "ENOTFOUND" )
+				assert.eql( err.message, "Key `xxz` not found" )
+			localCache.options.errorOnMissing = originalThrowOnMissingValue
+			console.log localCache.options.errorOnMissing
 			# try to delete an undefined key
 			localCache.del "xxx", ( err, res )->
 				n++

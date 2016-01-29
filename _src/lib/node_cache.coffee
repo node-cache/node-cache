@@ -5,7 +5,8 @@ EventEmitter = require('events').EventEmitter
 # generate superclass
 module.exports = class NodeCache extends EventEmitter
 	constructor: ( @options = {} )->
-
+		
+		@_initErrors()
 		# container for cached data
 		@data = {}
 
@@ -23,7 +24,7 @@ module.exports = class NodeCache extends EventEmitter
 			# en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference
 			useClones: true
 			# en/disable throwing errors when trying to `.get` missing or expired values.
-			throwOnMissing: false
+			errorOnMissing: false
 		, @options )
 
 		# statistics container
@@ -36,6 +37,7 @@ module.exports = class NodeCache extends EventEmitter
 		
 		# initalize checking period
 		@_checkData()
+		return
 
 	# ## get
 	#
@@ -45,6 +47,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# * `key` ( String ): cache key
 	# * `[cb]` ( Function ): Callback function
+	# * `[errorOnMissing=false]` ( Boolean ) return a error to the `cb` or throw it if no `cb` is used. Otherwise the get will return `undefined` on a miss.
 	# 
 	# **Example:**
 	#     
@@ -52,10 +55,10 @@ module.exports = class NodeCache extends EventEmitter
 	#       console.log( err, val )
 	#       return
 	#
-	get: ( key, cb, throwOnMissing )=>
-		# handle passing in throwOnMissing without cb
+	get: ( key, cb, errorOnMissing )=>
+		# handle passing in errorOnMissing without cb
 		if typeof cb == "boolean" and arguments.length == 2
-			throwOnMissing = cb
+			errorOnMissing = cb
 			cb = undefined
 
 		# get data and incremet stats
@@ -68,12 +71,11 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			# if not found return a error
 			@stats.misses++
-			if @options.throwOnMissing or throwOnMissing
-				missingError = new Error("Missing key " + key)
-				if cb
-					cb( missingError, undefined )
-				else
-					throw missingError;
+			if @options.errorOnMissing or errorOnMissing
+				_err = @_error( "ENOTFOUND", { key: key }, cb )
+				if _err?
+					throw _err
+				return
 			else
 				cb( null, undefined ) if cb?
 			return undefined
@@ -476,7 +478,7 @@ module.exports = class NodeCache extends EventEmitter
 		error = new Error()
 		error.name = type
 		error.errorcode = type
-		error.msg = @_ERRORS[ type ] or "-"
+		error.message = if @ERRORS[ type ]? then @ERRORS[ type ]( data ) else "-"
 		error.data = data
 
 		if cb and _.isFunction( cb )
@@ -486,7 +488,17 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			# if no callback is defined return the error object
 			return error
-
+	
+	# ## _initErrors
+	#
+	# internal method to generate error message templates
+	_initErrors: =>
+		@ERRORS = {}
+		for _errT, _errMsg of @_ERRORS
+			@ERRORS[ _errT ] = _.template( _errMsg )
+			
+		return
+		
 	_ERRORS:
-		"ENOTFOUND": "Key not found"
+		"ENOTFOUND": "Key `<%= key %>` not found"
 		"EKEYSTYPE": "The keys argument has to be an array."

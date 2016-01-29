@@ -26,7 +26,7 @@ module.exports = (grunt) ->
 
 		clean:
 			base:
-				src: [ "lib", "test/*.js" ]
+				src: [ "lib", "test", "*.js" ]
 
 		includereplace:
 			pckg:

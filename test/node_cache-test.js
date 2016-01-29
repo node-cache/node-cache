@@ -61,7 +61,7 @@
         assert.equal(_val, value2);
       });
       localCache.set(key, value, 0, function(err, res) {
-        var error, errorHandlerCallback, originalThrowOnMissingValue;
+        var errorHandlerCallback, originalThrowOnMissingValue;
         assert.isNull(err, err);
         n++;
         assert.equal(1, localCache.getStats().keys - start.keys);
@@ -75,33 +75,37 @@
           pred = [key];
           assert.eql(pred, res);
         });
-        localCache.get("xxx", function(err, res) {
+        localCache.get("yxx", function(err, res) {
           n++;
           assert.isNull(err, err);
           assert.isUndefined(res, res);
         });
         errorHandlerCallback = function(err, res) {
           n++;
-          assert.eql(err.message, "Missing key xxx");
+          assert.eql(err.name, "ENOTFOUND");
+          assert.eql(err.message, "Key `xxx` not found");
         };
         localCache.get("xxx", errorHandlerCallback, true);
         try {
-          localCache.get("xxx", true);
+          localCache.get("xxy", true);
         } catch (_error) {
-          error = _error;
+          err = _error;
           n++;
-          assert.eql(error.message, "Missing key xxx");
+          assert.eql(err.name, "ENOTFOUND");
+          assert.eql(err.message, "Key `xxy` not found");
         }
-        originalThrowOnMissingValue = localCache.options.throwOnMissing;
+        originalThrowOnMissingValue = localCache.options.errorOnMissing;
+        localCache.options.errorOnMissing = true;
         try {
-          localCache.options.throwOnMissing = true;
-          localCache.get("xxx");
+          localCache.get("xxz");
         } catch (_error) {
-          error = _error;
+          err = _error;
           n++;
-          assert.eql(error.message, "Missing key xxx");
+          assert.eql(err.name, "ENOTFOUND");
+          assert.eql(err.message, "Key `xxz` not found");
         }
-        localCache.options.throwOnMissing = originalThrowOnMissingValue;
+        localCache.options.errorOnMissing = originalThrowOnMissingValue;
+        console.log(localCache.options.errorOnMissing);
         localCache.del("xxx", function(err, res) {
           n++;
           assert.isNull(err, err);
