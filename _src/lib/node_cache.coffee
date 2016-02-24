@@ -267,6 +267,44 @@ module.exports = class NodeCache extends EventEmitter
 
 		return
 
+	# ## getTtl
+	#
+	# receive the ttl of a key.
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String ): cache key to check the ttl value
+	# * `[cb]` ( Function ): Callback function
+	#
+	# **Return**
+	# 
+	# ( Number|undefined ): The timestamp in ms when the key will expire, 0 if it will never expire or undefined if it not exists
+	#
+	# **Example:**
+	#     
+	#     ts = myCache.ttl( "myKey" ) // will set ttl to default ttl
+	#     
+	#     myCache.ttl( "myKey",( err, keyFound )->
+	#       console.log( err, success ) 
+	#
+	getTtl: ( key, cb )=>
+		# change args if only key and callback are passed
+		if not key
+			cb( null, undefined ) if cb?
+			return undefined
+
+		# check for existend data and update the ttl value
+		if @data[ key ]? and @_check( key, @data[ key ] )
+			_ttl = @data[ key ].t
+			cb( null, _ttl ) if cb?
+			return _ttl
+		else
+			# return undefined if key has not been found
+			cb( null, undefined ) if cb?
+			return undefined
+
+		return
+
 	# ## keys
 	#
 	# list all keys within this cache

@@ -556,10 +556,15 @@ module.exports =
 		_keys = [ key, key2, key3, key4, key5 ]
 		n = 0
 
+		_now = Date.now()
 		# set a key with ttl
 		localCache.set key, val, 0.5, ( err, res )->
 			assert.isNull( err, err )
 			assert.ok( res )
+
+			ts = localCache.getTtl( key )
+			if ts > _now and ts < _now + 300
+				throw new Error( "Invalid timestamp" )
 
 			# check the key immediately
 			localCache.get key, ( err, res )->
@@ -592,6 +597,10 @@ module.exports =
 
 		# check key after lifetime end
 		setTimeout( ->
+
+			ts = localCache.getTtl( key )
+			assert.isUndefined( ts, ts )
+
 			++n
 			localCache.get key, ( err, res )->
 				assert.isNull( err, err )
@@ -603,6 +612,12 @@ module.exports =
 		# check second key before lifetime end
 		setTimeout( ->
 			++n
+
+			localCache.getTtl key, ( err, ts )->
+				if ts > _now and ts < _now + 300
+					throw new Error( "Invalid timestamp" )
+				return
+
 			localCache.get key2, ( err, res )->
 				assert.isNull( err, err )
 				assert.eql( val, res )

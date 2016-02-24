@@ -447,7 +447,7 @@
       });
     },
     "ttl": function(beforeExit, assert) {
-      var _keys, key, key2, key3, key4, key5, n, val;
+      var _keys, _now, key, key2, key3, key4, key5, n, val;
       console.log("\nSTART TTL TEST");
       val = randomString(20);
       key = "k1_" + randomString(7);
@@ -457,9 +457,15 @@
       key5 = "k5_" + randomString(7);
       _keys = [key, key2, key3, key4, key5];
       n = 0;
+      _now = Date.now();
       localCache.set(key, val, 0.5, function(err, res) {
+        var ts;
         assert.isNull(err, err);
         assert.ok(res);
+        ts = localCache.getTtl(key);
+        if (ts > _now && ts < _now + 300) {
+          throw new Error("Invalid timestamp");
+        }
         localCache.get(key, function(err, res) {
           assert.isNull(err, err);
           assert.eql(val, res);
@@ -481,6 +487,9 @@
         });
       }, 400);
       setTimeout(function() {
+        var ts;
+        ts = localCache.getTtl(key);
+        assert.isUndefined(ts, ts);
         ++n;
         localCache.get(key, function(err, res) {
           assert.isNull(err, err);
@@ -489,6 +498,11 @@
       }, 600);
       setTimeout(function() {
         ++n;
+        localCache.getTtl(key, function(err, ts) {
+          if (ts > _now && ts < _now + 300) {
+            throw new Error("Invalid timestamp");
+          }
+        });
         localCache.get(key2, function(err, res) {
           assert.isNull(err, err);
           assert.eql(val, res);

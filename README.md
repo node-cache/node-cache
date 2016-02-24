@@ -251,12 +251,39 @@ myCache.ttl( "existendKey", function( err, changed ){
 });
 ```
 
-**Since `1.0.0`**:  
-Callback is now optional. You can also use synchronous syntax.
+## Get TTL (getTTL):
+
+`myCache.getTtl( key, [callback] )`
+
+Receive the ttl of a key.
+You will get:
+- `undefined` if the key does not exist
+- `0` if this key has no ttl
+- a timestamp in ms until the key expires 
 
 ```js
-value = myCache.ttl( "existendKey", 100 );
-// true
+myCache = new NodeCache( { stdTTL: 100 } )
+
+// Date.now() = 1456000500000
+myCache.set( "ttlKey", "MyExpireData" )
+myCache.set( "noTtlKey", 0, "NonExpireData" )
+
+ts = myCache.getTtl( "ttlKey" )
+// ts wil be approximately 1456000600000
+
+myCache.getTtl( "ttlKey", function( err, ts ){
+  if( !err ){
+    // ts wil be approximately 1456000600000
+  }
+});
+// ts wil be approximately 1456000600000
+
+ts = myCache.getTtl( "noTtlKey" )
+// ts = 0
+
+ts = myCache.getTtl( "unknownKey" )
+// ts = undefined
+
 ```
 
 ## List keys (KEYS)
@@ -472,6 +499,7 @@ GET: `83ms`  ( `0.83µs` per item )
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|3.2.0|2016-01-29|Added method `getTtl` to get the time when a key expires. See [#49](https://github.com/tcs-de/nodecache/issues/49)|
 |3.1.0|2016-01-29|Added option `errorOnMissing` to throw/callback an error o a miss during a `.get( "key" )`. Thanks to [David Godfrey](https://github.com/david-byng) for the pull [#45](https://github.com/tcs-de/nodecache/pull/45). Added docker files and a script to run test on different node versions locally|
 |3.0.1|2016-01-13|Added `.unref()` to the checkTimeout so until node `0.10` it's not necessary to call `.close()` when your script is done. Thanks to [Doug Moscrop](https://github.com/dougmoscrop) for the pull [#44](https://github.com/tcs-de/nodecache/pull/44).|
 |3.0.0|2015-05-29|Return a cloned version of the cached element and save a cloned version of a variable. This can be disabled by setting the option `useClones:false`. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst) and for #30 to [Matthieu Sieben](https://github.com/matthieusieben))|
