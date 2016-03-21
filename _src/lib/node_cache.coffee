@@ -1,4 +1,13 @@
-_ = require( "lodash" )
+# lodash requires
+_assignIn = require( "lodash/assignIn" )
+_isArray = require( "lodash/isArray" )
+_isString = require( "lodash/isString" )
+_isFunction = require( "lodash/isFunction" )
+_isNumber = require( "lodash/isNumber" )
+_isObject = require( "lodash/isObject" )
+_size = require( "lodash/size" )
+_template = require( "lodash/template" )
+
 clone = require( "clone" )
 EventEmitter = require('events').EventEmitter
 
@@ -11,7 +20,7 @@ module.exports = class NodeCache extends EventEmitter
 		@data = {}
 
 		# module options
-		@options = _.extend(
+		@options = _assignIn(
 			# convert all elements to string 
 			forceString: false
 			# used standard size for calculating value size
@@ -98,7 +107,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	mget: ( keys, cb )=>
 		# convert a string to an array of one key
-		if not _.isArray( keys )
+		if not _isArray( keys )
 			_err = @_error( "EKEYSTYPE" )
 			cb( _err ) if cb?
 			return _err
@@ -142,11 +151,11 @@ module.exports = class NodeCache extends EventEmitter
 		existend = false
 		
 		# force the data to string
-		if @options.forceString and not _.isString( value )
+		if @options.forceString and not _isString( value )
 			value = JSON.stringify( value )
 
 		# remap the arguments if `ttl` is not passed
-		if arguments.length is 3 and _.isFunction( ttl )
+		if arguments.length is 3 and _isFunction( ttl )
 			cb = ttl
 			ttl = @options.stdTTL
 		
@@ -192,7 +201,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	del: ( keys, cb )=>
 		# convert a string to an array of one key
-		if _.isString( keys )
+		if _isString( keys )
 			keys = [ keys ]
 
 		delCount = 0
@@ -490,20 +499,20 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method to calculate the value length
 	_getValLength: ( value )=>
-		if _.isString( value )
+		if _isString( value )
 			# if the value is a String get the real length
 			value.length
 		else if @options.forceString
 			# force string if it's defined and not passed
 			JSON.stringify( value ).length
-		else if _.isArray( value )
+		else if _isArray( value )
 			# if the data is an Array multiply each element with a defined default length
 			@options.arrayValueSize * value.length
-		else if _.isNumber( value )
+		else if _isNumber( value )
 			8
-		else if _.isObject( value )
+		else if _isObject( value )
 			# if the data is an Object multiply each element with a defined default length
-			@options.objectValueSize * _.size( value )
+			@options.objectValueSize * _size( value )
 		else
 			# default fallback
 			0
@@ -519,7 +528,7 @@ module.exports = class NodeCache extends EventEmitter
 		error.message = if @ERRORS[ type ]? then @ERRORS[ type ]( data ) else "-"
 		error.data = data
 
-		if cb and _.isFunction( cb )
+		if cb and _isFunction( cb )
 			# return the error
 			cb( error, null )
 			return
@@ -533,7 +542,7 @@ module.exports = class NodeCache extends EventEmitter
 	_initErrors: =>
 		@ERRORS = {}
 		for _errT, _errMsg of @_ERRORS
-			@ERRORS[ _errT ] = _.template( _errMsg )
+			@ERRORS[ _errT ] = _template( _errMsg )
 			
 		return
 		

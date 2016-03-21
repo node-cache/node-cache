@@ -14,5 +14,7 @@ config.json
 config*.json
 deploy.json
 /node_modules
-/test/test-expire.js
+/index.js
+/test/*.js
+/lib/*.js
 *.log

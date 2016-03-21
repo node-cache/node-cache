@@ -1,11 +1,11 @@
 VERSIONS[0]="0.10"
 VERSIONS[1]="0.12"
 VERSIONS[2]="4.2"
-# currently expresso is not working on node 5.5
+# currently expresso is not working on node 5.x
 #VERSIONS[3]="5.0"
 #VERSIONS[4]="5.4"
 VERSIONS[5]="lts"
-# currently expresso is not working on node 5.5
+# currently expresso is not working on node 5.x
 #VERSIONS[6]="latest"
 
 

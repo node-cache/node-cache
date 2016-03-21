@@ -499,6 +499,7 @@ GET: `83ms`  ( `0.83µs` per item )
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|3.2.1|2016-03-21|Updated lodash to 4.x.; optimized grunt |
 |3.2.0|2016-01-29|Added method `getTtl` to get the time when a key expires. See [#49](https://github.com/tcs-de/nodecache/issues/49)|
 |3.1.0|2016-01-29|Added option `errorOnMissing` to throw/callback an error o a miss during a `.get( "key" )`. Thanks to [David Godfrey](https://github.com/david-byng) for the pull [#45](https://github.com/tcs-de/nodecache/pull/45). Added docker files and a script to run test on different node versions locally|
 |3.0.1|2016-01-13|Added `.unref()` to the checkTimeout so until node `0.10` it's not necessary to call `.close()` when your script is done. Thanks to [Doug Moscrop](https://github.com/dougmoscrop) for the pull [#44](https://github.com/tcs-de/nodecache/pull/44).|

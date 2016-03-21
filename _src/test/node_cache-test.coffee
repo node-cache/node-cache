@@ -1,5 +1,5 @@
 # define runtime environment
-_ = require( "lodash" )
+_clone = require( "lodash/clone" )
 
 VCache = require "../"
 localCache = new VCache( stdTTL: 0 )
@@ -36,7 +36,7 @@ module.exports =
 
 		n = 0
 
-		start = _.clone( localCache.getStats() )
+		start = _clone( localCache.getStats() )
 		
 		value = randomString( 100 )
 		value2 = randomString( 100 )
@@ -196,7 +196,7 @@ module.exports =
 
 		localCache.flushAll()
 
-		start = _.clone( localCache.getStats() )
+		start = _clone( localCache.getStats() )
 		
 		value = randomString( 100 )
 		value2 = randomString( 100 )
@@ -425,7 +425,7 @@ module.exports =
 	"stats": (beforeExit, assert) ->
 		console.log "\nSTART STATS TEST"
 		n = 0
-		start = _.clone( localCache.getStats() )
+		start = _clone( localCache.getStats() )
 		count = 5
 		keys = []
 		vals = []
