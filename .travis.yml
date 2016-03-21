@@ -16,8 +16,8 @@ node_js:
   - 5.4
   - node
   - iojs
-install: npm install --production
+install: npm install
 before_script:
   - "npm install -g expresso"
-  - "npm install -g mocha grunt-cli"
+  - "npm install -g grunt-cli"
   - "grunt build"
