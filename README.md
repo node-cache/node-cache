@@ -496,6 +496,11 @@ GET: `167ms`  ( `1.67µs` per item )
 SET: `356ms`  ( `3.56µs` per item )  
 GET: `83ms`  ( `0.83µs` per item )
 
+## Compatibility
+
+This module should work well until node `0.6.x`.
+But it's tested only until version `0.10.x`.
+
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
