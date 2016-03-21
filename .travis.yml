@@ -19,3 +19,5 @@ node_js:
 install: npm install --production
 before_script:
   - "npm install -g expresso"
+  - "npm install -g mocha grunt-cli"
+  - "grunt build"
