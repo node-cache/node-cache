@@ -148,7 +148,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	set: ( key, value, ttl, cb )=>
 		# internal helper variables
-		existend = false
+		existent = false
 		
 		# force the data to string
 		if @options.forceString and not _isString( value )
@@ -161,7 +161,7 @@ module.exports = class NodeCache extends EventEmitter
 		
 		# remove existing data from stats
 		if @data[ key ]
-			existend = true
+			existent = true
 			@stats.vsize -= @_getValLength( @_unwrap( @data[ key ], false ) )
 		
 		# set the value
@@ -169,7 +169,7 @@ module.exports = class NodeCache extends EventEmitter
 		@stats.vsize += @_getValLength( value )
 
 		# only add the keys and key-size if the key is new
-		if not existend
+		if not existent
 			@stats.ksize += @_getKeyLength( key )
 			@stats.keys++
 		
@@ -206,7 +206,7 @@ module.exports = class NodeCache extends EventEmitter
 
 		delCount = 0
 		for key in keys
-			# only delete if existend
+			# only delete if existent
 			if @data[ key ]?
 				# calc the stats
 				@stats.vsize -= @_getValLength( @_unwrap( @data[ key ], false ) )
@@ -260,7 +260,7 @@ module.exports = class NodeCache extends EventEmitter
 			cb( null, false ) if cb?
 			return false
 
-		# check for existend data and update the ttl value
+		# check for existent data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			# on ttl = 0  delete the key. otherwise reset the value
 			if ttl > 0
@@ -302,7 +302,7 @@ module.exports = class NodeCache extends EventEmitter
 			cb( null, undefined ) if cb?
 			return undefined
 
-		# check for existend data and update the ttl value
+		# check for existent data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			_ttl = @data[ key ].t
 			cb( null, _ttl ) if cb?
