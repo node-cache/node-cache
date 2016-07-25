@@ -18,7 +18,7 @@ All keys are stored in a single object so the practical limit is at around 1m ke
 # Install
 
 ```bash
-  npm install node-cache
+  npm install node-cache --save
 ```
 
 Or just require the `node_cache.js` file to get the superclass
@@ -28,8 +28,8 @@ Or just require the `node_cache.js` file to get the superclass
 ## Initialize (INIT):
 
 ```js
-var NodeCache = require( "node-cache" );
-var myCache = new NodeCache();
+const NodeCache = require( "node-cache" );
+const myCache = new NodeCache();
 ```
 
 ### Options
@@ -43,8 +43,8 @@ var myCache = new NodeCache();
 **Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save complex variable types like functions, promises, regexp, ...
 
 ```js
-var NodeCache = require( "node-cache" );
-var myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
+const NodeCache = require( "node-cache" );
+const myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 ```
 
 ## Store a key (SET):
@@ -174,7 +174,7 @@ The method for mget changed from `.get( [ "a", "b" ] )` to `.mget( [ "a", "b" ] 
 
 Delete a key. Returns the number of deleted entries. A delete will never fail.
 
-```
+```js
 myCache.del( "myKey", function( err, count ){
   if( !err ){
     console.log( count ); // 1
@@ -367,7 +367,7 @@ You will get the `key` and the `value` as callback argument.
 
 ```js
 myCache.on( "set", function( key, value ){
-	// ... do something ...  
+  // ... do something ...  
 });
 ```
 
@@ -378,7 +378,7 @@ You will get the `key` and the deleted `value` as callback arguments.
 
 ```js
 myCache.on( "del", function( key, value ){
-	// ... do something ...  
+  // ... do something ...  
 });
 ```
 
@@ -389,7 +389,7 @@ You will get the `key` and `value` as callback argument.
 
 ```js
 myCache.on( "expired", function( key, value ){
-	// ... do something ...  
+  // ... do something ...  
 });
 ```
 
@@ -399,7 +399,7 @@ Fired when the cache has been flushed.
 
 ```js
 myCache.on( "flush", function(){
-	// ... do something ...  
+  // ... do something ...  
 });
 ```
 
