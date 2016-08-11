@@ -11,8 +11,8 @@ node-cache
 
 # Simple and fast NodeJS internal caching.
 
-A simple caching module that has `set`, `get` and `delete` methods and works a little bit like memcached.
-Keys can have a timeout after which they expire and are cleaned from the cache.  
+A simple caching module that has `set`, `get` and `delete` methods and works a little bit like memcached.  
+Keys can have a timeout (`ttl`) after which they expire and are deleted from the cache.  
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
 # Install
@@ -64,6 +64,8 @@ myCache.set( "myKey", obj, function( err, success ){
   }
 });
 ```
+
+> Note: If the key expires based on it's `ttl` it will be deleted entirely from the internal data object.
 
 **Since `1.0.0`**:  
 Callback is now optional. You can also use synchronous syntax.
