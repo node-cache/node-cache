@@ -1,5 +1,6 @@
 should = require "should"
 clone = require "lodash/clone"
+{ stringify } = JSON
 
 pkg = require "../package.json"
 VCache = require "../"
@@ -27,7 +28,7 @@ localCache._killCheckPeriod()
 # store test state
 state = {}
 
-describe "Testing `#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
+describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 	describe "general callback-style", () ->
 		before () ->
@@ -358,10 +359,9 @@ describe "Testing `#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", ()
 			return
 
 		it "set keys", () ->
-			[1..state.count].forEach () ->
+			for [1..state.count]
 				key = randomString 7
 				state.keys.push key
-				return
 
 			state.keys.forEach (key) ->
 				localCache.set key, state.val, (err, res) ->
@@ -379,6 +379,97 @@ describe "Testing `#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", ()
 
 			0.should.eql localCache.getStats().keys
 			{}.should.eql localCache.data
+			return
+		return
+
+
+	describe "many", () ->
+		before () ->
+			state =
+				n: 0
+				count: 100000
+				keys: []
+				val: randomString 20
+
+			for [1..state.count]
+				key = randomString 7
+				state.keys.push key
+			return
+
+		describe "BENCHMARK", () ->
+			this.timeout(0)
+			# hack so mocha always shows timing information
+			this.slow(1)
+
+			it "SET", () ->
+				start = Date.now()
+				# not using forEach because it's magnitude 10 times slower than for
+				# and we are into a benchmark
+				for key in state.keys
+					should(localCache.set key, state.val, 0).be.ok()
+				duration = Date.now() - start
+				console.log "\tSET: #{state.count} keys to: `#{state.val}` #{duration}ms (#{duration/state.count}ms per item)"
+				return
+
+			it "GET", () ->
+				# this benchmark is a bit useless because the equality check eats up
+				# around 3/4 of benchmark time
+				start = Date.now()
+				for key in state.keys
+					state.n++
+					state.val.should.eql localCache.get(key)
+				duration = Date.now() - start
+				console.log "\tGET: #{state.count} keys #{duration}ms (#{duration/state.count}ms per item)"
+				return
+
+			it "check stats", () ->
+				stats = localCache.getStats()
+				keys = localCache.keys()
+
+				stats.keys.should.eql keys.length
+				state.count.should.eql keys.length
+				state.n.should.eql keys.length
+				return
+
+			after () ->
+				console.log "\tBenchmark stats:"
+				console.log stringify(localCache.getStats(), null, "\t")
+				return
+			return
+		return
+
+
+	describe "delete", () ->
+		this.timeout(0)
+
+		before () ->
+			# don't override state because we still need `state.keys`
+			Object.assign state,
+				n: 0
+				startKeys: localCache.getStats().keys
+			return
+
+		it "delete all previously set keys", () ->
+			for i in [0...state.count]
+				localCache.del state.keys[i], (err, count) ->
+					state.n++
+					should(err).be.null()
+					1.should.eql count
+					return
+
+			state.n.should.eql state.count
+			return
+
+		it "delete keys again; should not delete anything", () ->
+			for i in [0...state.count]
+				localCache.del state.keys[i], (err, count) ->
+					state.n++
+					should(err).be.null()
+					0.should.eql count
+					return
+
+			state.n.should.eql state.count*2
+			localCache.getStats().keys.should.eql 0
 			return
 		return
 

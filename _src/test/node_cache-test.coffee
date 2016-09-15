@@ -17,7 +17,7 @@ randomString = ( length, withnumbers = true ) ->
 	string_length = length or 5
 	randomstring = ""
 	i = 0
-	
+
 	while i < string_length
 		rnum = Math.floor(Math.random() * chars.length)
 		randomstring += chars.substring(rnum, rnum + 1)
@@ -37,7 +37,7 @@ module.exports =
 		n = 0
 
 		start = _clone( localCache.getStats() )
-		
+
 		value = randomString( 100 )
 		value2 = randomString( 100 )
 		key = randomString( 10 )
@@ -111,13 +111,13 @@ module.exports =
 				assert.isNull( err, err )
 				assert.equal( 0, res )
 				return
-			
+
 			# test update
 			localCache.set key, value2, 0, ( err, res )->
 				n++
 				assert.isNull( err, err )
 				assert.ok( res, err )
-				
+
 				# check update
 				localCache.get key, ( err, res )->
 					n++
@@ -162,15 +162,16 @@ module.exports =
 					return
 				return
 			return
-		
+
 		if Promise?
 			p = new Promise (fulfill, reject)-> fulfill('Some deferred value')
 			p.then (value)->
 				assert.eql value, 'Some deferred value'
 				return
-			
+
 			localCacheNoClone.set( "promise", p )
 			q = localCacheNoClone.get( "promise" )
+			console.log typeof p, typeof q
 			try
 				q.then (value)->
 					n++
@@ -178,7 +179,7 @@ module.exports =
 			catch _err
 				assert.ok false, _err
 				return
-			
+
 		else
 			console.log "No Promise test, because not availible in this node version"
 
@@ -186,7 +187,7 @@ module.exports =
 			_count = 14
 			if Promise?
 				_count += 1
-			
+
 			assert.equal( _count, n, "not exited" )
 			return
 		return
@@ -197,7 +198,7 @@ module.exports =
 		localCache.flushAll()
 
 		start = _clone( localCache.getStats() )
-		
+
 		value = randomString( 100 )
 		value2 = randomString( 100 )
 		key = randomString( 10 )
@@ -229,11 +230,11 @@ module.exports =
 		# try to delete an undefined key
 		res = localCache.del( "xxx" )
 		assert.equal( 0, res )
-		
+
 		# test update
 		res = localCache.set( key, value2, 0 )
 		assert.ok( res, res )
-			
+
 		# check update
 		res = localCache.get( key )
 		# generate a predicted value
@@ -253,7 +254,7 @@ module.exports =
 		# try to get the deleted key
 		res = localCache.get( key )
 		assert.isUndefined( res, res )
-		
+
 		# set multiple keys to test the multi delete by array
 		res = localCache.set( "mulitA", 23 )
 		assert.ok( res, res )
@@ -261,17 +262,17 @@ module.exports =
 		assert.ok( res, res )
 		res = localCache.set( "mulitC", 23 )
 		assert.ok( res, res )
-		
+
 		res = localCache.get( "mulitA" )
 		assert.equal( res, 23 )
 		res = localCache.get( "mulitB" )
 		assert.equal( res, 23 )
 		res = localCache.get( "mulitC" )
 		assert.equal( res, 23 )
-		
+
 		res = localCache.del( [ "mulitA", "mulitB" ] )
 		assert.equal( 2, res )
-		
+
 		# try to get the deleted key
 		res = localCache.get( "mulitA" )
 		assert.isUndefined( res, res )
@@ -279,15 +280,15 @@ module.exports =
 		assert.isUndefined( res, res )
 		res = localCache.get( "mulitC" )
 		assert.equal( res, 23 )
-		
+
 		res = localCache.del( [ "mulitC" ] )
 		assert.equal( 1, res )
 		res = localCache.get( "mulitC" )
 		assert.isUndefined( res, res )
-		
+
 		res = localCache.del( [ "mulitA", "mulitB", "mulitC" ] )
 		assert.equal( 0, res )
-		
+
 		# set a key with 0
 		res = localCache.set( "zero", 0, 0 )
 		assert.ok( res, res )
@@ -295,7 +296,7 @@ module.exports =
 		# get a key with 0
 		res = localCache.get( "zero" )
 		assert.eql 0, res
-		
+
 		# set a key with 0
 		tObj =
 			a: 1
@@ -304,16 +305,16 @@ module.exports =
 				y: 3
 		res = localCache.set( "clone", tObj, 0 )
 		assert.ok( res, res )
-		
+
 		tObj.b.x = 666
 		res = localCache.get( "clone" )
 		assert.equal 2, res.b.x
-		
+
 		res.b.y = 42
-		
+
 		res2 = localCache.get( "clone" )
 		assert.equal 3, res2.b.y
-		
+
 		return
 
 	"flush": (beforeExit, assert) ->
@@ -328,13 +329,13 @@ module.exports =
 		for i in [1..count]
 			key = randomString( 7 )
 			ks.push key
-		
+
 		for key in ks
 			localCache.set key, val, 0, ( err, res )->
 				n++
 				assert.isNull( err, err )
 				return
-		
+
 		# check if all data set
 		assert.equal( localCache.getStats().keys, startKeys + count )
 
@@ -362,23 +363,23 @@ module.exports =
 		for i in [1..count]
 			key = randomString( 7 )
 			ks.push key
-		
+
 		time = new Date().getTime()
 		for key in ks
 			assert.ok localCache.set( key, val, 0 )
 
 		_dur =  new Date().getTime() - time
 		console.log( "BENCHMARK for SET:", "#{_dur}ms", " ( #{_dur/count}ms per item ) " )
-		
+
 		time = new Date().getTime()
 		for key in ks
 			n++
 			assert.eql val, localCache.get( key )
-		
+
 		_dur = new Date().getTime() - time
 		console.log( "BENCHMARK for GET:", "#{_dur}ms", " ( #{_dur/count}ms per item ) " )
 		console.log( "BENCHMARK STATS:", localCache.getStats() )
-		
+
 		beforeExit ->
 			_stats = localCache.getStats()
 			_keys = localCache.keys()
@@ -389,14 +390,14 @@ module.exports =
 			assert.equal( n, count )
 			return
 		return
-			
+
 
 	"delete": (beforeExit, assert) ->
 		console.log "\nSTART DELETE TEST"
 		n = 0
 		count = 10000
 		startKeys = localCache.getStats().keys
-		
+
 		# test deletes
 		for i in [1..count]
 			ri = Math.floor(Math.random() * vs.length)
@@ -404,7 +405,7 @@ module.exports =
 				n++
 				assert.isNull( err, err )
 				assert.equal( 1, count )
-		
+
 		# test deletes again. should not delete a key
 		for i in [1..count]
 			ri = Math.floor(Math.random() * vs.length)
@@ -412,16 +413,16 @@ module.exports =
 				n++
 				assert.equal( 0, count )
 				assert.isNull( err, err )
-		
-		# check stats for only a single deletion	
+
+		# check stats for only a single deletion
 		assert.equal( localCache.getStats().keys, startKeys - count )
-		
+
 		beforeExit ->
 			# check  successfull runs
 			assert.equal( n, count * 2)
 			return
 		return
-	
+
 	"stats": (beforeExit, assert) ->
 		console.log "\nSTART STATS TEST"
 		n = 0
@@ -442,8 +443,8 @@ module.exports =
 				assert.isNull( err, err )
 				assert.ok( success )
 				return
-		
-		# get and remove `count` elements 
+
+		# get and remove `count` elements
 		for i in [1..count]
 			localCache.get keys[ i ], ( err, res )->
 				n++
@@ -456,7 +457,7 @@ module.exports =
 				assert.isNull( err, err )
 				assert.ok( success )
 				return
-		
+
 		# generate `count` misses
 		for i in [1..count]
 			# 4 char key should not exist
@@ -467,21 +468,21 @@ module.exports =
 				return
 
 		end = localCache.getStats()
-		
+
 		# check predicted stats
 		assert.equal( end.hits - start.hits, 5, "hits wrong" )
 		assert.equal( end.misses - start.misses, 5, "misses wrong" )
 		assert.equal( end.keys - start.keys, 5, "hits wrong" )
 		assert.equal( end.ksize - start.ksize, 5*7, "hits wrong" )
 		assert.equal( end.vsize - start.vsize, 5*50, "hits wrong" )
-		
+
 		beforeExit ->
 
 			assert.equal( n, count*5 )
 			return
 
 		return
-	
+
 	"multi": (beforeExit, assert) ->
 		console.log "\nSTART MULTI TEST"
 		n = 0
@@ -494,20 +495,20 @@ module.exports =
 		for i in [1..count]
 			key = randomString( 7 )
 			ks.push key
-		
+
 		for key in ks
 			localCache.set key, val, 0, ( err, res )->
 				n++
 				assert.isNull( err, err )
 				return
-		
+
 		# generate a sub list of keys
 		getKeys = ks.splice( 50, 5 )
 		# generate prediction
 		pred = {}
 		for key in getKeys
 			pred[ key ] = val
-		
+
 		# try to get list
 		localCache.mget getKeys[ 0 ], ( err, res )->
 			n++
@@ -523,27 +524,27 @@ module.exports =
 			assert.isNull( err, err )
 			assert.eql( pred, res )
 			return
-		
+
 		# delete list of keys
 		localCache.del getKeys, ( err, res )->
 			n++
 			assert.isNull( err, err )
 			assert.equal( getKeys.length, res )
 			return
-		
+
 		# try to get list again. Empty result predicted
 		localCache.mget getKeys, ( err, res )->
 			n++
 			assert.isNull( err, err )
 			assert.eql( {}, res )
 			return
-		
+
 		beforeExit ->
 			# check  successfull runs
 			assert.equal( n, count + 4)
 			return
 		return
-	
+
 	"ttl": (beforeExit, assert) ->
 		console.log "\nSTART TTL TEST"
 
@@ -572,7 +573,7 @@ module.exports =
 				assert.eql( val, res )
 				return
 			return
-		
+
 		# set another key
 		localCache.set key2, val, 0.3, ( err, res )->
 			assert.isNull( err, err )
@@ -653,13 +654,13 @@ module.exports =
 					# check existens
 					localCache.get key, ( err, res )->
 						assert.eql( val, res )
-							
+
 						localCache.on "expired", _testExpired
 
 						# run general checkdata after ttl
 						setTimeout( ->
 							localCache._checkData( false )
-							
+
 							# deep dirty check if key is deleted
 							assert.isUndefined( localCache.data[ key ] )
 
@@ -706,7 +707,7 @@ module.exports =
 					assert.isUndefined( res, res )
 
 					#localCache._checkData( false )
-					
+
 					# deep dirty check if key is deleted
 					assert.isUndefined( localCache.data[ key3 ] )
 					return
@@ -714,7 +715,7 @@ module.exports =
 				, 500 )
 				return
 			return
-		
+
 
 		# set a key with default ttl = 0
 		localCache.set key4, val, 100, ( err, res )->
@@ -774,9 +775,9 @@ module.exports =
 					# check existens
 					res = localCache.get( key5 )
 					assert.isUndefined( res, res )
-					
+
 					localCacheTTL._checkData( false )
-					
+
 					# deep dirty check if key is deleted
 					assert.isUndefined( localCacheTTL.data[ key5 ] )
 					return
