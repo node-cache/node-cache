@@ -540,4 +540,47 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 		return
 
+
+	describe "multi", () ->
+		before () ->
+			state =
+				n: 0
+				count: 100
+				startKeys: localCache.getStats().keys
+				value: randomString 20
+				keys: []
+
+			for [1..state.count]
+				key = randomString 7
+				state.keys.push key
+
+			for key in state.keys
+				localCache.set key, state.value, 0, (err, res) ->
+					state.n++
+					should(err).be.null()
+					return
+			return
+
+		it "generate a sub-list of keys", () ->
+			state.getKeys = state.keys.splice 50, 5
+			state.prediction = {}
+			return
+
+		it "generate prediction", () ->
+			for key in state.getKeys
+				state.prediction[key] = state.value
+			return
+
+		it "try to mget with a single key", () ->
+			localCache.mget state.getKeys[0], (err, res) ->
+				state.n++
+				should(err).exist()
+				"Error".should.eql err.constructor.name
+				"EKEYSTYPE".should.eql err.name
+				should(res).be.undefined()
+				return
+			return
+
+		return
+
 	return
