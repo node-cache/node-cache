@@ -1,4 +1,12 @@
-exports.randomString = ( length, withnumbers = true ) ->
+###
+Generates a random string of given length
+
+@param {Number} length - length of the returned string
+@param {Boolean} withnumbers [true]
+
+@return {String} generated random string 
+###
+exports.randomString = (length, withnumbers = true) ->
 	chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	chars += "0123456789" if withnumbers
 
@@ -12,3 +20,21 @@ exports.randomString = ( length, withnumbers = true ) ->
 		i++
 
 	return randomstring
+
+###
+Subtracts all objB keys from objA keys and returns the result.
+Both objects should have identical keys with numeric values
+
+@param {Object} objA
+@param {Object} objB
+
+@return {Object} Object with the diffed values
+###
+exports.diffKeys = (objA, objB) ->
+	diff = {}
+
+	for key of objA
+		if objB.hasOwnProperty key
+			diff[key] = objA[key] - objB[key]
+
+	return diff

@@ -4,7 +4,7 @@ clone = require "lodash/clone"
 
 pkg = require "../package.json"
 VCache = require "../"
-{ randomString } = require "./helpers"
+{ randomString, diffKeys } = require "./helpers"
 
 localCache = new VCache({
 	stdTTL: 0
@@ -470,6 +470,73 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 			state.n.should.eql state.count*2
 			localCache.getStats().keys.should.eql 0
+			return
+		return
+
+
+	describe "stats", () ->
+		before () ->
+			state =
+				n: 0
+				start: clone localCache.getStats()
+				count: 5
+				keylength: 7
+				valuelength: 50
+				keys: []
+				values: []
+
+			for [1..state.count*2]
+				key = randomString state.keylength
+				value = randomString state.valuelength
+				state.keys.push key
+				state.values.push value
+
+				localCache.set key, value, 0, (err, success) ->
+					state.n++
+					should(err).be.null()
+					should(success).be.ok()
+					return
+			return
+
+		it "get and remove `count` elements", () ->
+			for i in [1..state.count]
+				localCache.get state.keys[i], (err, res) ->
+					state.n++
+					should(err).be.null()
+					state.values[i].should.eql res
+					return
+
+			for i in [1..state.count]
+				localCache.del state.keys[i], (err, success) ->
+					state.n++
+					should(err).be.null()
+					success.should.be.ok()
+					return
+
+			after = localCache.getStats()
+			diff = diffKeys after, state.start
+
+			diff.hits.should.eql 5
+			diff.keys.should.eql 5
+			diff.ksize.should.eql state.count * state.keylength
+			diff.vsize.should.eql state.count * state.valuelength
+			return
+
+		it "generate `count` misses", () ->
+			for i in [1..state.count]
+				# 4 char key should not exist
+				localCache.get "xxxx", (err, res) ->
+					state.n++
+					should(err).be.null()
+					should(res).be.undefined()
+					return
+
+			after = localCache.getStats()
+			diff = diffKeys after, state.start
+
+			diff.misses.should.eql 5
+
+			state.n.should.eql 5 * state.count
 			return
 		return
 
