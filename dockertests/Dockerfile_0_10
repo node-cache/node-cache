@@ -9,7 +9,7 @@ WORKDIR /usr/src/
 COPY package.json /usr/src/package.json
 
 RUN npm install --production
-RUN npm install -g expresso
+RUN npm install mocha should
 
 COPY lib/ /usr/src/lib/
 COPY test/ /usr/src/test/
