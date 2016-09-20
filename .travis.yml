@@ -12,11 +12,14 @@ node_js:
   - 5.2
   - 5.3
   - 5.4
+  - 5.12
   - 6
+  - 6.6
   - node
+  - lts/argon
+  - lts/*
   - iojs
 install: npm install
 before_script:
-  - "npm install -g expresso"
   - "npm install -g grunt-cli"
   - "grunt build"
