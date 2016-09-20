@@ -3,21 +3,21 @@ clone = require "lodash/clone"
 { stringify } = JSON
 
 pkg = require "../package.json"
-VCache = require "../"
+nodeCache = require "../"
 { randomString, diffKeys } = require "./helpers"
 
-localCache = new VCache({
+localCache = new nodeCache({
 	stdTTL: 0
 })
 
-localCacheNoClone = new VCache({
+localCacheNoClone = new nodeCache({
 	stdTTL: 0,
 	useClones: false,
 	checkperiod: 0
 })
 
 
-localCacheTTL = new VCache({
+localCacheTTL = new nodeCache({
 	stdTTL: 0.3,
 	checkperiod: 0
 })
