@@ -25,7 +25,7 @@
     "memcached",
     "object"
   ],
-  "version": "3.2.1",
+  "version": "4.0.0",
   "author": "tcs-de <github@tcs.de>",
   "maintainers": {
     "name": "M. Peter",
