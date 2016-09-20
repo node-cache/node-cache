@@ -26,17 +26,17 @@
     "object"
   ],
   "version": "4.0.0",
-  "author": "tcs-de <github@tcs.de>",
+  "author": "mpneuried <mp@tcs.de>",
   "maintainers": {
     "name": "M. Peter",
     "email": "mp@tcs.de",
     "url": "https://github.com/mpneuried"
   },
   "main": "./index.js",
-  "homepage": "https://github.com/tcs-de/nodecache",
+  "homepage": "https://github.com/mpneuried/nodecache",
   "repository": {
     "type": "git",
-    "url": "git://github.com/tcs-de/nodecache.git"
+    "url": "git://github.com/mpneuried/nodecache.git"
   },
   "license": "MIT",
   "engines": {

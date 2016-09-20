@@ -1,11 +1,12 @@
 node-cache
 ===========
 
-[![Build Status](https://secure.travis-ci.org/tcs-de/nodecache.svg?branch=master)](http://travis-ci.org/tcs-de/nodecache)
-[![Build Status](https://david-dm.org/tcs-de/nodecache.svg)](https://david-dm.org/tcs-de/nodecache)
+[![Build Status](https://secure.travis-ci.org/mpneuried/nodecache.svg?branch=master)](http://travis-ci.org/mpneuried/nodecache)
+[![Windows Tests](https://img.shields.io/appveyor/ci/mpneuried/nodecache.svg?label=Windows%20Test)](https://ci.appveyor.com/project/mpneuried/nodecache)
+[![Dependency Status](https://david-dm.org/mpneuried/nodecache.svg)](https://david-dm.org/mpneuried/nodecache)
 [![NPM version](https://badge.fury.io/js/node-cache.svg)](http://badge.fury.io/js/node-cache)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tcs-de/nodecache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mpneuried/nodecache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 [![NPM](https://nodei.co/npm/node-cache.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/node-cache/)
 
@@ -229,6 +230,8 @@ value = myCache.del( [ "A", "B", "C", "D" ] );
 Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.  
 If the ttl-argument isn't passed the default-TTL will be used.
 
+The key will be deleted when passing in a `ttl < 0`.
+
 ```js
 myCache = new NodeCache( { stdTTL: 100 } )
 myCache.ttl( "existendKey", 100, function( err, changed ){
@@ -410,13 +413,13 @@ myCache.on( "flush", function(){
 
 ### version `2.x`
 
-Due to the [Issue #11](https://github.com/tcs-de/nodecache/issues/11) the return format of the `.get()` method has been changed!
+Due to the [Issue #11](https://github.com/mpneuried/nodecache/issues/11) the return format of the `.get()` method has been changed!
 
 Instead of returning an object with the key `{ "myKey": "myValue" }` it returns the value itself `"myValue"`.
 
 ### version `3.x`
 
-Due to the [Issue #30](https://github.com/tcs-de/nodecache/issues/30) and [Issue #27](https://github.com/tcs-de/nodecache/issues/27) variables will now be cloned.  
+Due to the [Issue #30](https://github.com/mpneuried/nodecache/issues/30) and [Issue #27](https://github.com/mpneuried/nodecache/issues/27) variables will now be cloned.  
 This chould break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.  
 You can disable the cloning by setting the option `useClones: false`. In this case it's compatible with version `2.x`.
 
@@ -464,7 +467,7 @@ This is possible because the memory allocation for the object returned by 1.x is
 
 ### Version 3.0.x 
 
-*see [travis results](https://travis-ci.org/tcs-de/nodecache/builds/64560503)*
+*see [travis results](https://travis-ci.org/mpneuried/nodecache/builds/64560503)*
 
 **node.js `0.6.21`**  
 SET: `786`ms ( `7.24`µs per item )  
@@ -506,14 +509,15 @@ But it's tested only until version `0.10.x`.
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|4.0.0|2016-09-20|Updated tests to mocha; Fixed `.ttl` bug to not delete key on `.ttl( key, 0 )`. This is also relevant if `stdTTL=0`. *This causes the breaking change to `4.0.0`.*|
 |3.2.1|2016-03-21|Updated lodash to 4.x.; optimized grunt |
-|3.2.0|2016-01-29|Added method `getTtl` to get the time when a key expires. See [#49](https://github.com/tcs-de/nodecache/issues/49)|
-|3.1.0|2016-01-29|Added option `errorOnMissing` to throw/callback an error o a miss during a `.get( "key" )`. Thanks to [David Godfrey](https://github.com/david-byng) for the pull [#45](https://github.com/tcs-de/nodecache/pull/45). Added docker files and a script to run test on different node versions locally|
-|3.0.1|2016-01-13|Added `.unref()` to the checkTimeout so until node `0.10` it's not necessary to call `.close()` when your script is done. Thanks to [Doug Moscrop](https://github.com/dougmoscrop) for the pull [#44](https://github.com/tcs-de/nodecache/pull/44).|
+|3.2.0|2016-01-29|Added method `getTtl` to get the time when a key expires. See [#49](https://github.com/mpneuried/nodecache/issues/49)|
+|3.1.0|2016-01-29|Added option `errorOnMissing` to throw/callback an error o a miss during a `.get( "key" )`. Thanks to [David Godfrey](https://github.com/david-byng) for the pull [#45](https://github.com/mpneuried/nodecache/pull/45). Added docker files and a script to run test on different node versions locally|
+|3.0.1|2016-01-13|Added `.unref()` to the checkTimeout so until node `0.10` it's not necessary to call `.close()` when your script is done. Thanks to [Doug Moscrop](https://github.com/dougmoscrop) for the pull [#44](https://github.com/mpneuried/nodecache/pull/44).|
 |3.0.0|2015-05-29|Return a cloned version of the cached element and save a cloned version of a variable. This can be disabled by setting the option `useClones:false`. (Thanks for #27 to [cheshirecatalyst](https://github.com/cheshirecatalyst) and for #30 to [Matthieu Sieben](https://github.com/matthieusieben))|
-|~~2.2.0~~|~~2015-05-27~~|REVOKED VERSION, because of conficts. See [Issue #30](https://github.com/tcs-de/nodecache/issues/30). So `2.2.0` is now `3.0.0`|
+|~~2.2.0~~|~~2015-05-27~~|REVOKED VERSION, because of conficts. See [Issue #30](https://github.com/mpneuried/nodecache/issues/30). So `2.2.0` is now `3.0.0`|
 |2.1.1|2015-04-17|Passed old value to the `del` event. Thanks to [Qix](https://github.com/qix) for the pull.|
-|2.1.0|2015-04-17|Changed get miss to return `undefined` instead of an error. Thanks to all [#11](https://github.com/tcs-de/nodecache/issues/11) contributors |
+|2.1.0|2015-04-17|Changed get miss to return `undefined` instead of an error. Thanks to all [#11](https://github.com/mpneuried/nodecache/issues/11) contributors |
 |2.0.1|2015-04-17|Added close function (Thanks to [ownagedj](https://github.com/ownagedj)). Changed the development environment to use grunt.|
 |2.0.0|2015-01-05|changed return format of `.get()` with a error return on a miss and added the `.mget()` method. *Side effect: Performance of .get() up to 330 times faster!*|
 |1.1.0|2015-01-05|added `.keys()` method to list all existing keys|
