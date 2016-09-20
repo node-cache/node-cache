@@ -69,8 +69,8 @@ module.exports = (grunt) ->
 				wait: true
 
 			main:
-				cmd: "node_modules/expresso/bin/expresso"
-				args: [ "test/node_cache-test.js" ]
+				cmd: "npm"
+				args: [ "test" ]
 
 
 	# Load npm modules
@@ -90,6 +90,11 @@ module.exports = (grunt) ->
 	grunt.registerTask "default", "build"
 	grunt.registerTask "clear", [ "clean:base" ]
 	grunt.registerTask "test", [ "build", "run:main" ]
+	
+	grunt.registerTask "w", "watch"
+	grunt.registerTask "b", "build"
+	grunt.registerTask "t", "test"
+	
 
 	# build the project
 	grunt.registerTask "build", [ "clear", "coffee:base", "usebanner:base", "includereplace:pckg" ]
