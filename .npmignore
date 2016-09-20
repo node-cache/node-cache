@@ -6,3 +6,6 @@ npm-debug.log
 *.coffee
 /dockertests
 /test
+*.yml
+coffeelint.json
+.editorconfig
