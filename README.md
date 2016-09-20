@@ -229,6 +229,8 @@ value = myCache.del( [ "A", "B", "C", "D" ] );
 Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.  
 If the ttl-argument isn't passed the default-TTL will be used.
 
+The key will be deleted when passing in a `ttl < 0`.
+
 ```js
 myCache = new NodeCache( { stdTTL: 100 } )
 myCache.ttl( "existendKey", 100, function( err, changed ){
@@ -506,6 +508,7 @@ But it's tested only until version `0.10.x`.
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|4.0.0|2016-09-20|Updated tests to mocha; Fixed `.ttl` bug to not delete key on `.ttl( key, 0 )`. This is also relevant if `stdTTL=0`. *This causes the breaking change to `4.0.0`.*|
 |3.2.1|2016-03-21|Updated lodash to 4.x.; optimized grunt |
 |3.2.0|2016-01-29|Added method `getTtl` to get the time when a key expires. See [#49](https://github.com/tcs-de/nodecache/issues/49)|
 |3.1.0|2016-01-29|Added option `errorOnMissing` to throw/callback an error o a miss during a `.get( "key" )`. Thanks to [David Godfrey](https://github.com/david-byng) for the pull [#45](https://github.com/tcs-de/nodecache/pull/45). Added docker files and a script to run test on different node versions locally|
