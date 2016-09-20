@@ -137,7 +137,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			localCache.set state.key, state.value2, 0, (err, res) ->
 				state.n++
 				should.not.exist err
-				should(res).be.ok()
+				true.should.eql res
 
 				# check if update worked
 				localCache.get state.key, (err, res) ->
@@ -181,7 +181,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			localCache.set "zero", 0, 0, (err, res) ->
 				state.n++
 				should.not.exist err
-				should(res).be.ok()
+				true.should.eql res
 				done()
 				return
 			return
@@ -242,7 +242,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		it "set key", () ->
 			res = localCache.set state.key, state.value, 0
-			should(res).be.ok()
+			true.should.eql res
 			1.should.eql localCache.getStats().keys - state.start.keys
 			return
 
@@ -263,7 +263,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		it "update key (and get it to check if the update worked)", () ->
 			res = localCache.set state.key, state.value2, 0
-			should(res).be.ok()
+			true.should.eql res
 
 			# check if the update worked
 			res = localCache.get state.key
@@ -290,7 +290,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			# set the keys
 			keys.forEach (key) ->
 				res = localCache.set key, state.value3
-				should(res).be.ok()
+				true.should.eql res
 				return
 			# check the keys
 			keys.forEach (key) ->
@@ -321,7 +321,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		it "set a key to 0", () ->
 			res = localCache.set "zero", 0
-			should(res).be.ok()
+			true.should.eql res
 			return
 
 		it "get previously set key", () ->
@@ -331,7 +331,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		it "set a key to an object clone", () ->
 			res = localCache.set "clone", state.obj
-			should(res).be.ok()
+			true.should.eql res
 			return
 
 		it "get cloned object", () ->
@@ -613,7 +613,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		return
 
 
-	describe.only "ttl", () ->
+	describe "ttl", () ->
 		before () ->
 			state =
 				n: 0
@@ -630,8 +630,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		it "set a key with ttl", () ->
 			localCache.set state.key1, state.val, 0.5, (err, res) ->
 				should.not.exist err
-				should(res).be.ok()
-
+				true.should.eql res
 				ts = localCache.getTtl state.key1
 				if state.now < ts < state.now + 300
 					throw new Error "Invalid timestamp"
@@ -674,7 +673,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		it "set another key with ttl", () ->
 			localCache.set state.key2, state.val, 0.3, (err, res) ->
 				should.not.exist err
-				should(res).be.ok()
+				true.should.eql res
 				return
 			return
 
@@ -740,7 +739,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 				localCache.set innerState.key, innerState.val, 0.5, (err, res) ->
 					should.not.exist err
-					should(res).be.ok()
+					true.should.eql res
 					(innerState.startKeys + 1).should.eql localCache.getStats().keys
 					# event handler should have been fired
 					0.should.eql localCache.listenerCount "set"
@@ -776,7 +775,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			it "set a third key with ttl", () ->
 				localCache.set state.key3, state.val, 100, (err, res) ->
 					should.not.exist null
-					should(res).be.ok()
+					true.should.eql res
 					return
 				return
 
@@ -818,8 +817,76 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				, 500)
 				return
 
-			it "set key4 with ttl = 0"
-			it "set key5 with default ttl"
+			it "set a key with ttl = 100s (default: infinite), reset it's ttl to default and check if it still exists", () ->
+				localCache.set state.key4, state.val, 100, (err, res) ->
+					should.not.exist err
+					true.should.eql res
+
+					# check immediately
+					localCache.get state.key4, (err, res) ->
+						should.not.exist err
+						state.val.should.eql res
+
+						# set ttl to false key
+						localCache.ttl "#{state.key4}false", (err, wasSet) ->
+							should.not.exist err
+							false.should.eql wasSet
+							return
+
+						# set default ttl (0) to the right key
+						localCache.ttl state.key4, (err, wasSet) ->
+							should.not.exist err
+							true.should.eql wasSet
+
+							# and check if it still exists
+							res = localCache.get state.key4
+							state.val.should.eql res
+							return
+						return
+					return
+				return
+
+			it "set a key with ttl = 100s (default: 0.3s), reset it's ttl to default, check if it still exists, and wait for its timeout", (done) ->
+				localCacheTTL.set state.key5, state.val, 100, (err, res) ->
+					should.not.exist err
+					true.should.eql res
+
+					# check immediately
+					localCacheTTL.get state.key5, (err, res) ->
+						should.not.exist err
+						state.val.should.eql res
+
+						# set ttl to false key
+						localCacheTTL.ttl "#{state.key5}false", (err, wasSet) ->
+							should.not.exist err
+							false.should.eql wasSet
+							return
+
+						# set default ttl (0.3) to right key
+						localCacheTTL.ttl state.key5, (err, wasSet) ->
+							should.not.exist err
+							true.should.eql wasSet
+							return
+
+						# and check if it still exists
+						localCacheTTL.get state.key5, (err, res) ->
+							should.not.exist err
+							state.val.should.eql res
+
+							setTimeout(() ->
+								res = localCacheTTL.get state.key5
+								should.not.exist res
+
+								localCacheTTL._checkData false
+
+								# deep dirty check if key was deleted
+								should(localCacheTTL.data[state.key5]).be.undefined()
+								done()
+								return
+							, 350)
+							return
+						return
+				return
 
 			return
 
