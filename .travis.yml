@@ -1,22 +1,23 @@
 os:
   - linux
+  - osx
 language: node_js
 node_js:
   - 0.10
   - 0.12
   - 4.0
   - 4.1
-  - 4.2
+  - 4.5
   - 5.0
-  - 5.1
-  - 5.2
-  - 5.3
-  - 5.4
+  - 5.5
+  - 5.12
   - 6
+  - 6.6
   - node
+  - lts/argon
+  - lts/*
   - iojs
 install: npm install
 before_script:
-  - "npm install -g expresso"
   - "npm install -g grunt-cli"
   - "grunt build"
