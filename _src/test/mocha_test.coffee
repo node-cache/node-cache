@@ -444,9 +444,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		before () ->
 			# don't override state because we still need `state.keys`
-			Object.assign state,
-				n: 0
-				startKeys: localCache.getStats().keys
+			state.n = 0
+			state.startKeys = localCache.getStats().keys
 			return
 
 		it "delete all previously set keys", () ->
@@ -742,7 +741,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					true.should.eql res
 					(innerState.startKeys + 1).should.eql localCache.getStats().keys
 					# event handler should have been fired
-					0.should.eql localCache.listenerCount "set"
+					0.should.eql localCache.listeners("set").length
 					done()
 					return
 				return
