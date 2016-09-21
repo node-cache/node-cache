@@ -43,7 +43,8 @@
     "node": ">= 0.4.6"
   },
   "scripts": {
-    "test": "mocha test/mocha_test.js"
+    "test": "mocha test/mocha_test.js",
+    "build": "grunt build"
   },
   "dependencies": {
     "lodash": "4.x",
@@ -54,6 +55,7 @@
     "grunt-banner": "0.6.x",
     "grunt-contrib-clean": "1.0.x",
     "grunt-contrib-coffee": "1.0.x",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-include-replace": "3.2.x",
     "grunt-regarde": "0.1.x",
     "grunt-run": "0.5.x",
