@@ -4,7 +4,7 @@ Generates a random string of given length
 @param {Number} length - length of the returned string
 @param {Boolean} withnumbers [true]
 
-@return {String} generated random string 
+@return {String} generated random string
 ###
 exports.randomString = (length, withnumbers = true) ->
 	chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -20,6 +20,17 @@ exports.randomString = (length, withnumbers = true) ->
 		i++
 
 	return randomstring
+
+
+###
+Generates a random number between 0 and `max`
+
+@param {Number} max
+
+@return {Number} generated random number
+###
+exports.randomNumber = (max) -> Math.floor Math.random() * (max + 1)
+
 
 ###
 Subtracts all objB keys from objA keys and returns the result.

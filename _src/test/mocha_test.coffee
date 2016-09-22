@@ -4,7 +4,7 @@ clone = require "lodash/clone"
 
 pkg = require "../package.json"
 nodeCache = require "../"
-{ randomString, diffKeys } = require "./helpers"
+{ randomNumber, randomString, diffKeys } = require "./helpers"
 
 localCache = new nodeCache({
 	stdTTL: 0
@@ -347,6 +347,162 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 		return
 
+	describe "correct and incorrect key types", () ->
+		describe "number", () ->
+			before () ->
+				state =
+					keys: []
+					val: randomString 20
+
+				for [1..10]
+					state.keys.push randomNumber 100000
+				return
+
+			it "set", () ->
+				for key in state.keys
+					localCache.set key, state.val, (err, res) ->
+						should.not.exist err
+						true.should.eql res
+						return
+				return
+
+			it "get", () ->
+				localCache.get state.keys[0], (err, res) ->
+					should.not.exist err
+					state.val.should.eql res
+					return
+				return
+
+			it "mget", () ->
+				localCache.mget state.keys[0..1], (err, res) ->
+					should.not.exist err
+					# generate prediction
+					prediction = {}
+					prediction[state.keys[0]] = state.val
+					prediction[state.keys[1]] = state.val
+					prediction.should.eql res
+					return
+				return
+
+			it "del single", () ->
+				localCache.del state.keys[0], (err, count) ->
+					should.not.exist err
+					1.should.eql count
+					return
+				return
+
+			it "del multi", () ->
+				localCache.del state.keys[1..2], (err, count) ->
+					should.not.exist err
+					2.should.eql count
+					return
+				return
+
+			it "ttl", (done) ->
+				success = localCache.ttl state.keys[3], 0.3
+				true.should.eql success
+
+				res = localCache.get state.keys[3]
+				state.val.should.eql res
+
+				setTimeout(() ->
+					res = localCache.get state.keys[3]
+					should.not.exist res
+					done()
+					return
+				, 400)
+				return
+
+			it "getTtl", () ->
+				now = Date.now()
+				success = localCache.ttl state.keys[4], 0.5
+				true.should.eql success
+
+				ttl = localCache.getTtl state.keys[4]
+				(485 < (ttl - now) < 510).should.eql true
+				return
+
+			after () ->
+				localCache.flushAll false
+				return
+			return
+
+		describe "string", () ->
+			before () ->
+				state =
+					keys: []
+					val: randomString 20
+
+				for [1..10]
+					state.keys.push randomString 10
+				return
+
+			it "set", () ->
+				for key in state.keys
+					localCache.set key, state.val, (err, res) ->
+						should.not.exist err
+						true.should.eql res
+						return
+				return
+
+			it "get", () ->
+				localCache.get state.keys[0], (err, res) ->
+					should.not.exist err
+					state.val.should.eql res
+					return
+				return
+
+			it "mget", () ->
+				localCache.mget state.keys[0..1], (err, res) ->
+					should.not.exist err
+					# generate prediction
+					prediction = {}
+					prediction[state.keys[0]] = state.val
+					prediction[state.keys[1]] = state.val
+					prediction.should.eql res
+					return
+				return
+
+			it "del single", () ->
+				localCache.del state.keys[0], (err, count) ->
+					should.not.exist err
+					1.should.eql count
+					return
+				return
+
+			it "del multi", () ->
+				localCache.del state.keys[1..2], (err, count) ->
+					should.not.exist err
+					2.should.eql count
+					return
+				return
+
+			it "ttl", (done) ->
+				success = localCache.ttl state.keys[3], 0.3
+				true.should.eql success
+
+				res = localCache.get state.keys[3]
+				state.val.should.eql res
+
+				setTimeout(() ->
+					res = localCache.get state.keys[3]
+					should.not.exist res
+					done()
+					return
+				, 400)
+				return
+
+			it "getTtl", () ->
+				now = Date.now()
+				success = localCache.ttl state.keys[4], 0.5
+				true.should.eql success
+
+				ttl = localCache.getTtl state.keys[4]
+				(485 < (ttl - now) < 510).should.eql true
+				return
+			return
+
+		return
 
 	describe "flush", () ->
 		before () ->
