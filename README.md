@@ -16,6 +16,11 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout (`ttl`) after which they expire and are deleted from the cache.  
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
+**Since `4.1.0`**:
+*Key-validation*: The keys can be given as either `string` or `number`, but are casted to a `string` internally anyway.  
+All other types will either throw an error or call the callback with an error.
+
+
 # Install
 
 ```bash
@@ -115,7 +120,7 @@ if ( value == undefined ){
 
 The return format changed to a simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )*.
 
-**Since `2.1.0`**: 
+**Since `2.1.0`**:
 
 The return format changed to a simple value, but a due to discussion in #11 a miss shouldn't return an error.
 So after 2.1.0 a miss returns `undefined`.
@@ -264,7 +269,7 @@ Receive the ttl of a key.
 You will get:
 - `undefined` if the key does not exist
 - `0` if this key has no ttl
-- a timestamp in ms until the key expires 
+- a timestamp in ms until the key expires
 
 ```js
 myCache = new NodeCache( { stdTTL: 100 } )
@@ -409,7 +414,7 @@ myCache.on( "flush", function(){
 ```
 
 
-## Breaking changes 
+## Breaking changes
 
 ### version `2.x`
 
@@ -465,7 +470,7 @@ GET: `34`ms ( `0.34`µs per item )
 > As you can see the version 2.x will increase the GET performance up to 200x in node 0.10.x.
 This is possible because the memory allocation for the object returned by 1.x is very expensive.
 
-### Version 3.0.x 
+### Version 3.0.x
 
 *see [travis results](https://travis-ci.org/mpneuried/nodecache/builds/64560503)*
 
@@ -483,11 +488,11 @@ GET: `32`ms ( `0.60`µs per item )
 
 **io.js `v2.1.0`**  
 SET: `238`ms ( `4.06`µs per item )  
-GET: `34`ms ( `0.67`µs per item ) 
+GET: `34`ms ( `0.67`µs per item )
 
 > until the version 3.0.x the object cloning is included, so we lost a little bit of the performance
 
-### Version 3.1.x 
+### Version 3.1.x
 
 **node.js `v0.10.41`**  
 SET: `305ms`  ( `3.05µs` per item )  
@@ -503,12 +508,12 @@ GET: `83ms`  ( `0.83µs` per item )
 
 ## Compatibility
 
-This module should work well until node `0.6.x`.
-But it's tested only until version `0.10.x`.
+This module should work well until node `6.x`.
 
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|4.0.0|2016-09-22|Added tests for different key types; Added key validation (must be `string` or `number`); Fixed `.del` bug where trying to delete a `number` key resulted in no deletion at all.|
 |4.0.0|2016-09-20|Updated tests to mocha; Fixed `.ttl` bug to not delete key on `.ttl( key, 0 )`. This is also relevant if `stdTTL=0`. *This causes the breaking change to `4.0.0`.*|
 |3.2.1|2016-03-21|Updated lodash to 4.x.; optimized grunt |
 |3.2.0|2016-01-29|Added method `getTtl` to get the time when a key expires. See [#49](https://github.com/mpneuried/nodecache/issues/49)|

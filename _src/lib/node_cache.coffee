@@ -44,6 +44,9 @@ module.exports = class NodeCache extends EventEmitter
 			ksize: 0
 			vsize: 0
 
+		# pre allocate valid keytypes array
+		@validKeyTypes = ["string", "number"]
+
 		# initalize checking period
 		@_checkData()
 		return
@@ -54,13 +57,13 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String ): cache key
+	# * `key` ( String | Number ): cache key
 	# * `[cb]` ( Function ): Callback function
 	# * `[errorOnMissing=false]` ( Boolean ) return a error to the `cb` or throw it if no `cb` is used. Otherwise the get will return `undefined` on a miss.
 	#
 	# **Example:**
 	#
-	#     myCache.key "myKey", ( err, val )->
+	#     myCache.get "myKey", ( err, val )->
 	#       console.log( err, val )
 	#       return
 	#
@@ -69,6 +72,14 @@ module.exports = class NodeCache extends EventEmitter
 		if typeof cb == "boolean" and arguments.length == 2
 			errorOnMissing = cb
 			cb = undefined
+
+		# handle invalid key types
+		if (err = @_isInvalidKey( key ))?
+			if cb?
+				cb( err )
+				return
+			else
+				throw err
 
 		# get data and incremet stats
 		if @data[ key ]? and @_check( key, @data[ key ] )
@@ -96,12 +107,12 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `keys` ( String[] ): an array of keys
+	# * `keys` ( String|Number[] ): an array of keys
 	# * `[cb]` ( Function ): Callback function
 	#
 	# **Example:**
 	#
-	#     myCache.key [ "foo", "bar" ], ( err, val )->
+	#     myCache.mget [ "foo", "bar" ], ( err, val )->
 	#       console.log( err, val )
 	#       return
 	#
@@ -115,7 +126,15 @@ module.exports = class NodeCache extends EventEmitter
 		# define return
 		oRet = {}
 		for key in keys
-			# get data and incremet stats
+			# handle invalid key types
+			if (err = @_isInvalidKey( key ))?
+				if cb?
+					cb( err )
+					return
+				else
+					throw err
+
+			# get data and increment stats
 			if @data[ key ]? and @_check( key, @data[ key ] )
 				@stats.hits++
 				oRet[ key ] = @_unwrap( @data[ key ] )
@@ -133,7 +152,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String ): cache key
+	# * `key` ( String | Number ): cache key
 	# * `value` ( Any ): A element to cache. If the option `option.forceString` is `true` the module trys to translate it to a serialized JSON
 	# * `[ ttl ]` ( Number | String ): ( optional ) The time to live in seconds.
 	# * `[cb]` ( Function ): Callback function
@@ -143,13 +162,10 @@ module.exports = class NodeCache extends EventEmitter
 	#     myCache.set "myKey", "my_String Value", ( err, success )->
 	#       console.log( err, success )
 	#
-	#     myCache.set "myKey", "my_String Value", "10h", ( err, success )->
+	#     myCache.set "myKey", "my_String Value", "10", ( err, success )->
 	#       console.log( err, success )
 	#
 	set: ( key, value, ttl, cb )=>
-		# internal helper variables
-		existent = false
-
 		# force the data to string
 		if @options.forceString and not _isString( value )
 			value = JSON.stringify( value )
@@ -158,6 +174,17 @@ module.exports = class NodeCache extends EventEmitter
 		if arguments.length is 3 and _isFunction( ttl )
 			cb = ttl
 			ttl = @options.stdTTL
+
+		# handle invalid key types
+		if (err = @_isInvalidKey( key ))?
+			if cb?
+				cb( err )
+				return
+			else
+				throw err
+
+		# internal helper variables
+		existent = false
 
 		# remove existing data from stats
 		if @data[ key ]
@@ -185,7 +212,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `keys` ( String | String[] ): cache key to delete or a array of cache keys
+	# * `keys` ( String | Number | String|Number[] ): cache key to delete or a array of cache keys
 	# * `[cb]` ( Function ): Callback function
 	#
 	# **Return**
@@ -198,14 +225,21 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	#     myCache.del( "myKey", ( err, delCount )->
 	#       console.log( err, delCount )
-	#
+	#       return
 	del: ( keys, cb )=>
-		# convert a string to an array of one key
-		if _isString( keys )
+		# convert keys to an array of itself
+		if not _isArray( keys )
 			keys = [ keys ]
 
 		delCount = 0
 		for key in keys
+			# handle invalid key types
+			if (err = @_isInvalidKey( key ))?
+				if cb?
+					cb( err )
+					return
+				else
+					throw err
 			# only delete if existent
 			if @data[ key ]?
 				# calc the stats
@@ -228,11 +262,13 @@ module.exports = class NodeCache extends EventEmitter
 
 	# ## ttl
 	#
-	# reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 it's similar to `.del()`
+	# reset or redefine the ttl of a key. `ttl` = 0 means inifite lifetime.
+	# If `ttl` is not passed the default ttl is used.
+	# If `ttl` < 0 the key will be deleted.
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String ): cache key to reset the ttl value
+	# * `key` ( String | Number ): cache key to reset the ttl value
 	# * `ttl` ( Number ): ( optional -> options.stdTTL || 0 ) The time to live in seconds
 	# * `[cb]` ( Function ): Callback function
 	#
@@ -260,6 +296,14 @@ module.exports = class NodeCache extends EventEmitter
 			cb( null, false ) if cb?
 			return false
 
+		# handle invalid key types
+		if (err = @_isInvalidKey( key ))?
+			if cb?
+				cb( err )
+				return
+			else
+				throw err
+
 		# check for existent data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			# if ttl < 0  delete the key. otherwise reset the value
@@ -282,7 +326,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String ): cache key to check the ttl value
+	# * `key` ( String | Number ): cache key to check the ttl value
 	# * `[cb]` ( Function ): Callback function
 	#
 	# **Return**
@@ -291,16 +335,24 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     ts = myCache.ttl( "myKey" ) // will set ttl to default ttl
+	#     ts = myCache.getTtl( "myKey" )
 	#
-	#     myCache.ttl( "myKey",( err, keyFound )->
-	#       console.log( err, success )
+	#     myCache.getTtl( "myKey",( err, ttl )->
+	#       console.log( err, ttl )
+	#       return
 	#
 	getTtl: ( key, cb )=>
-		# change args if only key and callback are passed
 		if not key
 			cb( null, undefined ) if cb?
 			return undefined
+
+		# handle invalid key types
+		if (err = @_isInvalidKey( key ))?
+			if cb?
+				cb( err )
+				return
+			else
+				throw err
 
 		# check for existent data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
@@ -447,6 +499,15 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			return true
 
+	# ## _isInvalidKey
+	#
+	# internal method to check if the type of a key is either `number` or `string`
+	_isInvalidKey: ( key )=>
+		unless typeof key in @validKeyTypes
+			return @_error( "EKEYTYPE", { type: typeof key })
+		return
+
+
 	# ## _wrap
 	#
 	# internal method to wrap a value in an object with some metadata
@@ -548,4 +609,5 @@ module.exports = class NodeCache extends EventEmitter
 
 	_ERRORS:
 		"ENOTFOUND": "Key `<%= key %>` not found"
+		"EKEYTYPE": "The key argument has to be of type `string` or `number`. Found: `<%= type %>`"
 		"EKEYSTYPE": "The keys argument has to be an array."

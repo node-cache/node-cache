@@ -347,7 +347,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 		return
 
-	describe "correct and incorrect key types", () ->
+	describe.only "correct and incorrect key types", () ->
 		describe "number", () ->
 			before () ->
 				state =
@@ -499,6 +499,274 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 				ttl = localCache.getTtl state.keys[4]
 				(485 < (ttl - now) < 510).should.eql true
+				return
+			return
+
+		describe "boolean - invalid type", () ->
+			before () ->
+				state =
+					keys: [true, false]
+					val: randomString 20
+				return
+
+			it "set sync-style", () ->
+				(() -> localCache.set(state.keys[0], state.val)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "set cb-style", () ->
+				localCache.set state.keys[0], state.val, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
+
+			it "get sync-style", () ->
+				(() -> localCache.get(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "get cb-style", () ->
+				localCache.get state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
+
+			it "mget sync-style", () ->
+				(() -> localCache.mget(state.keys)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "mget cb-style", () ->
+				localCache.mget state.keys, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
+
+			it "del single sync-style", () ->
+				(() -> localCache.del(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "del single cb-style", () ->
+				localCache.del state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
+
+			it "del multi sync-style", () ->
+				(() -> localCache.del(state.keys)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "del multi cb-style", () ->
+				localCache.del state.keys, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
+
+			it "ttl sync-style", () ->
+				(() -> localCache.ttl(state.keys[0], 10)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "ttl cb-style", () ->
+				localCache.ttl state.keys[0], 10, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
+
+			it "getTtl sync-style", () ->
+				(() -> localCache.getTtl(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "getTtl cb-style", () ->
+				localCache.getTtl state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
+			return
+
+		describe "object - invalid type", () ->
+			before () ->
+				state =
+					keys: [{ a: 1 }, { b: 2 }]
+					val: randomString 20
+				return
+
+			it "set sync-style", () ->
+				(() -> localCache.set(state.keys[0], state.val)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "set cb-style", () ->
+				localCache.set state.keys[0], state.val, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
+				return
+
+			it "get sync-style", () ->
+				(() -> localCache.get(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "get cb-style", () ->
+				localCache.get state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
+				return
+
+			it "mget sync-style", () ->
+				(() -> localCache.mget(state.keys)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "mget cb-style", () ->
+				localCache.mget state.keys, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
+				return
+
+			it "del single sync-style", () ->
+				(() -> localCache.del(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "del single cb-style", () ->
+				localCache.del state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
+				return
+
+			it "del multi sync-style", () ->
+				(() -> localCache.del(state.keys)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "del multi cb-style", () ->
+				localCache.del state.keys, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
+				return
+
+			it "ttl sync-style", () ->
+				(() -> localCache.ttl(state.keys[0], 10)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "ttl cb-style", () ->
+				localCache.ttl state.keys[0], 10, (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
+				return
+
+			it "getTtl sync-style", () ->
+				(() -> localCache.getTtl(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "getTtl cb-style", () ->
+				localCache.getTtl state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
 				return
 			return
 
