@@ -508,12 +508,13 @@ GET: `83ms`  ( `0.83µs` per item )
 
 ## Compatibility
 
-This module should work well until node `6.x`.
+This module should work well back until node `0.6.x`.
+But it's only tested until version `0.10.x` because the build dependencies are not installable ;-) .
 
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
-|4.0.0|2016-09-22|Added tests for different key types; Added key validation (must be `string` or `number`); Fixed `.del` bug where trying to delete a `number` key resulted in no deletion at all.|
+|4.1.0|2016-09-23|Added tests for different key types; Added key validation (must be `string` or `number`); Fixed `.del` bug where trying to delete a `number` key resulted in no deletion at all.|
 |4.0.0|2016-09-20|Updated tests to mocha; Fixed `.ttl` bug to not delete key on `.ttl( key, 0 )`. This is also relevant if `stdTTL=0`. *This causes the breaking change to `4.0.0`.*|
 |3.2.1|2016-03-21|Updated lodash to 4.x.; optimized grunt |
 |3.2.0|2016-01-29|Added method `getTtl` to get the time when a key expires. See [#49](https://github.com/mpneuried/nodecache/issues/49)|
