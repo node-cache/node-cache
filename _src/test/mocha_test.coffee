@@ -347,7 +347,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 		return
 
-	describe.only "correct and incorrect key types", () ->
+	describe "correct and incorrect key types", () ->
 		describe "number", () ->
 			before () ->
 				state =
