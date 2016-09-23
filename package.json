@@ -43,7 +43,7 @@
     "node": ">= 0.4.6"
   },
   "scripts": {
-    "test": "mocha test/mocha_test.js --grep "correct and incorrect key types"",
+    "test": "mocha test/mocha_test.js",
     "build": "grunt build"
   },
   "dependencies": {
