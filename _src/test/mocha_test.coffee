@@ -1392,4 +1392,35 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		return
 
+	describe.only "clone", () ->
+		it "a function", (done) ->
+			key = randomString 10
+
+			value = () ->
+				done()
+				return
+
+			localCache.set key, value
+
+			fn = localCache.get key
+			fn()
+			return
+
+		it "a regex", () ->
+			key = randomString 10
+			regex = new RegExp "\\b\\w{4}\\b", "g"
+			match = "king"
+			noMatch = "bla"
+
+			true.should.eql regex.test(match)
+			false.should.eql regex.test(noMatch)
+
+			localCache.set key, regex
+			cachedRegex = localCache.get key
+
+			true.should.eql cachedRegex.test(match)
+			false.should.eql cachedRegex.test(noMatch)
+			return
+		return
+
 	return
