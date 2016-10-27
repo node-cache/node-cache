@@ -18,3 +18,5 @@ deploy.json
 /test/*.js
 /lib/*.js
 *.log
+
+coverage/

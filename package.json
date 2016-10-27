@@ -43,7 +43,7 @@
     "node": ">= 0.4.6"
   },
   "scripts": {
-    "test": "mocha test/mocha_test.js",
+    "test": "COFFEECOV_INIT_ALL=false mocha --compilers coffee:coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec",
     "build": "grunt build"
   },
   "dependencies": {
@@ -51,15 +51,19 @@
     "lodash": "4.x"
   },
   "devDependencies": {
+    "coffee-coverage": "1.x",
+    "coffee-script": "1.x",
+    "coveralls": "2.x",
     "grunt": "0.4.x",
     "grunt-banner": "0.6.x",
     "grunt-contrib-clean": "1.0.x",
     "grunt-contrib-coffee": "1.0.x",
-    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-watch": "1.x",
     "grunt-include-replace": "3.2.x",
     "grunt-regarde": "0.1.x",
     "grunt-run": "0.5.x",
-    "mocha": "^3.0.2",
-    "should": "^11.1.0"
+    "istanbul": "0.x",
+    "mocha": "3.x",
+    "should": "11.x"
   }
 }

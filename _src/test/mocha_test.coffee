@@ -1,8 +1,11 @@
+fs = require "fs"
+
 should = require "should"
 clone = require "lodash/clone"
 { stringify } = JSON
 
-pkg = require "../package.json"
+pkg = JSON.parse fs.readFileSync("package.json")
+
 nodeCache = require "../"
 { randomNumber, randomString, diffKeys } = require "./helpers"
 

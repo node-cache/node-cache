@@ -5,6 +5,7 @@ node-cache
 [![Windows Tests](https://img.shields.io/appveyor/ci/mpneuried/nodecache.svg?label=Windows%20Test)](https://ci.appveyor.com/project/mpneuried/nodecache)
 [![Dependency Status](https://david-dm.org/mpneuried/nodecache.svg)](https://david-dm.org/mpneuried/nodecache)
 [![NPM version](https://badge.fury.io/js/node-cache.svg)](http://badge.fury.io/js/node-cache)
+[![Coveralls Coverage](https://img.shields.io/coveralls/mpneuried/nodecache.svg)](https://coveralls.io/github/mpneuried/nodecache)
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mpneuried/nodecache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 

@@ -21,3 +21,6 @@ install: npm install
 before_script:
   - "npm install -g grunt-cli"
   - "grunt build"
+after_success:
+  - ./node_modules/.bin/istanbul report text-summary lcov
+  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
