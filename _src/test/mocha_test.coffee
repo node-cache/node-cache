@@ -195,29 +195,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 			return
 
-		it "test promise storage", (done) ->
-			deferred_value = "Some deferred value"
-			if Promise?
-				p = new Promise (fulfill, reject) ->
-					fulfill deferred_value
-					return
-				p.then (value) ->
-					deferred_value.should.eql value
-					return
-				localCacheNoClone.set "promise", p
-				q = localCacheNoClone.get "promise"
-				q.then (value) ->
-					state.n++
-					done()
-					return
-			else
-				console.log "No Promises available in this node version (#{process.version})"
-				this.skip()
-			return
-
 		after () ->
 			count = 14
-			count++ if Promise?
 			count.should.eql state.n
 			return
 		return
@@ -345,6 +324,101 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			res2 = localCache.get "clone"
 			state.obj.should.eql res2
 			return
+
+		it "test promise storage (fulfill before adding to cache)", (done) ->
+			deferred_value = "Some deferred value"
+			if Promise?
+				p = new Promise (fulfill, reject) ->
+					fulfill deferred_value
+					return
+				p.then (value) ->
+					deferred_value.should.eql value
+					return
+				localCache.set "promise", p
+				q = localCache.get "promise"
+				q.then (value) ->
+					done()
+					return
+			else
+				console.log "No Promises available in this node version (#{process.version})"
+				this.skip()
+			return
+
+		it "test promise storage (fulfill after adding to cache)", (done) ->
+			deferred_value = "Some deferred value"
+			if Promise?
+				called  = 0
+				callStub = () ->
+					called++
+					if called is 2
+						done()
+					return
+
+				p = new Promise (fulfill, reject) ->
+					fulfiller = () ->
+						fulfill deferred_value
+						return
+					setTimeout fulfiller, 250
+					return
+				p.then (value) ->
+					deferred_value.should.eql value
+					callStub()
+					return
+				localCache.set "promise", p
+				q = localCache.get "promise"
+				q.then (value) ->
+					deferred_value.should.eql value
+					callStub()
+					return
+			else
+				console.log "No Promises available in this node version (#{process.version})"
+				this.skip()
+			return
+
+		it "test es6 map", () ->
+			unless Map?
+				console.log "No Maps available in this node version (#{process.version})"
+				this.skip()
+				return
+
+			key = randomString 10
+			map = new Map([ ["firstkey", "firstvalue"], ["2ndkey", "2ndvalue"], ["thirdkey", "thirdvalue"] ])
+
+			localCache.set key, map
+
+			map.set "fourthkey", "fourthvalue"
+
+			cached_map = localCache.get key
+			should( cached_map.get("2ndkey") ).eql "2ndvalue"
+			should( cached_map.get "fourthkey" ).be.undefined()
+			return
+
+		it "test `useClones = true` with an Object", () ->
+			key = randomString 10
+			value =
+				a: 123
+				b: 456
+			c = 789
+
+			localCache.set key, value
+			value.a = c
+
+			value.should.not.be.eql localCache.get(key)
+			return
+
+		it "test `useClones = false` with an Object", () ->
+			key = randomString 10
+			value =
+				a: 123
+				b: 456
+			c = 789
+
+			localCacheNoClone.set key, value
+			value.a = c
+
+			should( value is localCacheNoClone.get(key) ).be.true()
+			return
+
 		return
 
 	describe "correct and incorrect key types", () ->
