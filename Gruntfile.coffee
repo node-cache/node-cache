@@ -53,16 +53,30 @@ module.exports = (grunt) ->
 					"test/node_cache-test.js": ["test/node_cache-test.js"]
 
 
+		mochacli:
+			options:
+				require: [ "should", "coffee-coverage/register-istanbul" ]
+				reporter: "spec"
+				bail: false
+				timeout: 3000
+				slow: 3
+				compilers: "coffee:coffee-script/register"
+
+			main:
+				src: [ "_src/test/mocha_test.coffee" ]
+
 	# Load npm modules
 	grunt.loadNpmTasks "grunt-contrib-coffee"
 	grunt.loadNpmTasks "grunt-contrib-clean"
 	grunt.loadNpmTasks "grunt-contrib-watch"
 	grunt.loadNpmTasks "grunt-include-replace"
 	grunt.loadNpmTasks "grunt-banner"
+	grunt.loadNpmTasks "grunt-mocha-cli"
 
 	# ALIAS TASKS
 	grunt.registerTask "default", "build"
 	grunt.registerTask "clear", [ "clean:base" ]
+	grunt.registerTask "test", "mochacli:main"
 	# Shortcuts
 	grunt.registerTask "b", "build"
 	grunt.registerTask "w", "watch"

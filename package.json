@@ -60,6 +60,7 @@
     "grunt-contrib-coffee": "1.0.x",
     "grunt-contrib-watch": "1.x",
     "grunt-include-replace": "3.2.x",
+    "grunt-mocha-cli": "2.x",
     "grunt-regarde": "0.1.x",
     "grunt-run": "0.5.x",
     "istanbul": "0.x",

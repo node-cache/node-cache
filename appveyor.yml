@@ -30,7 +30,7 @@ test_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
-  - cmd: npm t
+  - cmd: grunt test
 
 os:
   - Default Azure

@@ -1392,7 +1392,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		return
 
-	describe.only "clone", () ->
+	describe "clone", () ->
 		it "a function", (done) ->
 			key = randomString 10
 
