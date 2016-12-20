@@ -1,0 +1,11 @@
+FROM node:0.10
+MAINTAINER M. Peter <mp@tcs.de>
+
+RUN	mkdir -p /usr/src/
+WORKDIR /usr/src/
+
+COPY issue78/issue78.js /usr/src/issue78.js
+RUN npm install node-cache
+
+
+CMD [ "node", "issue78.js" ]
