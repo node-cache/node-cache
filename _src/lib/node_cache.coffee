@@ -476,7 +476,7 @@ module.exports = class NodeCache extends EventEmitter
 			@_check( key, value )
 
 		if startPeriod and @options.checkperiod > 0
-			@checkTimeout = setTimeout( @_checkData, ( @options.checkperiod * 1000 ) )
+			@checkTimeout = setTimeout( @_checkData, ( @options.checkperiod * 1000 ), startPeriod )
 			@checkTimeout.unref() if @checkTimeout.unref?
 		return
 
