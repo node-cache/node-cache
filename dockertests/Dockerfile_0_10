@@ -9,10 +9,10 @@ WORKDIR /usr/src/
 COPY package.json /usr/src/package.json
 
 RUN npm install --production
-RUN npm install mocha should
+RUN npm install mocha should coffee-script
 
 COPY lib/ /usr/src/lib/
 COPY test/ /usr/src/test/
 COPY index.js /usr/src/
 
-CMD [ "npm", "test" ]
+CMD [ "npm", "run", "test-docker" ]

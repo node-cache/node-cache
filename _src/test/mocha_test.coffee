@@ -25,6 +25,9 @@ localCacheTTL = new nodeCache({
 	checkperiod: 0
 })
 
+
+BENCH = {}
+
 # just for testing disable the check period
 localCache._killCheckPeriod()
 
@@ -32,7 +35,14 @@ localCache._killCheckPeriod()
 state = {}
 
 describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
-
+	
+	after ->
+		txt = "Benchmark node@#{process.version}:"
+		for type, ops of BENCH
+			txt += "\n   - #{type}: #{ops.toFixed(1)} ops/s"
+		console.log txt
+		return
+	
 	describe "general callback-style", () ->
 		before () ->
 			state =
@@ -343,7 +353,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 			else
-				console.log "No Promises available in this node version (#{process.version})"
+				if not process.env.SILIENT_MODE?
+					console.log "No Promises available in this node version (#{process.version})"
 				this.skip()
 			return
 
@@ -374,13 +385,15 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					callStub()
 					return
 			else
-				console.log "No Promises available in this node version (#{process.version})"
+				if not process.env.SILIENT_MODE?
+					console.log "No Promises available in this node version (#{process.version})"
 				this.skip()
 			return
 
 		it "test es6 map", () ->
 			unless Map?
-				console.log "No Maps available in this node version (#{process.version})"
+				if not process.env.SILIENT_MODE?
+					console.log "No Maps available in this node version (#{process.version})"
 				this.skip()
 				return
 
@@ -909,7 +922,10 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				for key in state.keys
 					should(localCache.set key, state.val, 0).be.ok()
 				duration = Date.now() - start
-				console.log "\tSET: #{state.count} keys to: `#{state.val}` #{duration}ms (#{duration/state.count}ms per item)"
+				if not process.env.SILIENT_MODE?
+					console.log "\tSET: #{state.count} keys to: `#{state.val}` #{duration}ms (#{duration/state.count}ms per item)"
+				else
+					BENCH[ "SET" ] = 1/(( duration/1000 )/state.count)
 				return
 
 			it "GET", () ->
@@ -920,7 +936,10 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					state.n++
 					state.val.should.eql localCache.get(key)
 				duration = Date.now() - start
-				console.log "\tGET: #{state.count} keys #{duration}ms (#{duration/state.count}ms per item)"
+				if not process.env.SILIENT_MODE?
+					console.log "\tGET: #{state.count} keys #{duration}ms (#{duration/state.count}ms per item)"
+				else
+					BENCH[ "GET" ] = 1/(( duration/1000 )/state.count)
 				return
 
 			it "check stats", () ->
@@ -933,8 +952,9 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 
 			after () ->
-				console.log "\tBenchmark stats:"
-				console.log stringify(localCache.getStats(), null, "\t")
+				if not process.env.SILIENT_MODE?
+					console.log "\tBenchmark stats:"
+					console.log stringify(localCache.getStats(), null, "\t")
 				return
 			return
 		return

@@ -44,6 +44,7 @@
   },
   "scripts": {
     "test": "COFFEECOV_INIT_ALL=false mocha --compilers coffee:coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec",
+    "test-docker": "SILIENT_MODE=1 mocha test/mocha_test.js -R min",
     "build": "grunt build"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-FROM node:argon
+FROM node:6.9
 MAINTAINER M. Peter <mp@tcs.de>
 
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y build-essential
@@ -15,4 +15,4 @@ COPY lib/ /usr/src/lib/
 COPY test/ /usr/src/test/
 COPY index.js /usr/src/
 
-CMD [ "npm", "test" ]
+CMD [ "npm", "run", "test-docker" ]

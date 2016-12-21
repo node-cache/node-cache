@@ -1,7 +1,5 @@
-FROM node:5.0
+FROM erdii/nodejs-alpine-buildtools:7
 MAINTAINER M. Peter <mp@tcs.de>
-
-RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y build-essential
 
 RUN	mkdir -p /usr/src/
 WORKDIR /usr/src/

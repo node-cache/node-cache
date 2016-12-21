@@ -15,4 +15,4 @@ COPY lib/ /usr/src/lib/
 COPY test/ /usr/src/test/
 COPY index.js /usr/src/
 
-CMD [ "npm", "test" ]
+CMD [ "npm", "run", "test-docker" ]

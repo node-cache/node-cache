@@ -1,0 +1,26 @@
+FROM ubuntu:16.10
+MAINTAINER M. Peter <mp@tcs.de>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update
+RUN apt-get -qq update
+RUN apt-get upgrade -y
+RUN apt-get install -y build-essential
+RUN apt-get install -y nodejs npm
+# fucking debian installs `node` as `nodejs`
+RUN update-alternatives --install /usr/bin/node node /usr/bin/nodejs 10
+
+RUN	mkdir -p /usr/src/
+WORKDIR /usr/src/
+
+COPY package.json /usr/src/package.json
+
+RUN npm install --production
+RUN npm install mocha should
+
+COPY lib/ /usr/src/lib/
+COPY test/ /usr/src/test/
+COPY index.js /usr/src/
+
+CMD [ "npm", "run", "test-docker" ]
