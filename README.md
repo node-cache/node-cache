@@ -426,7 +426,7 @@ Instead of returning an object with the key `{ "myKey": "myValue" }` it returns 
 ### version `3.x`
 
 Due to the [Issue #30](https://github.com/mpneuried/nodecache/issues/30) and [Issue #27](https://github.com/mpneuried/nodecache/issues/27) variables will now be cloned.  
-This chould break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.  
+This could break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.  
 You can disable the cloning by setting the option `useClones: false`. In this case it's compatible with version `2.x`.
 
 ## Benchmarks
