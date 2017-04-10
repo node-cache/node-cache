@@ -47,7 +47,8 @@ const myCache = new NodeCache();
 `0` = no periodic check.
 - `errorOnMissing`: *(default: `false`)* en/disable throwing or passing an error to the callback if attempting to `.get` a missing or expired value.
 - `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.  
-**Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save mutable objects or other complex types with mutability involved and wanted.
+**Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save mutable objects or other complex types with mutability involved and wanted.  
+_Here's a [simple code exmaple](https://runkit.com/mpneuried/useclones-example-83) showing the different behavior_
 
 ```js
 const NodeCache = require( "node-cache" );
