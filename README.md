@@ -13,12 +13,12 @@ node-cache
 
 # Simple and fast NodeJS internal caching.
 
-A simple caching module that has `set`, `get` and `delete` methods and works a little bit like memcached.  
-Keys can have a timeout (`ttl`) after which they expire and are deleted from the cache.  
+A simple caching module that has `set`, `get` and `delete` methods and works a little bit like memcached.
+Keys can have a timeout (`ttl`) after which they expire and are deleted from the cache.
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
 **Since `4.1.0`**:
-*Key-validation*: The keys can be given as either `string` or `number`, but are casted to a `string` internally anyway.  
+*Key-validation*: The keys can be given as either `string` or `number`, but are casted to a `string` internally anyway.
 All other types will either throw an error or call the callback with an error.
 
 
@@ -41,14 +41,16 @@ const myCache = new NodeCache();
 
 ### Options
 
-- `stdTTL`: *(default: `0`)* the standard ttl as number in seconds for every generated cache element.  
+- `stdTTL`: *(default: `0`)* the standard ttl as number in seconds for every generated cache element.
 `0` = unlimited
-- `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.  
+- `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.
 `0` = no periodic check.
 - `errorOnMissing`: *(default: `false`)* en/disable throwing or passing an error to the callback if attempting to `.get` a missing or expired value.
-- `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.  
-**Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save mutable objects or other complex types with mutability involved and wanted.  
+- `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.
+**Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save mutable objects or other complex types with mutability involved and wanted.
 _Here's a [simple code exmaple](https://runkit.com/mpneuried/useclones-example-83) showing the different behavior_
+- `deleteOnExpire`: *(default: `true`)* whether variables will be deleted automatically when they expire.
+If `true` the variable will be deleted. If `false` the variable will remain. You are encouraged to handle the variable upon the event `expired` by yourself.
 
 ```js
 const NodeCache = require( "node-cache" );
@@ -59,7 +61,7 @@ const myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 
 `myCache.set( key, val, [ ttl ], [callback] )`
 
-Sets a `key` `value` pair. It is possible to define a `ttl` (in seconds).  
+Sets a `key` `value` pair. It is possible to define a `ttl` (in seconds).
 Returns `true` on success.
 
 ```js
@@ -75,7 +77,7 @@ myCache.set( "myKey", obj, function( err, success ){
 
 > Note: If the key expires based on it's `ttl` it will be deleted entirely from the internal data object.
 
-**Since `1.0.0`**:  
+**Since `1.0.0`**:
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
@@ -107,7 +109,7 @@ myCache.get( "myKey", function( err, value ){
 });
 ```
 
-**Since `1.0.0`**:  
+**Since `1.0.0`**:
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
@@ -118,7 +120,7 @@ if ( value == undefined ){
 // { my: "Special", variable: 42 }
 ```
 
-**Since `2.0.0`**:  
+**Since `2.0.0`**:
 
 The return format changed to a simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )*.
 
@@ -161,7 +163,7 @@ myCache.mget( [ "myKeyA", "myKeyB" ], function( err, value ){
 });
 ```
 
-**Since `1.0.0`**:  
+**Since `1.0.0`**:
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
@@ -174,7 +176,7 @@ value = myCache.mget( [ "myKeyA", "myKeyB" ] );
 */
 ```
 
-**Since `2.0.0`**:  
+**Since `2.0.0`**:
 
 The method for mget changed from `.get( [ "a", "b" ] )` to `.mget( [ "a", "b" ] )`
 
@@ -193,7 +195,7 @@ myCache.del( "myKey", function( err, count ){
 });
 ```
 
-**Since `1.0.0`**:  
+**Since `1.0.0`**:
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
@@ -216,7 +218,7 @@ myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
 });
 ```
 
-**Since `1.0.0`**:  
+**Since `1.0.0`**:
 Callback is now optional. You can also use synchronous syntax.
 
 ```js
@@ -234,7 +236,7 @@ value = myCache.del( [ "A", "B", "C", "D" ] );
 
 `myCache.ttl( key, ttl, [callback] )`
 
-Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.  
+Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.
 If the ttl-argument isn't passed the default-TTL will be used.
 
 The key will be deleted when passing in a `ttl < 0`.
@@ -302,7 +304,7 @@ ts = myCache.getTtl( "unknownKey" )
 
 `myCache.keys( [callback] )`
 
-Returns an array of all existing keys.  
+Returns an array of all existing keys.
 
 ```js
 // async
@@ -325,7 +327,7 @@ console.log( mykeys );
 
 `myCache.getStats()`
 
-Returns the statistics.  
+Returns the statistics.
 
 ```js
 myCache.getStats();
@@ -344,7 +346,7 @@ myCache.getStats();
 
 `myCache.flushAll()`
 
-Flush all data.  
+Flush all data.
 
 ```js
 myCache.flushAll();
@@ -379,7 +381,7 @@ You will get the `key` and the `value` as callback argument.
 
 ```js
 myCache.on( "set", function( key, value ){
-  // ... do something ...  
+  // ... do something ...
 });
 ```
 
@@ -390,7 +392,7 @@ You will get the `key` and the deleted `value` as callback arguments.
 
 ```js
 myCache.on( "del", function( key, value ){
-  // ... do something ...  
+  // ... do something ...
 });
 ```
 
@@ -401,7 +403,7 @@ You will get the `key` and `value` as callback argument.
 
 ```js
 myCache.on( "expired", function( key, value ){
-  // ... do something ...  
+  // ... do something ...
 });
 ```
 
@@ -411,7 +413,7 @@ Fired when the cache has been flushed.
 
 ```js
 myCache.on( "flush", function(){
-  // ... do something ...  
+  // ... do something ...
 });
 ```
 
@@ -426,8 +428,8 @@ Instead of returning an object with the key `{ "myKey": "myValue" }` it returns 
 
 ### version `3.x`
 
-Due to the [Issue #30](https://github.com/mpneuried/nodecache/issues/30) and [Issue #27](https://github.com/mpneuried/nodecache/issues/27) variables will now be cloned.  
-This could break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.  
+Due to the [Issue #30](https://github.com/mpneuried/nodecache/issues/30) and [Issue #27](https://github.com/mpneuried/nodecache/issues/27) variables will now be cloned.
+This could break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.
 You can disable the cloning by setting the option `useClones: false`. In this case it's compatible with version `2.x`.
 
 ## Benchmarks
@@ -437,37 +439,37 @@ You can disable the cloning by setting the option `useClones: false`. In this ca
 After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
 But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that it was executed on similar hardware.
 
-**node.js `0.10.36`**  
-SET: `324`ms ( `3.24`µs per item )  
-GET: `7956`ms ( `79.56`µs per item )   
+**node.js `0.10.36`**
+SET: `324`ms ( `3.24`µs per item )
+GET: `7956`ms ( `79.56`µs per item )
 
-**node.js `0.12.0`**  
-SET: `432`ms ( `4.32`µs per item )  
-GET: `42767`ms ( `427.67`µs per item )   
+**node.js `0.12.0`**
+SET: `432`ms ( `4.32`µs per item )
+GET: `42767`ms ( `427.67`µs per item )
 
-**io.js `v1.1.0`**  
-SET: `510`ms ( `5.1`µs per item )  
-GET: `1535`ms ( `15.35`µs per item )   
+**io.js `v1.1.0`**
+SET: `510`ms ( `5.1`µs per item )
+GET: `1535`ms ( `15.35`µs per item )
 
 ### Version 2.0.x
 
 Again the same benchmarks by travis with version 2.0
 
-**node.js `0.6.21`**  
-SET: `786`ms ( `7.86`µs per item )  
-GET: `56`ms ( `0.56`µs per item )   
+**node.js `0.6.21`**
+SET: `786`ms ( `7.86`µs per item )
+GET: `56`ms ( `0.56`µs per item )
 
-**node.js `0.10.36`**  
+**node.js `0.10.36`**
 SET: `353`ms ( `3.53`µs per item )
-GET: `41`ms ( `0.41`µs per item )   
+GET: `41`ms ( `0.41`µs per item )
 
-**node.js `0.12.2`**  
-SET: `327`ms ( `3.27`µs per item )  
-GET: `32`ms ( `0.32`µs per item )   
+**node.js `0.12.2`**
+SET: `327`ms ( `3.27`µs per item )
+GET: `32`ms ( `0.32`µs per item )
 
-**io.js `v1.7.1`**  
-SET: `238`ms ( `2.38`µs per item )  
-GET: `34`ms ( `0.34`µs per item )  
+**io.js `v1.7.1`**
+SET: `238`ms ( `2.38`µs per item )
+GET: `34`ms ( `0.34`µs per item )
 
 > As you can see the version 2.x will increase the GET performance up to 200x in node 0.10.x.
 This is possible because the memory allocation for the object returned by 1.x is very expensive.
@@ -476,36 +478,36 @@ This is possible because the memory allocation for the object returned by 1.x is
 
 *see [travis results](https://travis-ci.org/mpneuried/nodecache/builds/64560503)*
 
-**node.js `0.6.21`**  
-SET: `786`ms ( `7.24`µs per item )  
-GET: `56`ms ( `1.14`µs per item )   
+**node.js `0.6.21`**
+SET: `786`ms ( `7.24`µs per item )
+GET: `56`ms ( `1.14`µs per item )
 
-**node.js `0.10.38`**  
+**node.js `0.10.38`**
 SET: `353`ms ( `5.41`µs per item )
-GET: `41`ms ( `1.23`µs per item )   
+GET: `41`ms ( `1.23`µs per item )
 
-**node.js `0.12.4`**  
-SET: `327`ms ( `4.63`µs per item )  
-GET: `32`ms ( `0.60`µs per item )   
+**node.js `0.12.4`**
+SET: `327`ms ( `4.63`µs per item )
+GET: `32`ms ( `0.60`µs per item )
 
-**io.js `v2.1.0`**  
-SET: `238`ms ( `4.06`µs per item )  
+**io.js `v2.1.0`**
+SET: `238`ms ( `4.06`µs per item )
 GET: `34`ms ( `0.67`µs per item )
 
 > until the version 3.0.x the object cloning is included, so we lost a little bit of the performance
 
 ### Version 3.1.x
 
-**node.js `v0.10.41`**  
-SET: `305ms`  ( `3.05µs` per item )  
+**node.js `v0.10.41`**
+SET: `305ms`  ( `3.05µs` per item )
 GET: `104ms`  ( `1.04µs` per item )
 
-**node.js `v0.12.9`**  
-SET: `337ms`  ( `3.37µs` per item )  
+**node.js `v0.12.9`**
+SET: `337ms`  ( `3.37µs` per item )
 GET: `167ms`  ( `1.67µs` per item )
 
-**node.js `v4.2.6`**  
-SET: `356ms`  ( `3.56µs` per item )  
+**node.js `v4.2.6`**
+SET: `356ms`  ( `3.56µs` per item )
 GET: `83ms`  ( `0.83µs` per item )
 
 ## Compatibility

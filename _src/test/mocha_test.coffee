@@ -25,6 +25,11 @@ localCacheTTL = new nodeCache({
 	checkperiod: 0
 })
 
+localCacheNoDelete = new nodeCache({
+	stdTTL: 0.3,
+	checkperiod: 0
+	deleteOnExpire: false
+})
 
 BENCH = {}
 
@@ -35,14 +40,14 @@ localCache._killCheckPeriod()
 state = {}
 
 describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
-	
+
 	after ->
 		txt = "Benchmark node@#{process.version}:"
 		for type, ops of BENCH
 			txt += "\n   - #{type}: #{ops.toFixed(1)} ops/s"
 		console.log txt
 		return
-	
+
 	describe "general callback-style", () ->
 		before () ->
 			state =
@@ -1407,7 +1412,18 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 							return
 						return
 				return
-			
+
+
+			it "set a key key with a cache initialized with no automatic delete on expire", (done) ->
+				localCacheNoDelete.set state.key1, state.val, (err, res) ->
+				setTimeout(() ->
+					res = localCacheNoDelete.get state.key1
+					should(res).eql(state.val)
+					done()
+					return
+				, 500)
+				return
+
 			it "test issue #78 with expire event not fired", ( done )->
 				@timeout( 6000 )
 				localCacheTTL2 = new nodeCache({
@@ -1416,10 +1432,10 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				})
 				expCount = 0
 				expkeys = [ "ext78_test:a", "ext78_test:b" ]
-				
+
 				localCacheTTL2.set( expkeys[ 0 ], expkeys[ 0 ], 2)
 				localCacheTTL2.set( expkeys[ 1 ], expkeys[ 1 ], 3)
-				
+
 				localCacheTTL2.on "expired", ( key, value )->
 					key.should.eql( expkeys[ expCount ] )
 					value.should.eql( expkeys[ expCount ] )
