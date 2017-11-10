@@ -34,6 +34,8 @@ module.exports = class NodeCache extends EventEmitter
 			useClones: true
 			# en/disable throwing errors when trying to `.get` missing or expired values.
 			errorOnMissing: false
+			# whether values should be deleted automatically at expiration
+			deleteOnExpire: true
 		, @options )
 
 		# statistics container
@@ -488,16 +490,18 @@ module.exports = class NodeCache extends EventEmitter
 
 	# ## _check
 	#
-	# internal method the check the value. If it's not valid any moe delete it
+	# internal method the check the value. If it's not valid any more delete it
 	_check: ( key, data )=>
+		_retval = true
 		# data is invalid if the ttl is to old and is not 0
 		#console.log data.t < Date.now(), data.t, Date.now()
 		if data.t isnt 0 and data.t < Date.now()
-			@del( key )
+			if @options.deleteOnExpire
+				_retval = false;
+				@del( key )
 			@emit( "expired", key, @_unwrap(data) )
-			return false
-		else
-			return true
+
+		return _retval
 
 	# ## _isInvalidKey
 	#
