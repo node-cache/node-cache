@@ -280,7 +280,7 @@ myCache = new NodeCache( { stdTTL: 100 } )
 
 // Date.now() = 1456000500000
 myCache.set( "ttlKey", "MyExpireData" )
-myCache.set( "noTtlKey", 0, "NonExpireData" )
+myCache.set( "noTtlKey", "NonExpireData", 0 )
 
 ts = myCache.getTtl( "ttlKey" )
 // ts wil be approximately 1456000600000
