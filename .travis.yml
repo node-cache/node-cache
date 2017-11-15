@@ -13,10 +13,14 @@ node_js:
   - 5.12
   - 6
   - 6.6
+  - 7
+  - 8
+  - 9
   - node
   - lts/argon
+  - lts/boron
+  - lts/carbon
   - lts/*
-  - iojs
 install: npm install
 before_script:
   - "npm install -g grunt-cli"

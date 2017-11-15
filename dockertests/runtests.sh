@@ -22,6 +22,7 @@ VERSIONS[16]="7_alpine"
 
 VERSIONS[17]="argon"
 VERSIONS[18]="boron"
+VERSIONS[18]="carbon"
 VERSIONS[19]="latest"
 
 
