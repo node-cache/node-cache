@@ -90,7 +90,7 @@ declare namespace NodeCache {
 
 		ttl(
 			key: Key,
-			cb?: Callback<boolean>,
+			cb?: Callback<boolean>
 		): boolean;
 
 		getTtl(
@@ -99,7 +99,7 @@ declare namespace NodeCache {
 
 		getTtl(
 			key: Key,
-			cb?: Callback<boolean>,
+			cb?: Callback<boolean>
 		): boolean;
 
 		/**
@@ -245,11 +245,11 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 
 	ttl(
 		key: Key,
-		cb?: Callback<boolean>,
+		cb?: Callback<boolean>
 	): boolean;
 
 	getTtl(
-		key: Key,
+		key: Key
 	): number|undefined;
 
 	getTtl(
@@ -284,4 +284,3 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 }
 
 export = NodeCache;
-

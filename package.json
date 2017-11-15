@@ -33,6 +33,7 @@
     "url": "https://github.com/mpneuried"
   },
   "main": "./index.js",
+  "types": "./index.d.ts",
   "homepage": "https://github.com/mpneuried/nodecache",
   "repository": {
     "type": "git",
@@ -43,11 +44,12 @@
     "node": ">= 0.4.6"
   },
   "scripts": {
-    "test": "COFFEECOV_INIT_ALL=false mocha --compilers coffee:coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec",
-    "test-docker": "SILIENT_MODE=1 mocha test/mocha_test.js -R min",
+    "test": "COFFEECOV_INIT_ALL=false mocha --compilers coffee:coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
+    "test-docker": "SILIENT_MODE=1 mocha test/mocha_test.js -R min && tsc",
     "build": "grunt build"
   },
   "dependencies": {
+    "@types/node": "^8.0.51",
     "clone": "2.x",
     "lodash": "4.x"
   },
@@ -57,6 +59,7 @@
     "coveralls": "2.x",
     "grunt": "0.4.x",
     "grunt-banner": "0.6.x",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "1.0.x",
     "grunt-contrib-coffee": "1.0.x",
     "grunt-contrib-watch": "1.x",
@@ -66,6 +69,7 @@
     "grunt-run": "0.5.x",
     "istanbul": "0.x",
     "mocha": "3.x",
-    "should": "11.x"
+    "should": "11.x",
+    "typescript": "^2.6.1"
   }
 }
