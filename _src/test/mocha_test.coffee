@@ -517,6 +517,14 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				(485 < (ttl - now) < 510).should.eql true
 				return
 
+			it "getTs", () ->
+				now = Date.now()
+
+				ts = localCache.getTs state.keys[5]
+				(ts < now).should.eql true
+				((now - ts) < 10000).should.eql true
+				return
+
 			after () ->
 				localCache.flushAll false
 				return
@@ -594,6 +602,14 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 				ttl = localCache.getTtl state.keys[4]
 				(485 < (ttl - now) < 510).should.eql true
+				return
+
+			it "getTs", () ->
+				now = Date.now()
+
+				ts = localCache.getTs state.keys[5]
+				(ts < now).should.eql true
+				((now - ts) < 10000).should.eql true
 				return
 			return
 
@@ -729,6 +745,24 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					})
 					return
 				return
+
+			it "getTs sync-style", () ->
+				(() -> localCache.getTs(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+				return
+
+			it "getTs cb-style", () ->
+				localCache.getTs state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+					})
+					return
+				return
 			return
 
 		describe "object - invalid type", () ->
@@ -855,6 +889,24 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 			it "getTtl cb-style", () ->
 				localCache.getTtl state.keys[0], (err, res) ->
+					should.not.exist res
+					should(err).be.an.Error()
+					should(err).match({
+						name: "EKEYTYPE"
+						message: "The key argument has to be of type `string` or `number`. Found: `object`"
+					})
+					return
+				return
+
+			it "getTs sync-style", () ->
+				(() -> localCache.getTs(state.keys[0])).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+				return
+
+			it "getTs cb-style", () ->
+				localCache.getTs state.keys[0], (err, res) ->
 					should.not.exist res
 					should(err).be.an.Error()
 					should(err).match({
@@ -1447,6 +1499,62 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					localCacheTTL2.close()
 					done()
 				, 5000 )
+			return
+
+		return
+
+	describe "ts", () ->
+		before () ->
+			state =
+				n: 0
+				val: randomString 20
+				key1: "k1_#{randomString 20}"
+				key2: "k2_#{randomString 20}"
+				key3: "k3_#{randomString 20}"
+				key4: "k4_#{randomString 20}"
+				key5: "k5_#{randomString 20}"
+				now: Date.now()
+			state.keys = [state.key1, state.key2, state.key3, state.key4, state.key5]
+			return
+
+		it "set a key and validate the timestamp", () ->
+			localCache.set state.key1, state.val, 0.5, (err, res) ->
+				should.not.exist err
+				true.should.eql res
+				ts = localCache.getTs state.key1
+				ttl = localCache.getTtl state.key1
+				if ttl < ts
+					throw new Error "Timestamp Greater than TTL"
+				if state.now > ts
+					throw new Error "Invalid Timestamp"
+				return
+			return
+
+		it "before it times out", (done) ->
+			setTimeout(() ->
+				state.n++
+				localCache.getTs state.key1, (err, res) ->
+					ttl = localCache.getTtl state.key1
+					should.not.exist err
+					(state.now <= res < ttl).should.eql true
+					done()
+					return
+			, 400)
+			return
+
+		it "and after it timed out", (done) ->
+			setTimeout(() ->
+				ts = localCache.getTs state.key1
+				should.not.exist ts
+
+				state.n++
+				localCache.get state.key1, (err, res) ->
+					should.not.exist err
+					should(res).be.undefined()
+					done()
+					return
+				return
+			, 200)
 			return
 
 		return

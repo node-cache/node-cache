@@ -368,6 +368,52 @@ module.exports = class NodeCache extends EventEmitter
 
 		return
 
+# ## getTs
+#
+# receive the timestamp of a key.
+#
+# **Parameters:**
+#
+# * `key` ( String | Number ): cache key to check the ts value
+# * `[cb]` ( Function ): Callback function
+#
+# **Return**
+#
+# ( Number|undefined ): The timestamp in ms when the key was set or undefined if it does not exist
+#
+# **Example:**
+#
+#     ts = myCache.getTs( "myKey" )
+#
+#     myCache.getTs( "myKey",( err, ts )->
+#       console.log( err, ts )
+#       return
+#
+	getTs: ( key, cb )=>
+		if not key
+			cb( null, undefined ) if cb?
+			return undefined
+
+		# handle invalid key types
+		if (err = @_isInvalidKey( key ))?
+			if cb?
+				cb( err )
+				return
+			else
+				throw err
+
+		# check for existent data and update the ttl value
+		if @data[ key ]? and @_check( key, @data[ key ] )
+			_ts = @data[ key ].ts
+			cb( null, _ts ) if cb?
+			return _ts
+		else
+# return undefined if key has not been found
+			cb( null, undefined ) if cb?
+			return undefined
+
+		return
+
 	# ## keys
 	#
 	# list all keys within this cache
@@ -539,6 +585,7 @@ module.exports = class NodeCache extends EventEmitter
 		# return the wrapped value
 		oReturn =
 			t: livetime
+			ts: now
 			v: if asClone then clone( value ) else value
 
 	# ## _unwrap
