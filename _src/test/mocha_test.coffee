@@ -1557,6 +1557,20 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			, 200)
 			return
 
+		it "set another key", () ->
+			localCache.set state.key2, state.val, 0.5, (err, res) ->
+				should.not.exist err
+				true.should.eql res
+			return
+
+		it "update ttl and check that ts does not change", () ->
+			ts1 = localCache.getTs state.key2
+			localCache.ttl state.key2, 0.3, (err, res) ->
+				res.should.eql true
+				should.not.exist err
+				ts2 = localCache.getTs state.key2
+				ts2.should.eql ts1
+			return
 		return
 
 	describe "clone", () ->

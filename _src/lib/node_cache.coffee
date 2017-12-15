@@ -310,7 +310,7 @@ module.exports = class NodeCache extends EventEmitter
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			# if ttl < 0  delete the key. otherwise reset the value
 			if ttl >= 0
-				@data[ key ] = @_wrap( @data[ key ].v, ttl, false )
+				@data[ key ] = @_wrap( @data[ key ].v, ttl, @data[ key ].ts, false )
 			else
 				@del( key )
 			cb( null, true ) if cb?
@@ -402,7 +402,7 @@ module.exports = class NodeCache extends EventEmitter
 			else
 				throw err
 
-		# check for existent data and update the ttl value
+		# check for existent data and update the ts value
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			_ts = @data[ key ].ts
 			cb( null, _ts ) if cb?
@@ -561,7 +561,7 @@ module.exports = class NodeCache extends EventEmitter
 	# ## _wrap
 	#
 	# internal method to wrap a value in an object with some metadata
-	_wrap: ( value, ttl, asClone = true )=>
+	_wrap: ( value, ttl, ts, asClone = true )=>
 		if not @options.useClones
 			asClone = false
 		# define the time to live
@@ -581,6 +581,10 @@ module.exports = class NodeCache extends EventEmitter
 				livetime = @options.stdTTL
 			else
 				livetime = now + ( @options.stdTTL * ttlMultiplicator )
+
+		# if given use timestamp
+		if ts
+			now = ts
 
 		# return the wrapped value
 		oReturn =
