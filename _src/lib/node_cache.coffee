@@ -310,7 +310,7 @@ module.exports = class NodeCache extends EventEmitter
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			# if ttl < 0  delete the key. otherwise reset the value
 			if ttl >= 0
-				@data[ key ] = @_wrap( @data[ key ].v, ttl, false )
+				@data[ key ] = @_wrap( @data[ key ].v, ttl, @data[ key ].ts, false )
 			else
 				@del( key )
 			cb( null, true ) if cb?
@@ -363,6 +363,52 @@ module.exports = class NodeCache extends EventEmitter
 			return _ttl
 		else
 			# return undefined if key has not been found
+			cb( null, undefined ) if cb?
+			return undefined
+
+		return
+
+	# ## getTs
+	#
+	# receive the timestamp of a key.
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String | Number ): cache key to check the ts value
+	# * `[cb]` ( Function ): Callback function
+	#
+	# **Return**
+	#
+	# ( Number|undefined ): The timestamp in ms when the key was set or undefined if it does not exist
+	#
+	# **Example:**
+	#
+	#     ts = myCache.getTs( "myKey" )
+	#
+	#     myCache.getTs( "myKey",( err, ts )->
+	#       console.log( err, ts )
+	#       return
+	#
+	getTs: ( key, cb )=>
+		if not key
+			cb( null, undefined ) if cb?
+			return undefined
+
+		# handle invalid key types
+		if (err = @_isInvalidKey( key ))?
+			if cb?
+				cb( err )
+				return
+			else
+				throw err
+
+		# check for existent data and update the ts value
+		if @data[ key ]? and @_check( key, @data[ key ] )
+			_ts = @data[ key ].ts
+			cb( null, _ts ) if cb?
+			return _ts
+		else
+	# return undefined if key has not been found
 			cb( null, undefined ) if cb?
 			return undefined
 
@@ -515,7 +561,7 @@ module.exports = class NodeCache extends EventEmitter
 	# ## _wrap
 	#
 	# internal method to wrap a value in an object with some metadata
-	_wrap: ( value, ttl, asClone = true )=>
+	_wrap: ( value, ttl, ts, asClone = true )=>
 		if not @options.useClones
 			asClone = false
 		# define the time to live
@@ -536,9 +582,14 @@ module.exports = class NodeCache extends EventEmitter
 			else
 				livetime = now + ( @options.stdTTL * ttlMultiplicator )
 
+		# if given use timestamp
+		if ts
+			now = ts
+
 		# return the wrapped value
 		oReturn =
 			t: livetime
+			ts: now
 			v: if asClone then clone( value ) else value
 
 	# ## _unwrap

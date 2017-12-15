@@ -95,6 +95,17 @@ interface TypeSample {
 	result2 = cache.getTtl(key, cb);
 }
 
+{
+	let cache: NodeCache;
+	let cb: Callback<Boolean>;
+	let key: string;
+	let number: number;
+	let result1: number | undefined;
+	let result2: Boolean;
+	result1 = cache.getTs(key);
+	result2 = cache.getTs(key, cb);
+}
+
 /* tslint:disable void-return no-void-expression */
 {
 	let cache: NodeCache;

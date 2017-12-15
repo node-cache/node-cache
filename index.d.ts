@@ -102,6 +102,16 @@ declare namespace NodeCache {
 			cb?: Callback<boolean>
 		): boolean;
 
+		getTs(
+			key: Key,
+		): number|undefined;
+
+		getTs(
+			key: Key,
+			cb?: Callback<boolean>
+		): boolean;
+
+
 		/**
 		 * list all keys within this cache
 		 * @param cb Callback function
@@ -153,6 +163,7 @@ declare namespace NodeCache {
 	interface WrappedValue<T> {
 		// ttl
 		t: number;
+		ts: number;
 		// value
 		v: T;
 	}
@@ -253,6 +264,15 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	): number|undefined;
 
 	getTtl(
+		key: Key,
+		cb?: Callback<boolean>,
+	): boolean;
+
+	getTs(
+		key: Key
+	): number|undefined;
+
+	getTs(
 		key: Key,
 		cb?: Callback<boolean>,
 	): boolean;
