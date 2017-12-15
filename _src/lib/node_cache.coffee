@@ -368,27 +368,27 @@ module.exports = class NodeCache extends EventEmitter
 
 		return
 
-# ## getTs
-#
-# receive the timestamp of a key.
-#
-# **Parameters:**
-#
-# * `key` ( String | Number ): cache key to check the ts value
-# * `[cb]` ( Function ): Callback function
-#
-# **Return**
-#
-# ( Number|undefined ): The timestamp in ms when the key was set or undefined if it does not exist
-#
-# **Example:**
-#
-#     ts = myCache.getTs( "myKey" )
-#
-#     myCache.getTs( "myKey",( err, ts )->
-#       console.log( err, ts )
-#       return
-#
+	# ## getTs
+	#
+	# receive the timestamp of a key.
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String | Number ): cache key to check the ts value
+	# * `[cb]` ( Function ): Callback function
+	#
+	# **Return**
+	#
+	# ( Number|undefined ): The timestamp in ms when the key was set or undefined if it does not exist
+	#
+	# **Example:**
+	#
+	#     ts = myCache.getTs( "myKey" )
+	#
+	#     myCache.getTs( "myKey",( err, ts )->
+	#       console.log( err, ts )
+	#       return
+	#
 	getTs: ( key, cb )=>
 		if not key
 			cb( null, undefined ) if cb?
@@ -408,7 +408,7 @@ module.exports = class NodeCache extends EventEmitter
 			cb( null, _ts ) if cb?
 			return _ts
 		else
-# return undefined if key has not been found
+	# return undefined if key has not been found
 			cb( null, undefined ) if cb?
 			return undefined
 
