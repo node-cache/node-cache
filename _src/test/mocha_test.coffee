@@ -1276,7 +1276,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 250)
+			, 205) //adjusting timing due to CI failures
 			return
 
 		it "and after it timed out, too", (done) ->
