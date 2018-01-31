@@ -25,6 +25,7 @@ module.exports = class NodeCache extends EventEmitter
 			forceString: false
 			# used standard size for calculating value size
 			objectValueSize: 80
+			promiseValueSize: 80
 			arrayValueSize: 40
 			# standard time to live in seconds. 0 = infinity;
 			stdTTL: 0
@@ -575,6 +576,10 @@ module.exports = class NodeCache extends EventEmitter
 			@options.arrayValueSize * value.length
 		else if _isNumber( value )
 			8
+		else if typeof value?.then is "function"
+			# if the data is a Promise, use defined default
+			# (can't calculate actual/resolved value size synchronously)
+			@options.promiseValueSize
 		else if _isObject( value )
 			# if the data is an Object multiply each element with a defined default length
 			@options.objectValueSize * _size( value )
