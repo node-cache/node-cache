@@ -27,11 +27,18 @@
   ],
   "version": "4.1.1",
   "author": "mpneuried <mp@tcs.de>",
-  "maintainers": {
-    "name": "M. Peter",
-    "email": "mp@tcs.de",
-    "url": "https://github.com/mpneuried"
-  },
+  "maintainers": [
+    {
+      "name": "M. Peter",
+      "email": "mp@tcs.de",
+      "url": "https://github.com/mpneuried"
+    },
+    {
+      "name": "Joshy",
+      "email": "erdiicodes@gmail.com",
+      "url": "https://blog.werise.de/"
+    }
+  ],
   "main": "./index.js",
   "types": "./index.d.ts",
   "homepage": "https://github.com/mpneuried/nodecache",
