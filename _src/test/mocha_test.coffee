@@ -1177,7 +1177,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					state.val.should.eql res
 					done()
 					return
-			, 400)
+			, 200)
 			return
 
 		it "and after it timed out", (done) ->
