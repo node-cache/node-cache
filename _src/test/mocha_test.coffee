@@ -1192,7 +1192,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 200)
+			, 500)
 			return
 
 		it "set another key with ttl", () ->
