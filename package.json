@@ -52,7 +52,7 @@
   },
   "scripts": {
     "test": "COFFEECOV_INIT_ALL=false mocha --compilers coffee:coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
-    "test-docker": "SILIENT_MODE=1 mocha test/mocha_test.js -R min && tsc",
+    "test-docker": "SILENT_MODE=1 mocha test/mocha_test.js -R min && tsc",
     "build": "grunt build"
   },
   "dependencies": {
