@@ -1153,7 +1153,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		it "set a key with ttl", () ->
-			localCache.set state.key1, state.val, 0.5, (err, res) ->
+			localCache.set state.key1, state.val, 0.7, (err, res) ->
 				should.not.exist err
 				true.should.eql res
 				ts = localCache.getTtl state.key1
@@ -1177,7 +1177,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					state.val.should.eql res
 					done()
 					return
-			, 200)
+			, 20)
 			return
 
 		it "and after it timed out", (done) ->
@@ -1192,7 +1192,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 500)
+			, 700)
 			return
 
 		it "set another key with ttl", () ->
