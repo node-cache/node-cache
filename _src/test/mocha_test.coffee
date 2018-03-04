@@ -1196,7 +1196,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		it "set another key with ttl", () ->
-			localCache.set state.key2, state.val, 0.3, (err, res) ->
+			localCache.set state.key2, state.val, 0.5, (err, res) ->
 				should.not.exist err
 				true.should.eql res
 				return
@@ -1224,7 +1224,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 250)
+			, 20)
 			return
 
 		it "and after it timed out, too", (done) ->
@@ -1239,7 +1239,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 100)
+			, 500)
 			return
 
 		describe "test the automatic check", (done) ->
