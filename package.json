@@ -56,7 +56,7 @@
     "build": "grunt build"
   },
   "dependencies": {
-    "@types/node": "^8.0.51",
+    "@types/node": "^8.9.4",
     "clone": "2.x",
     "lodash": "4.x"
   },
