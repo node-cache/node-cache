@@ -56,11 +56,11 @@
     "build": "grunt build"
   },
   "dependencies": {
-    "@types/node": "^8.9.4",
     "clone": "2.x",
     "lodash": "4.x"
   },
   "devDependencies": {
+    "@types/node": "^8.9.4",
     "coffee-coverage": "1.x",
     "coffee-script": "1.x",
     "coveralls": "2.x",
