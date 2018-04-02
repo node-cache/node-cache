@@ -1276,7 +1276,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 205)
+			, 250)
 			return
 
 		it "and after it timed out, too", (done) ->
@@ -1291,7 +1291,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 150)
+			, 100)
 			return
 
 		describe "test the automatic check", (done) ->
