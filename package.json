@@ -25,13 +25,20 @@
     "memcached",
     "object"
   ],
-  "version": "4.1.1",
+  "version": "4.2.0",
   "author": "mpneuried <mp@tcs.de>",
-  "maintainers": {
-    "name": "M. Peter",
-    "email": "mp@tcs.de",
-    "url": "https://github.com/mpneuried"
-  },
+  "maintainers": [
+    {
+      "name": "M. Peter",
+      "email": "mp@tcs.de",
+      "url": "https://github.com/mpneuried"
+    },
+    {
+      "name": "Joshy",
+      "email": "erdiicodes@gmail.com",
+      "url": "https://blog.werise.de/"
+    }
+  ],
   "main": "./index.js",
   "types": "./index.d.ts",
   "homepage": "https://github.com/mpneuried/nodecache",
@@ -45,15 +52,15 @@
   },
   "scripts": {
     "test": "COFFEECOV_INIT_ALL=false mocha --compilers coffee:coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
-    "test-docker": "SILIENT_MODE=1 mocha test/mocha_test.js -R min && tsc",
+    "test-docker": "SILENT_MODE=1 mocha test/mocha_test.js -R min && tsc",
     "build": "grunt build"
   },
   "dependencies": {
-    "@types/node": "^8.0.51",
     "clone": "2.x",
     "lodash": "4.x"
   },
   "devDependencies": {
+    "@types/node": "^8.9.4",
     "coffee-coverage": "1.x",
     "coffee-script": "1.x",
     "coveralls": "2.x",

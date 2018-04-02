@@ -358,7 +358,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 			else
-				if not process.env.SILIENT_MODE?
+				if not process.env.SILENT_MODE?
 					console.log "No Promises available in this node version (#{process.version})"
 				this.skip()
 			return
@@ -390,14 +390,14 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					callStub()
 					return
 			else
-				if not process.env.SILIENT_MODE?
+				if not process.env.SILENT_MODE?
 					console.log "No Promises available in this node version (#{process.version})"
 				this.skip()
 			return
 
 		it "test es6 map", () ->
 			unless Map?
-				if not process.env.SILIENT_MODE?
+				if not process.env.SILENT_MODE?
 					console.log "No Maps available in this node version (#{process.version})"
 				this.skip()
 				return
@@ -979,7 +979,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				for key in state.keys
 					should(localCache.set key, state.val, 0).be.ok()
 				duration = Date.now() - start
-				if not process.env.SILIENT_MODE?
+				if not process.env.SILENT_MODE?
 					console.log "\tSET: #{state.count} keys to: `#{state.val}` #{duration}ms (#{duration/state.count}ms per item)"
 				else
 					BENCH[ "SET" ] = 1/(( duration/1000 )/state.count)
@@ -993,7 +993,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					state.n++
 					state.val.should.eql localCache.get(key)
 				duration = Date.now() - start
-				if not process.env.SILIENT_MODE?
+				if not process.env.SILENT_MODE?
 					console.log "\tGET: #{state.count} keys #{duration}ms (#{duration/state.count}ms per item)"
 				else
 					BENCH[ "GET" ] = 1/(( duration/1000 )/state.count)
@@ -1009,7 +1009,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 
 			after () ->
-				if not process.env.SILIENT_MODE?
+				if not process.env.SILENT_MODE?
 					console.log "\tBenchmark stats:"
 					console.log stringify(localCache.getStats(), null, "\t")
 				return
@@ -1205,7 +1205,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		it "set a key with ttl", () ->
-			localCache.set state.key1, state.val, 0.5, (err, res) ->
+			localCache.set state.key1, state.val, 0.7, (err, res) ->
 				should.not.exist err
 				true.should.eql res
 				ts = localCache.getTtl state.key1
@@ -1229,7 +1229,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					state.val.should.eql res
 					done()
 					return
-			, 400)
+			, 20)
 			return
 
 		it "and after it timed out", (done) ->
@@ -1244,11 +1244,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 200)
+			, 700)
 			return
 
 		it "set another key with ttl", () ->
-			localCache.set state.key2, state.val, 0.3, (err, res) ->
+			localCache.set state.key2, state.val, 0.5, (err, res) ->
 				should.not.exist err
 				true.should.eql res
 				return
@@ -1276,7 +1276,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 250)
+			, 20)
 			return
 
 		it "and after it timed out, too", (done) ->
@@ -1291,7 +1291,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					done()
 					return
 				return
-			, 100)
+			, 500)
 			return
 
 		describe "test the automatic check", (done) ->
