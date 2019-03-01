@@ -566,6 +566,7 @@ But it's only tested until version `0.10.x` because the build dependencies are n
 |[**backlunr**](https://github.com/mpneuried/backlunr)|A solution to bring Backbone Collections together with the browser fulltext search engine Lunr.js|
 |[**domel**](https://github.com/mpneuried/domel)|A simple dom helper if you want to get rid of jQuery|
 |[**obj-schema**](https://github.com/mpneuried/obj-schema)|Simple module to validate an object by a predefined schema|
+|[**fraud**](https://github.com/AnandChowdhary/fraud)|File system combined with nodecache for key-JSON storage|
 
 # The MIT License (MIT)
 
