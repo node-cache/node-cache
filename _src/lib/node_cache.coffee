@@ -14,6 +14,7 @@ EventEmitter = require('events').EventEmitter
 # generate superclass
 module.exports = class NodeCache extends EventEmitter
 	constructor: ( @options = {} )->
+		super()
 
 		@_initErrors()
 		# container for cached data
