@@ -17,9 +17,11 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout (`ttl`) after which they expire and are deleted from the cache.
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
-**Since `4.1.0`**:
-*Key-validation*: The keys can be given as either `string` or `number`, but are casted to a `string` internally anyway.
-All other types will either throw an error or call the callback with an error.
+
+## ATTENTION - BREAKING MAJOR RELEASE INCOMING!!!
+
+The upcoming 5.0.0 Release will drop support for node versions before 6.x!
+(We are thinking about dropping node 6.x too, because it recently reached end-of-life.)
 
 
 # Install
@@ -56,6 +58,10 @@ If `true` the variable will be deleted. If `false` the variable will remain. You
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 ```
+
+**Since `4.1.0`**:
+*Key-validation*: The keys can be given as either `string` or `number`, but are casted to a `string` internally anyway.
+All other types will either throw an error or call the callback with an error.
 
 ## Store a key (SET):
 
