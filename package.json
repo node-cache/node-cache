@@ -57,25 +57,24 @@
   },
   "dependencies": {
     "clone": "2.x",
-    "lodash": "4.x"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@types/node": "^8.9.4",
-    "coffee-coverage": "1.x",
+    "coffee-coverage": "^3.0.1",
     "coffee-script": "1.x",
-    "coveralls": "2.x",
-    "grunt": "0.4.x",
+    "coveralls": "^3.0.3",
+    "grunt": "^1.0.4",
     "grunt-banner": "0.6.x",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "1.0.x",
-    "grunt-contrib-coffee": "1.0.x",
-    "grunt-contrib-watch": "1.x",
+    "grunt-contrib-coffee": "^2.1.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-include-replace": "3.2.x",
-    "grunt-mocha-cli": "2.x",
-    "grunt-regarde": "0.1.x",
-    "grunt-run": "0.5.x",
+    "grunt-mocha-cli": "^4.0.0",
+    "grunt-run": "^0.8.1",
     "istanbul": "0.x",
-    "mocha": "3.x",
+    "mocha": "^6.1.4",
     "should": "11.x",
     "typescript": "^2.6.1"
   }
