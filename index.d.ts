@@ -117,7 +117,7 @@ declare namespace NodeCache {
 		getStats(): Stats;
 
 		/**
-		 * flush the hole data and reset the stats
+		 * flush the whole data and reset the stats
 		 */
 		flushAll(): void;
 
