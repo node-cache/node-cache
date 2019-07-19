@@ -266,7 +266,7 @@ module.exports = class NodeCache extends EventEmitter
 
 	# ## ttl
 	#
-	# reset or redefine the ttl of a key. `ttl` = 0 means inifite lifetime.
+	# reset or redefine the ttl of a key. `ttl` = 0 means infinite lifetime.
 	# If `ttl` is not passed the default ttl is used.
 	# If `ttl` < 0 the key will be deleted.
 	#
@@ -308,9 +308,9 @@ module.exports = class NodeCache extends EventEmitter
 			else
 				throw err
 
-		# check for existent data and update the ttl value
+		# check for existant data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
-			# if ttl < 0  delete the key. otherwise reset the value
+			# if ttl < 0 delete the key. otherwise reset the value
 			if ttl >= 0
 				@data[ key ] = @_wrap( @data[ key ].v, ttl, false )
 			else
@@ -358,7 +358,7 @@ module.exports = class NodeCache extends EventEmitter
 			else
 				throw err
 
-		# check for existent data and update the ttl value
+		# check for existant data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			_ttl = @data[ key ].t
 			cb( null, _ttl ) if cb?
@@ -421,7 +421,7 @@ module.exports = class NodeCache extends EventEmitter
 
 	# ## flushAll
 	#
-	# flush the hole data and reset the stats
+	# flush the whole data and reset the stats
 	#
 	# **Example:**
 	#
@@ -472,7 +472,7 @@ module.exports = class NodeCache extends EventEmitter
 
 	# ## _checkData
 	#
-	# internal Housekeeping mehtod.
+	# internal housekeeping method.
 	# Check all the cached data and delete the invalid values
 	_checkData: ( startPeriod = true )=>
 		# run the housekeeping method
@@ -495,8 +495,8 @@ module.exports = class NodeCache extends EventEmitter
 	# internal method the check the value. If it's not valid any more delete it
 	_check: ( key, data )=>
 		_retval = true
-		# data is invalid if the ttl is to old and is not 0
-		#console.log data.t < Date.now(), data.t, Date.now()
+		# data is invalid if the ttl is too old and is not 0
+		# console.log data.t < Date.now(), data.t, Date.now()
 		if data.t isnt 0 and data.t < Date.now()
 			if @options.deleteOnExpire
 				_retval = false
