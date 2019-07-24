@@ -80,6 +80,15 @@ interface TypeSample {
 
 {
 	let cache: NodeCache;
+	let key: string | number;
+	let cb: Callback<boolean>;
+	let result: boolean;
+	result = cache.has(key);
+	result = cache.has(key, cb);
+}
+
+{
+	let cache: NodeCache;
 	let result: Stats;
 	result = cache.getStats();
 }

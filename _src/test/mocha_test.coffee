@@ -76,6 +76,20 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				done()
 			return
 
+		it "has a key", (done) ->
+			localCache.has state.key, (err, res) ->
+				should.not.exist err
+				true.should.eql res
+				done()
+			return
+
+		it "doesn not have a key", (done) ->
+			localCache.has 'non existing key', (err, res) ->
+				should.not.exist err
+				false.should.eql res
+				done()
+			return
+
 		it "get key names", (done) ->
 			localCache.keys (err, res) ->
 				state.n++
@@ -251,6 +265,16 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		it "get key names", () ->
 			res = localCache.keys()
 			[state.key].should.eql res
+			return
+
+		it "has key", () ->
+			res = localCache.has(state.key)
+			true.should.eql res
+			return
+
+		it "does not have key", () ->
+			res = localCache.has('non existing key')
+			false.should.eql res
 			return
 
 		it "delete an undefined key", () ->

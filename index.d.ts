@@ -266,6 +266,14 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	keys(cb?: Callback<string[]>): string[];
 
 	/**
+	 * Check if a key is cached
+	 * @param key cache key to check
+	 * @param cb Callback function
+	 * @returns Boolean indicating if the key is cached or not
+	 */
+	has(key: Key, cb?: Callback<boolean>): boolean;
+
+	/**
 	 * get the stats
 	 *
 	 * @returns Stats data

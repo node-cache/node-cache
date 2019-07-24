@@ -104,7 +104,6 @@ module.exports = class NodeCache extends EventEmitter
 				cb( null, undefined ) if cb?
 			return undefined
 
-
 	# ## mget
 	#
 	# get multiple cached keys at once and change the stats
@@ -392,6 +391,30 @@ module.exports = class NodeCache extends EventEmitter
 		_keys = Object.keys( @data )
 		cb( null, _keys )if cb?
 		return _keys
+
+	# ## has
+	#
+	# Check if a key is cached
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String | Number ): cache key to check the ttl value
+	# * `[cb]` ( Function ): Callback function
+	#
+	# **Return**
+	#
+	# ( Boolean ): A boolean that indicates if the key is cached
+	#
+	# **Example:**
+	#
+	#     _exists = myCache.has('myKey')
+	#
+	#     # true
+	#
+	has: ( key, cb )=>
+		_exists = !!@data[ key ]
+		cb( null, _exists )if cb?
+		return _exists
 
 	# ## getStats
 	#

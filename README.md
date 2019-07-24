@@ -329,6 +329,29 @@ console.log( mykeys );
 
 ```
 
+## Has key (HAS)
+
+`myCache.has( key, [callback] )`
+
+Returns boolean indicating if the key is cached.
+
+```js
+// async
+myCache.has( 'myKey',  function( err, exists ){
+  if( !err ){
+    console.log( exists );
+   // true
+  }
+});
+
+// sync
+exists = myCache.has( 'myKey' );
+
+console.log( exists );
+// true
+
+```
+
 ## Statistics (STATS):
 
 `myCache.getStats()`
