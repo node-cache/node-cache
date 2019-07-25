@@ -412,7 +412,7 @@ module.exports = class NodeCache extends EventEmitter
 	#     # true
 	#
 	has: ( key, cb )=>
-		_exists = !!@data[ key ]
+		_exists = @data[ key ]? and @_check( key, @data[ key ] )
 		cb( null, _exists )if cb?
 		return _exists
 
