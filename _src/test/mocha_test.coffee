@@ -76,6 +76,20 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				done()
 			return
 
+		it "has a key", (done) ->
+			localCache.has state.key, (err, res) ->
+				should.not.exist err
+				res.should.eql true
+				done()
+			return
+
+		it "doesn not have a key", (done) ->
+			localCache.has 'non existing key', (err, res) ->
+				should.not.exist err
+				res.should.eql false
+				done()
+			return
+
 		it "get key names", (done) ->
 			localCache.keys (err, res) ->
 				state.n++
@@ -251,6 +265,16 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		it "get key names", () ->
 			res = localCache.keys()
 			[state.key].should.eql res
+			return
+
+		it "has key", () ->
+			res = localCache.has(state.key)
+			res.should.eql true
+			return
+
+		it "does not have key", () ->
+			res = localCache.has('non existing key')
+			res.should.eql false
 			return
 
 		it "delete an undefined key", () ->
@@ -1148,9 +1172,52 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				key3: "k3_#{randomString 20}"
 				key4: "k4_#{randomString 20}"
 				key5: "k5_#{randomString 20}"
+				key6: "k6_#{randomString 20}"
 				now: Date.now()
 			state.keys = [state.key1, state.key2, state.key3, state.key4, state.key5]
 			return
+		
+		describe "has validates expired ttl", () -> 
+			it "set a key with ttl", () ->
+				localCacheTTL.set state.key6, state.val, 0.7, (err, res) ->
+					should.not.exist err
+					true.should.eql res
+				return
+	
+			it "check this key immediately", () ->
+				localCacheTTL.has state.key6, (err, res) ->
+					should.not.exist err
+					res.should.eql true
+					return
+				return
+	
+			it "before it times out", (done) ->
+				setTimeout(() ->
+					state.n++
+					res = localCacheTTL.has state.key6
+					res.should.eql true
+					localCacheTTL.get state.key6, (err, res) ->
+						should.not.exist err
+						state.val.should.eql res
+						done()
+						return
+				, 20)
+				return
+	
+			it "and after it timed out", (done) ->
+				setTimeout(() ->
+					res = localCacheTTL.has state.key6
+					res.should.eql false
+					
+					state.n++
+					localCacheTTL.get state.key6, (err, res) ->
+						should.not.exist err
+						should(res).be.undefined()
+						done()
+						return
+					return
+				, 800)
+				return
 
 		it "set a key with ttl", () ->
 			localCache.set state.key1, state.val, 0.7, (err, res) ->
@@ -1172,6 +1239,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		it "before it times out", (done) ->
 			setTimeout(() ->
 				state.n++
+				res = localCache.has state.key1
+				res.should.eql true
 				localCache.get state.key1, (err, res) ->
 					should.not.exist err
 					state.val.should.eql res
@@ -1182,6 +1251,9 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		it "and after it timed out", (done) ->
 			setTimeout(() ->
+				res = localCache.has state.key1
+				res.should.eql false
+				
 				ts = localCache.getTtl state.key1
 				should.not.exist ts
 
