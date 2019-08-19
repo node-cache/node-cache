@@ -1,5 +1,4 @@
-
-import NodeCache = require('../../');
+import NodeCache = require("../../");
 
 import Options = NodeCache.Options;
 import Stats = NodeCache.Stats;
@@ -21,19 +20,17 @@ interface TypeSample {
 {
 	let cache: NodeCache;
 	let key: string;
-	let cb: Callback<TypeSample>;
 	let result: TypeSample | undefined;
 	result = cache.get<TypeSample>(key);
-	result = cache.get<TypeSample>(key, cb);
+	result = cache.get<TypeSample>(key);
 }
 
 {
 	let cache: NodeCache;
 	let keys: string[];
-	let cb: Callback<{ [key: string]: TypeSample }>;
 	let result: { [key: string]: TypeSample };
 	result = cache.mget<TypeSample>(keys);
-	result = cache.mget<TypeSample>(keys, cb);
+	result = cache.mget<TypeSample>(keys);
 }
 
 {
@@ -41,50 +38,45 @@ interface TypeSample {
 	let key: string;
 	let value: TypeSample;
 	let ttl: number | string;
-	let cb: Callback<boolean>;
 	let result: boolean;
 	result = cache.set<TypeSample>(key, value);
 	result = cache.set<TypeSample>(key, value, ttl);
-	result = cache.set<TypeSample>(key, value, ttl, cb);
-	result = cache.set<TypeSample>(key, value, cb);
+	result = cache.set<TypeSample>(key, value, ttl);
+	result = cache.set<TypeSample>(key, value);
 }
 
 {
 	let cache: NodeCache;
 	let keys: string | string[];
-	let cb: Callback<number>;
 	let result: number;
 	result = cache.del(keys);
-	result = cache.del(keys, cb);
+	result = cache.del(keys);
 }
 
 {
 	let cache: NodeCache;
 	let key: string;
 	let ttl: number;
-	let cb: Callback<boolean>;
 	let result: boolean;
 	result = cache.ttl(key);
 	result = cache.ttl(key, ttl);
-	result = cache.ttl(key, ttl, cb);
-	result = cache.ttl(key, cb);
+	result = cache.ttl(key, ttl);
+	result = cache.ttl(key);
 }
 
 {
 	let cache: NodeCache;
-	let cb: Callback<string[]>;
 	let result: string[];
 	result = cache.keys();
-	result = cache.keys(cb);
+	result = cache.keys();
 }
 
 {
 	let cache: NodeCache;
 	let key: string | number;
-	let cb: Callback<boolean>;
 	let result: boolean;
 	result = cache.has(key);
-	result = cache.has(key, cb);
+	result = cache.has(key);
 }
 
 {
@@ -95,13 +87,10 @@ interface TypeSample {
 
 {
 	let cache: NodeCache;
-	let cb: Callback<Boolean>;
 	let key: string;
 	let number: number;
 	let result1: number | undefined;
-	let result2: Boolean;
 	result1 = cache.getTtl(key);
-	result2 = cache.getTtl(key, cb);
 }
 
 /* tslint:disable void-return no-void-expression */
