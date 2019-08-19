@@ -1031,11 +1031,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 
 
-			it "set a key key with a cache initialized with no automatic delete on expire", (done) ->
+			it "set a key key with a cache initialized with no automatic delete on expire should be undefined", (done) ->
 				localCacheNoDelete.set state.key1, state.val
 				setTimeout(() ->
 					res = localCacheNoDelete.get state.key1
-					should(res).eql(state.val)
+					should(res).eql(undefined)
 					done()
 					return
 				, 500)
