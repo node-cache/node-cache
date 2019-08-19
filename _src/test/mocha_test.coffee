@@ -48,192 +48,6 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		console.log txt
 		return
 
-	describe "general callback-style", () ->
-		before () ->
-			state =
-				n: 0
-				start: clone localCache.getStats()
-				key: randomString 10
-				value: randomString 100
-				value2: randomString 100
-			return
-
-		it "set a key", (done) ->
-			localCache.set state.key, state.value, 0, (err, res) ->
-				state.n++
-				should.not.exist err
-				# check stats (number of keys should be one more than before)
-				1.should.equal localCache.getStats().keys - state.start.keys
-				done()
-				return
-			return
-
-		it "get a key", (done) ->
-			localCache.get state.key, (err, res) ->
-				state.n++
-				should.not.exist err
-				state.value.should.eql res
-				done()
-			return
-
-		it "has a key", (done) ->
-			localCache.has state.key, (err, res) ->
-				should.not.exist err
-				res.should.eql true
-				done()
-			return
-
-		it "doesn not have a key", (done) ->
-			localCache.has 'non existing key', (err, res) ->
-				should.not.exist err
-				res.should.eql false
-				done()
-			return
-
-		it "get key names", (done) ->
-			localCache.keys (err, res) ->
-				state.n++
-				should.not.exist err
-				[state.key].should.eql res
-				done()
-				return
-			return
-
-		it "try to get an undefined key", (done) ->
-			localCache.get "yxz", (err, res) ->
-				state.n++
-				should.not.exist err
-				should(res).be.undefined()
-				done()
-				return
-			return
-
-		it "catch an undefined key with callback", (done) ->
-			key = "xxx"
-
-			errorHandlerCallback = (err, res) ->
-				state.n++
-				"ENOTFOUND".should.eql err.name
-				"Key `#{key}` not found".should.eql err.message
-				# should(res).be.undefined()
-				# AssertionError: expected null to be undefined
-				# should be undefined by definition?
-				return
-
-			localCache.get key, errorHandlerCallback, true
-			done()
-			return
-
-		it "catch an undefined key without callback", (done) ->
-			key = "xxy"
-			try
-				localCache.get key, true
-			catch err
-				state.n++
-				"ENOTFOUND".should.eql err.name
-				"Key `#{key}` not found".should.eql err.message
-				done()
-			return
-
-		it "catch undefined key without callback (errorOnMissing = true)", (done) ->
-			key = "xxz"
-			# the errorOnMissing option throws errors automatically
-			# save old setting value
-			originalThrowOnMissingValue = localCache.options.errorOnMissing
-			localCache.options.errorOnMissing = true
-			catched = false
-			try
-				localCache.get key
-			catch err
-				state.n++
-				catched = true
-				"ENOTFOUND".should.eql err.name
-				"Key `#{key}` not found".should.eql err.message
-			# the error should have been catched
-			catched.should.be.true()
-			# reset old setting value
-			localCache.options.errorOnMissing = originalThrowOnMissingValue
-			done()
-			return
-
-		it "try to delete an undefined key", (done) ->
-			localCache.del "xxx", (err, count) ->
-				state.n++
-				should.not.exist err
-				0.should.eql count
-				done()
-				return
-			return
-
-		it "update key (and get it to check if the update worked)", (done) ->
-			localCache.set state.key, state.value2, 0, (err, res) ->
-				state.n++
-				should.not.exist err
-				true.should.eql res
-
-				# check if update worked
-				localCache.get state.key, (err, res) ->
-					state.n++
-					should.not.exist err
-					state.value2.should.eql res
-
-					# check if stats didn't change
-					1.should.eql localCache.getStats().keys - state.start.keys
-					done()
-					return
-				return
-			return
-
-		it "delete the defined key", (done) ->
-			# register event handler for first cache deletion
-			localCache.once "del", (key, val) ->
-				state.key.should.equal key
-				state.value2.should.equal val
-				return
-
-			# delete the key
-			localCache.del state.key, (err, count) ->
-				state.n++
-				should.not.exist err
-				1.should.eql count
-
-				# check key numbers
-				0.should.eql localCache.getStats().keys - state.start.keys
-
-				# check if key was deleted
-				localCache.get state.key, (err, res) ->
-					state.n++
-					should.not.exist err
-					should(res).be.undefined()
-					done()
-				return
-			return
-
-		it "set a key to 0", (done) ->
-			localCache.set "zero", 0, 0, (err, res) ->
-				state.n++
-				should.not.exist err
-				true.should.eql res
-				done()
-				return
-			return
-
-		it "get previously set key", (done) ->
-			localCache.get "zero", (err, res) ->
-				state.n++
-				should.not.exist err
-				0.should.eql res
-				done()
-				return
-			return
-
-		after () ->
-			count = 14
-			count.should.eql state.n
-			return
-		return
-
-
 	describe "general sync-style", () ->
 		before () ->
 			localCache.flushAll()
@@ -635,33 +449,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				})
 				return
 
-			it "set cb-style", () ->
-				localCache.set state.keys[0], state.val, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-					})
-					return
-				return
-
 			it "get sync-style", () ->
 				(() -> localCache.get(state.keys[0])).should.throw({
 					name: "EKEYTYPE"
 					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
 				})
-				return
-
-			it "get cb-style", () ->
-				localCache.get state.keys[0], (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-					})
-					return
 				return
 
 			it "mget sync-style", () ->
@@ -671,33 +463,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				})
 				return
 
-			it "mget cb-style", () ->
-				localCache.mget state.keys, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-					})
-					return
-				return
-
 			it "del single sync-style", () ->
 				(() -> localCache.del(state.keys[0])).should.throw({
 					name: "EKEYTYPE"
 					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
 				})
-				return
-
-			it "del single cb-style", () ->
-				localCache.del state.keys[0], (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-					})
-					return
 				return
 
 			it "del multi sync-style", () ->
@@ -707,33 +477,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				})
 				return
 
-			it "del multi cb-style", () ->
-				localCache.del state.keys, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-					})
-					return
-				return
-
 			it "ttl sync-style", () ->
 				(() -> localCache.ttl(state.keys[0], 10)).should.throw({
 					name: "EKEYTYPE"
 					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
 				})
-				return
-
-			it "ttl cb-style", () ->
-				localCache.ttl state.keys[0], 10, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-					})
-					return
 				return
 
 			it "getTtl sync-style", () ->
@@ -742,18 +490,6 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
 				})
 				return
-
-			it "getTtl cb-style", () ->
-				localCache.getTtl state.keys[0], (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-					})
-					return
-				return
-			return
 
 		describe "object - invalid type", () ->
 			before () ->
@@ -769,33 +505,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				})
 				return
 
-			it "set cb-style", () ->
-				localCache.set state.keys[0], state.val, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `object`"
-					})
-					return
-				return
-
 			it "get sync-style", () ->
 				(() -> localCache.get(state.keys[0])).should.throw({
 					name: "EKEYTYPE"
 					message: "The key argument has to be of type `string` or `number`. Found: `object`"
 				})
-				return
-
-			it "get cb-style", () ->
-				localCache.get state.keys[0], (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `object`"
-					})
-					return
 				return
 
 			it "mget sync-style", () ->
@@ -805,33 +519,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				})
 				return
 
-			it "mget cb-style", () ->
-				localCache.mget state.keys, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `object`"
-					})
-					return
-				return
-
 			it "del single sync-style", () ->
 				(() -> localCache.del(state.keys[0])).should.throw({
 					name: "EKEYTYPE"
 					message: "The key argument has to be of type `string` or `number`. Found: `object`"
 				})
-				return
-
-			it "del single cb-style", () ->
-				localCache.del state.keys[0], (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `object`"
-					})
-					return
 				return
 
 			it "del multi sync-style", () ->
@@ -841,33 +533,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				})
 				return
 
-			it "del multi cb-style", () ->
-				localCache.del state.keys, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `object`"
-					})
-					return
-				return
-
 			it "ttl sync-style", () ->
 				(() -> localCache.ttl(state.keys[0], 10)).should.throw({
 					name: "EKEYTYPE"
 					message: "The key argument has to be of type `string` or `number`. Found: `object`"
 				})
-				return
-
-			it "ttl cb-style", () ->
-				localCache.ttl state.keys[0], 10, (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `object`"
-					})
-					return
 				return
 
 			it "getTtl sync-style", () ->
@@ -876,19 +546,6 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					message: "The key argument has to be of type `string` or `number`. Found: `object`"
 				})
 				return
-
-			it "getTtl cb-style", () ->
-				localCache.getTtl state.keys[0], (err, res) ->
-					should.not.exist res
-					should(err).be.an.Error()
-					should(err).match({
-						name: "EKEYTYPE"
-						message: "The key argument has to be of type `string` or `number`. Found: `object`"
-					})
-					return
-				return
-			return
-
 		return
 
 	describe "flush", () ->
@@ -907,10 +564,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				state.keys.push key
 
 			state.keys.forEach (key) ->
-				localCache.set key, state.val, (err, res) ->
-					state.n++
-					should.not.exist err
-					return
+				localCache.set key
+				state.n++
 				return
 
 			state.count.should.eql state.n
@@ -1000,26 +655,19 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		it "delete all previously set keys", () ->
 			for i in [0...state.count]
-				localCache.del state.keys[i], (err, count) ->
-					state.n++
-					should.not.exist err
-					1.should.eql count
-					return
+				1.should.eql localCache.del state.keys[i]
+				state.n++
 
 			state.n.should.eql state.count
 			return
 
 		it "delete keys again; should not delete anything", () ->
 			for i in [0...state.count]
-				localCache.del state.keys[i], (err, count) ->
-					state.n++
-					should.not.exist err
-					0.should.eql count
-					return
+				0.should.eql localCache.del state.keys[i]
+				state.n++
 
 			state.n.should.eql state.count*2
 			localCache.getStats().keys.should.eql 0
-			return
 		return
 
 
@@ -1040,27 +688,18 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				state.keys.push key
 				state.values.push value
 
-				localCache.set key, value, 0, (err, success) ->
-					state.n++
-					should.not.exist err
-					should(success).be.ok()
-					return
+				true.should.eql localCache.set key, value, 0
+				state.n++
 			return
 
 		it "get and remove `count` elements", () ->
 			for i in [1..state.count]
-				localCache.get state.keys[i], (err, res) ->
-					state.n++
-					should.not.exist err
-					state.values[i].should.eql res
-					return
+				state.values[i].should.eql localCache.get state.keys[i]
+				state.n++
 
 			for i in [1..state.count]
-				localCache.del state.keys[i], (err, count) ->
-					state.n++
-					should.not.exist err
-					1.should.eql count
-					return
+				1.should.eql localCache.del state.keys[i]
+				state.n++
 
 			after = localCache.getStats()
 			diff = diffKeys after, state.start
@@ -1074,11 +713,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		it "generate `count` misses", () ->
 			for i in [1..state.count]
 				# 4 char key should not exist
-				localCache.get "xxxx", (err, res) ->
-					state.n++
-					should.not.exist err
-					should(res).be.undefined()
-					return
+				should(localCache.get "xxxx").be.undefined()
+				state.n++
 
 			after = localCache.getStats()
 			diff = diffKeys after, state.start
@@ -1106,10 +742,9 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				state.keys.push key
 
 			for key in state.keys
-				localCache.set key, state.value, 0, (err, res) ->
-					state.n++
-					should.not.exist err
-					return
+				localCache.set key, state.value, 0
+				state.n++
+
 			return
 
 		it "generate a sub-list of keys", () ->
@@ -1123,37 +758,26 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		it "try to mget with a single key", () ->
-			localCache.mget state.getKeys[0], (err, res) ->
-				state.n++
-				should.exist err
-				"Error".should.eql err.constructor.name
-				"EKEYSTYPE".should.eql err.name
-				should(res).be.undefined()
-				return
+			(() => localCache.mget(state.getKeys[0])).should.throw({
+				name: "EKEYSTYPE",
+				message: "The keys argument has to be an array."
+			})
+			state.n++
 			return
 
 		it "mget the sub-list", () ->
-			localCache.mget state.getKeys, (err, res) ->
-				state.n++
-				should.not.exist err
-				state.prediction.should.eql res
-				return
+			state.prediction.should.eql localCache.mget state.getKeys
+			state.n++;
 			return
 
 		it "delete keys in the sub-list", () ->
-			localCache.del state.getKeys, (err, count) ->
-				state.n++
-				should.not.exist err
-				state.getKeys.length.should.eql count
-				return
+			state.getKeys.length.should.eql localCache.del state.getKeys
+			state.n++
 			return
 
 		it "try to mget the sub-list again", () ->
-			localCache.mget state.getKeys, (err, res) ->
-				state.n++
-				should.not.exist err
-				{}.should.eql res
-				return
+			{}.should.eql localCache.mget state.getKeys
+			state.n++
 			return
 
 		it "check successful runs", () ->
@@ -1179,42 +803,30 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		
 		describe "has validates expired ttl", () -> 
 			it "set a key with ttl", () ->
-				localCacheTTL.set state.key6, state.val, 0.7, (err, res) ->
-					should.not.exist err
-					true.should.eql res
+				true.should.eql localCacheTTL.set state.key6, state.val, 0.7
 				return
 	
 			it "check this key immediately", () ->
-				localCacheTTL.has state.key6, (err, res) ->
-					should.not.exist err
-					res.should.eql true
-					return
+				true.should.eql localCacheTTL.has state.key6
 				return
 	
-			it "before it times out", (done) ->
+			it "before it times out", () ->
 				setTimeout(() ->
 					state.n++
 					res = localCacheTTL.has state.key6
 					res.should.eql true
-					localCacheTTL.get state.key6, (err, res) ->
-						should.not.exist err
-						state.val.should.eql res
-						done()
-						return
+					state.val.should.eql localCacheTTL.get state.key6
+					return
 				, 20)
 				return
 	
-			it "and after it timed out", (done) ->
+			it "and after it timed out", () ->
 				setTimeout(() ->
 					res = localCacheTTL.has state.key6
 					res.should.eql false
 					
 					state.n++
-					localCacheTTL.get state.key6, (err, res) ->
-						should.not.exist err
-						should(res).be.undefined()
-						done()
-						return
+					should(localCacheTTL.get state.key6).be.undefined()
 					return
 				, 800)
 				return
@@ -1230,26 +842,20 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		it "check this key immediately", () ->
-			localCache.get state.key1, (err, res) ->
-				should.not.exist err
-				state.val.should.eql res
-				return
+			state.val.should.eql localCache.get state.key1
 			return
 
-		it "before it times out", (done) ->
+		it "before it times out", () ->
 			setTimeout(() ->
 				state.n++
 				res = localCache.has state.key1
 				res.should.eql true
-				localCache.get state.key1, (err, res) ->
-					should.not.exist err
-					state.val.should.eql res
-					done()
-					return
+				state.val.should.eql localCache.get state.key1
+				return
 			, 20)
 			return
 
-		it "and after it timed out", (done) ->
+		it "and after it timed out", () ->
 			setTimeout(() ->
 				res = localCache.has state.key1
 				res.should.eql false
@@ -1258,11 +864,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				should.not.exist ts
 
 				state.n++
-				localCache.get state.key1, (err, res) ->
-					should.not.exist err
-					should(res).be.undefined()
-					done()
-					return
+				should(localCache.get state.key1).be.undefined()
 				return
 			, 700)
 			return
@@ -1281,35 +883,22 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 			return
 
-		it "before it times out", (done) ->
+		it "before it times out", () ->
 			setTimeout(() ->
 				state.n++
 
-				localCache.get state.key2, (err, ts) ->
-					if state.now < ts < state.now + 300
-						throw new Error "Invalid timestamp"
-					return
-
-				localCache.get state.key2, (err, res) ->
-					should.not.exist err
-					state.val.should.eql res
-					done()
-					return
+				state.val.should.eql localCache.get state.key2
 				return
 			, 20)
 			return
 
-		it "and after it timed out, too", (done) ->
+		it "and after it timed out, too", () ->
 			setTimeout(() ->
 				ts = localCache.getTtl state.key2
 				should.not.exist ts
 
 				state.n++
-				localCache.get state.key2, (err, res) ->
-					should.not.exist err
-					should(res).be.undefined()
-					done()
-					return
+				should(localCache.get state.key2).be.undefined()
 				return
 			, 500)
 			return
@@ -1329,26 +918,20 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				, 1000)
 				return
 
-			it "set a key with ttl", (done) ->
+			it "set a key with ttl", () ->
 				localCache.once "set", (key) ->
 					innerState.key.should.eql key
 					return
 
-				localCache.set innerState.key, innerState.val, 0.5, (err, res) ->
-					should.not.exist err
-					true.should.eql res
-					(innerState.startKeys + 1).should.eql localCache.getStats().keys
-					# event handler should have been fired
-					0.should.eql localCache.listeners("set").length
-					done()
-					return
+				true.should.eql localCache.set innerState.key, innerState.val, 0.5
+
+				(innerState.startKeys + 1).should.eql localCache.getStats().keys
+				# event handler should have been fired
+				0.should.eql localCache.listeners("set").length
 				return
 
 			it "and check it's existence", () ->
-				localCache.get innerState.key, (err, res) ->
-					should.not.exist err
-					innerState.val.should.eql res
-					return
+				innerState.val.should.eql localCache.get innerState.key
 				return
 
 			it "wait for 'expired' event", (done) ->
@@ -1370,31 +953,19 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		describe "more ttl tests", () ->
 
 			it "set a third key with ttl", () ->
-				localCache.set state.key3, state.val, 100, (err, res) ->
-					should.not.exist null
-					true.should.eql res
-					return
+				true.should.eql localCache.set state.key3, state.val, 100
 				return
 
 			it "check it immediately", () ->
-				localCache.get state.key3, (err, res) ->
-					should.not.exist err
-					state.val.should.eql res
-					return
+				state.val.should.eql localCache.get state.key3
 				return
 
 			it "set ttl to the invalid key", () ->
-				localCache.ttl "#{state.key3}false", 0.3, (err, wasSet) ->
-					should.not.exist err
-					false.should.eql wasSet
-					return
+				false.should.eql localCache.ttl "#{state.key3}false", 0.3
 				return
 
 			it "set ttl to the correct key", () ->
-				localCache.ttl state.key3, 0.3, (err, wasSet) ->
-					should.not.exist err
-					true.should.eql wasSet
-					return
+				true.should.eql localCache.ttl state.key3, 0.3
 				return
 
 			it "check if the key still exists", () ->
@@ -1415,79 +986,53 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 
 			it "set a key with ttl = 100s (default: infinite), reset it's ttl to default and check if it still exists", () ->
-				localCache.set state.key4, state.val, 100, (err, res) ->
-					should.not.exist err
-					true.should.eql res
+				true.should.eql localCache.set state.key4, state.val, 100
 
-					# check immediately
-					localCache.get state.key4, (err, res) ->
-						should.not.exist err
-						state.val.should.eql res
+				# check immediately
+				state.val.should.eql localCache.get state.key4
 
-						# set ttl to false key
-						localCache.ttl "#{state.key4}false", (err, wasSet) ->
-							should.not.exist err
-							false.should.eql wasSet
-							return
+				# set ttl to false key
+				false.should.eql localCache.ttl "#{state.key4}false"
 
-						# set default ttl (0) to the right key
-						localCache.ttl state.key4, (err, wasSet) ->
-							should.not.exist err
-							true.should.eql wasSet
+				# set default ttl (0) to the right key
+				true.should.eql localCache.ttl state.key4
 
-							# and check if it still exists
-							res = localCache.get state.key4
-							state.val.should.eql res
-							return
-						return
-					return
+				# and check if it still exists
+				res = localCache.get state.key4
+				state.val.should.eql res
 				return
 
 			it "set a key with ttl = 100s (default: 0.3s), reset it's ttl to default, check if it still exists, and wait for its timeout", (done) ->
-				localCacheTTL.set state.key5, state.val, 100, (err, res) ->
-					should.not.exist err
-					true.should.eql res
+				true.should.eql localCacheTTL.set state.key5, state.val, 100
 
-					# check immediately
-					localCacheTTL.get state.key5, (err, res) ->
-						should.not.exist err
-						state.val.should.eql res
+				# check immediately
+				state.val.should.eql localCacheTTL.get state.key5
 
-						# set ttl to false key
-						localCacheTTL.ttl "#{state.key5}false", (err, wasSet) ->
-							should.not.exist err
-							false.should.eql wasSet
-							return
+				# set ttl to false key
+				false.should.eql localCacheTTL.ttl "#{state.key5}false"
 
-						# set default ttl (0.3) to right key
-						localCacheTTL.ttl state.key5, (err, wasSet) ->
-							should.not.exist err
-							true.should.eql wasSet
-							return
+				# set default ttl (0.3) to right key
+				true.should.eql localCacheTTL.ttl state.key5
 
-						# and check if it still exists
-						localCacheTTL.get state.key5, (err, res) ->
-							should.not.exist err
-							state.val.should.eql res
+				# and check if it still exists
+				state.val.should.eql localCacheTTL.get state.key5
 
-							setTimeout(() ->
-								res = localCacheTTL.get state.key5
-								should.not.exist res
+				setTimeout(() ->
+					res = localCacheTTL.get state.key5
+					should.not.exist res
 
-								localCacheTTL._checkData false
+					localCacheTTL._checkData false
 
-								# deep dirty check if key was deleted
-								should(localCacheTTL.data[state.key5]).be.undefined()
-								done()
-								return
-							, 350)
-							return
-						return
+					# deep dirty check if key was deleted
+					should(localCacheTTL.data[state.key5]).be.undefined()
+					done()
+					return
+				, 350)
 				return
 
 
 			it "set a key key with a cache initialized with no automatic delete on expire", (done) ->
-				localCacheNoDelete.set state.key1, state.val, (err, res) ->
+				localCacheNoDelete.set state.key1, state.val
 				setTimeout(() ->
 					res = localCacheNoDelete.get state.key1
 					should(res).eql(state.val)
