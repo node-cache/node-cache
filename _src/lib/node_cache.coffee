@@ -5,6 +5,7 @@ _isString = require( "lodash/isString" )
 _isFunction = require( "lodash/isFunction" )
 _isNumber = require( "lodash/isNumber" )
 _isObject = require( "lodash/isObject" )
+_isBoolean = require( "lodash/isBoolean" )
 _size = require( "lodash/size" )
 _template = require( "lodash/template" )
 
@@ -546,6 +547,8 @@ module.exports = class NodeCache extends EventEmitter
 		else if _isObject( value )
 			# if the data is an Object multiply each element with a defined default length
 			@options.objectValueSize * _size( value )
+		else if _isBoolean( value )
+			8
 		else
 			# default fallback
 			0
