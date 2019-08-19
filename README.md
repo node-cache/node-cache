@@ -365,8 +365,8 @@ myCache.getStats();
       keys: 0,    // global key count
       hits: 0,    // global hit count
       misses: 0,  // global miss count
-      ksize: 0,   // global key size count in bytes
-      vsize: 0    // global value size count in bytes
+      ksize: 0,   // global key size count in approximately bytes
+      vsize: 0    // global value size count in approximately bytes
     }
   */
 ```
@@ -385,8 +385,8 @@ myCache.getStats();
       keys: 0,    // global key count
       hits: 0,    // global hit count
       misses: 0,  // global miss count
-      ksize: 0,   // global key size count in bytes
-      vsize: 0    // global value size count in bytes
+      ksize: 0,   // global key size count in approximately bytes
+      vsize: 0    // global value size count in approximately bytes
     }
   */
 ```
