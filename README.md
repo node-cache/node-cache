@@ -27,7 +27,7 @@ The upcoming 5.0.0 Release will drop support for node versions before 6.x!
 # Install
 
 ```bash
-  npm install node-cache --save
+	npm install node-cache --save
 ```
 
 Or just require the `node_cache.js` file to get the superclass
@@ -60,19 +60,29 @@ const myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 
 **Since `4.1.0`**:
 *Key-validation*: The keys can be given as either `string` or `number`, but are casted to a `string` internally anyway.
-All other types will throw an error.
+All other types will either throw an error or call the callback with an error.
 
 ## Store a key (SET):
 
-`myCache.set( key, val, [ ttl ] )`
+`myCache.set( key, val, [ ttl ], [callback] )`
 
 Sets a `key` `value` pair. It is possible to define a `ttl` (in seconds).
 Returns `true` on success.
 
 ```js
 obj = { my: "Special", variable: 42 };
+/* sync */
 success = myCache.set( "myKey", obj, 10000 );
 // true
+
+/* async (legacy) */
+myCache.set( "myKey", obj, function( err, success ){
+	if( !err && success ){
+		console.log( success );
+		// true
+		// ... do something ...
+	}
+});
 ```
 
 > Note: If the key expires based on it's `ttl` it will be deleted entirely from the internal data object.
@@ -80,23 +90,37 @@ success = myCache.set( "myKey", obj, 10000 );
 
 ## Retrieve a key (GET):
 
-`myCache.get( key )`
+`myCache.get( key, [callback] )`
 
 Gets a saved value from the cache.
 Returns a `undefined` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
 
 ```js
+/* sync */
 value = myCache.get( "myKey" );
 if ( value == undefined ){
-  // handle miss!
+	// handle miss!
 }
 // { my: "Special", variable: 42 }
+
+/* async (legacy) */
+myCache.get( "myKey", function( err, value ){
+	if( !err ){
+		if(value == undefined){
+			// key not found
+		}else{
+			console.log( value );
+			//{ my: "Special", variable: 42 }
+			// ... do something ...
+		}
+	}
+});
 ```
 
 **Since `2.0.0`**:
 
-The return format changed to a simple value and a `ENOTFOUND` error if not found *( as result instance of `Error` )*.
+The return format changed to a simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )
 
 **Since `2.1.0`**:
 
@@ -108,28 +132,43 @@ So after 2.1.0 a miss returns `undefined`.
 
 ```js
 try{
-    value = myCache.get( "not-existing-key", true );
+		value = myCache.get( "not-existing-key", true );
 } catch( err ){
-    // ENOTFOUND: Key `not-existing-key` not found
+		// ENOTFOUND: Key `not-existing-key` not found
 }
 ```
 
 ## Get multiple keys (MGET):
 
-`myCache.mget( [ key1, key2, ... ,keyn ] )`
+`myCache.mget( [ key1, key2, ..., keyn ], [callback] )`
 
 Gets multiple saved values from the cache.
 Returns an empty object `{}` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
 
 ```js
+/* sync */
 value = myCache.mget( [ "myKeyA", "myKeyB" ] );
 /*
-  {
-    "myKeyA": { my: "Special", variable: 123 },
-    "myKeyB": { the: "Glory", answer: 42 }
-  }
+	{
+		"myKeyA": { my: "Special", variable: 123 },
+		"myKeyB": { the: "Glory", answer: 42 }
+	}
 */
+
+/* async (legacy) */
+myCache.mget( [ "myKeyA", "myKeyB" ], function( err, value ){
+	if( !err ){
+		console.log( value );
+		/*
+			{
+				"myKeyA": { my: "Special", variable: 123 },
+				"myKeyB": { the: "Glory", answer: 42 }
+			}
+		*/
+		// ... do something ...
+	}
+});
 ```
 
 **Since `2.0.0`**:
@@ -138,22 +177,32 @@ The method for mget changed from `.get( [ "a", "b" ] )` to `.mget( [ "a", "b" ] 
 
 ## Delete a key (DEL):
 
-`myCache.del( key )`
+`myCache.del( key, [callback] )`
 
 Delete a key. Returns the number of deleted entries. A delete will never fail.
 
 ```js
+/* sync */
 value = myCache.del( "A" );
 // 1
+
+/* async (legacy) */
+myCache.del( "myKey", function( err, count ){
+	if( !err ){
+		console.log( count ); // 1
+		// ... do something ...
+	}
+});
 ```
 
 ## Delete multiple keys (MDEL):
 
-`myCache.del( [ key1, key2, ..., keyn ] )`
+`myCache.del( [ key1, key2, ..., keyn ], [callback] )`
 
 Delete multiple keys. Returns the number of deleted entries. A delete will never fail.
 
 ```js
+/* sync */
 value = myCache.del( "A" );
 // 1
 
@@ -162,11 +211,19 @@ value = myCache.del( [ "B", "C" ] );
 
 value = myCache.del( [ "A", "B", "C", "D" ] );
 // 1 - because A, B and C not exists
+
+/* async (legacy) */
+myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
+	if( !err ){
+		console.log( count ); // 2
+		// ... do something ...
+	}
+});
 ```
 
 ## Change TTL (TTL):
 
-`myCache.ttl( key, ttl )`
+`myCache.ttl( key, ttl, [callback] )`
 
 Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.
 If the ttl-argument isn't passed the default-TTL will be used.
@@ -174,6 +231,7 @@ If the ttl-argument isn't passed the default-TTL will be used.
 The key will be deleted when passing in a `ttl < 0`.
 
 ```js
+/* sync */
 myCache = new NodeCache( { stdTTL: 100 } )
 changed = myCache.ttl( "existentKey", 100 )
 // true
@@ -183,11 +241,33 @@ changed2 = myCache.ttl( "missingKey", 100 )
 
 changed3 = myCache.ttl( "existentKey" )
 // true
+
+/* async (legacy) */
+myCache.ttl( "existendKey", 100, function( err, changed ){
+	if( !err ){
+		console.log( changed ); // true
+		// ... do something ...
+	}
+});
+
+myCache.ttl( "missingKey", 100, function( err, changed ){
+	if( !err ){
+		console.log( changed ); // false
+		// ... do something ...
+	}
+});
+
+myCache.ttl( "existendKey", function( err, changed ){
+	if( !err ){
+		console.log( changed ); // true
+		// ... do something ...
+	}
+});
 ```
 
 ## Get TTL (getTTL):
 
-`myCache.getTtl( key )`
+`myCache.getTtl( key, [callback] )`
 
 Receive the ttl of a key.
 You will get:
@@ -202,6 +282,7 @@ myCache = new NodeCache( { stdTTL: 100 } )
 myCache.set( "ttlKey", "MyExpireData" )
 myCache.set( "noTtlKey", "NonExpireData", 0 )
 
+/* sync */
 ts = myCache.getTtl( "ttlKey" )
 // ts wil be approximately 1456000600000
 
@@ -213,31 +294,56 @@ ts = myCache.getTtl( "noTtlKey" )
 
 ts = myCache.getTtl( "unknownKey" )
 // ts = undefined
+
+/* async (legacy) */
+myCache.getTtl( "ttlKey", function( err, ts ){
+	if( !err ){
+		// ts wil be approximately 1456000600000
+	}
+});
 ```
 
 ## List keys (KEYS)
 
-`myCache.keys()`
+`myCache.keys( [callback] )`
 
 Returns an array of all existing keys.
 
 ```js
+/* sync */
 mykeys = myCache.keys();
 
 console.log( mykeys );
 // [ "all", "my", "keys", "foo", "bar" ]
+
+/* async (legacy) */ 
+myCache.keys( function( err, mykeys ){
+	if( !err ){
+		console.log( mykeys );
+	 // [ "all", "my", "keys", "foo", "bar" ]
+	}
+});
 ```
 
 ## Has key (HAS)
 
-`myCache.has( key )`
+`myCache.has( key, [callback] )`
 
 Returns boolean indicating if the key is cached.
 
 ```js
+/* sync */
 exists = myCache.has( 'myKey' );
 
 console.log( exists );
+
+/* async (legacy) */
+myCache.has( 'myKey',  function( err, exists ){
+	if( !err ){
+		console.log( exists );
+	 // true
+	}
+});
 ```
 
 ## Statistics (STATS):
@@ -248,15 +354,15 @@ Returns the statistics.
 
 ```js
 myCache.getStats();
-  /*
-    {
-      keys: 0,    // global key count
-      hits: 0,    // global hit count
-      misses: 0,  // global miss count
-      ksize: 0,   // global key size count in approximately bytes
-      vsize: 0    // global value size count in approximately bytes
-    }
-  */
+	/*
+		{
+			keys: 0,    // global key count
+			hits: 0,    // global hit count
+			misses: 0,  // global miss count
+			ksize: 0,   // global key size count in approximately bytes
+			vsize: 0    // global value size count in approximately bytes
+		}
+	*/
 ```
 
 ## Flush all data (FLUSH):
@@ -268,15 +374,15 @@ Flush all data.
 ```js
 myCache.flushAll();
 myCache.getStats();
-  /*
-    {
-      keys: 0,    // global key count
-      hits: 0,    // global hit count
-      misses: 0,  // global miss count
-      ksize: 0,   // global key size count in approximately bytes
-      vsize: 0    // global value size count in approximately bytes
-    }
-  */
+	/*
+		{
+			keys: 0,    // global key count
+			hits: 0,    // global hit count
+			misses: 0,  // global miss count
+			ksize: 0,   // global key size count in approximately bytes
+			vsize: 0    // global value size count in approximately bytes
+		}
+	*/
 ```
 
 ## Close the cache:
@@ -298,7 +404,7 @@ You will get the `key` and the `value` as callback argument.
 
 ```js
 myCache.on( "set", function( key, value ){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
@@ -309,7 +415,7 @@ You will get the `key` and the deleted `value` as callback arguments.
 
 ```js
 myCache.on( "del", function( key, value ){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
@@ -320,7 +426,7 @@ You will get the `key` and `value` as callback argument.
 
 ```js
 myCache.on( "expired", function( key, value ){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
@@ -330,7 +436,7 @@ Fired when the cache has been flushed.
 
 ```js
 myCache.on( "flush", function(){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
