@@ -69,6 +69,7 @@ module.exports = class NodeCache extends EventEmitter
 					else
 						return oldMethod(...args, cb)
 					return
+				return
 			)
 
 		# statistics container
