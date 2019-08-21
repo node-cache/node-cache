@@ -46,6 +46,7 @@ module.exports = class NodeCache extends EventEmitter
 
 		# generate functions with callbacks (legacy)
 		if (@options.enableLegacyCallbacks)
+			console.warn("WARNING! Callback legacy support will drop in v6.x")
 			_forEach([
 				"get",
 				"mget",
