@@ -193,7 +193,7 @@ Receive the ttl of a key.
 You will get:
 - `undefined` if the key does not exist
 - `0` if this key has no ttl
-- a timestamp in ms until the key expires
+- a timestamp in ms representing the time at which the key will expire
 
 ```js
 myCache = new NodeCache( { stdTTL: 100 } )
