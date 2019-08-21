@@ -52,6 +52,7 @@ const myCache = new NodeCache();
 _Here's a [simple code example](https://runkit.com/mpneuried/useclones-example-83) showing the different behavior_
 - `deleteOnExpire`: *(default: `true`)* whether variables will be deleted automatically when they expire.
 If `true` the variable will be deleted. If `false` the variable will remain. You are encouraged to handle the variable upon the event `expired` by yourself.
+- `enableLegacyCallbacks`: *(default: `false`)* enables the usage of callbacks instead of sync functions. will be removed in v6.x.
 
 ```js
 const NodeCache = require( "node-cache" );
