@@ -47,7 +47,6 @@ const myCache = new NodeCache();
 `0` = unlimited
 - `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.
 `0` = no periodic check.
-- `errorOnMissing`: *(default: `false`)* en/disable throwing or passing an error to the callback if attempting to `.get` a missing or expired value.
 - `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.
 **Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save mutable objects or other complex types with mutability involved and wanted.
 _Here's a [simple code example](https://runkit.com/mpneuried/useclones-example-83) showing the different behavior_
@@ -61,30 +60,14 @@ const myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
 
 **Since `4.1.0`**:
 *Key-validation*: The keys can be given as either `string` or `number`, but are casted to a `string` internally anyway.
-All other types will either throw an error or call the callback with an error.
+All other types will throw an error.
 
 ## Store a key (SET):
 
-`myCache.set( key, val, [ ttl ], [callback] )`
+`myCache.set( key, val, [ ttl ] )`
 
 Sets a `key` `value` pair. It is possible to define a `ttl` (in seconds).
 Returns `true` on success.
-
-```js
-obj = { my: "Special", variable: 42 };
-myCache.set( "myKey", obj, function( err, success ){
-  if( !err && success ){
-    console.log( success );
-    // true
-    // ... do something ...
-  }
-});
-```
-
-> Note: If the key expires based on it's `ttl` it will be deleted entirely from the internal data object.
-
-**Since `1.0.0`**:
-Callback is now optional. You can also use synchronous syntax.
 
 ```js
 obj = { my: "Special", variable: 42 };
@@ -92,31 +75,16 @@ success = myCache.set( "myKey", obj, 10000 );
 // true
 ```
 
+> Note: If the key expires based on it's `ttl` it will be deleted entirely from the internal data object.
+
 
 ## Retrieve a key (GET):
 
-`myCache.get( key, [callback] )`
+`myCache.get( key )`
 
 Gets a saved value from the cache.
 Returns a `undefined` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
-
-```js
-myCache.get( "myKey", function( err, value ){
-  if( !err ){
-    if(value == undefined){
-      // key not found
-    }else{
-      console.log( value );
-      //{ my: "Special", variable: 42 }
-      // ... do something ...
-    }
-  }
-});
-```
-
-**Since `1.0.0`**:
-Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.get( "myKey" );
@@ -128,7 +96,7 @@ if ( value == undefined ){
 
 **Since `2.0.0`**:
 
-The return format changed to a simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )*.
+The return format changed to a simple value and a `ENOTFOUND` error if not found *( as result instance of `Error` )*.
 
 **Since `2.1.0`**:
 
@@ -148,29 +116,11 @@ try{
 
 ## Get multiple keys (MGET):
 
-`myCache.mget( [ key1, key2, ... ,keyn ], [callback] )`
+`myCache.mget( [ key1, key2, ... ,keyn ] )`
 
 Gets multiple saved values from the cache.
 Returns an empty object `{}` if not found or expired.
 If the value was found it returns an object with the `key` `value` pair.
-
-```js
-myCache.mget( [ "myKeyA", "myKeyB" ], function( err, value ){
-  if( !err ){
-    console.log( value );
-    /*
-      {
-        "myKeyA": { my: "Special", variable: 123 },
-        "myKeyB": { the: "Glory", answer: 42 }
-      }
-    */
-    // ... do something ...
-  }
-});
-```
-
-**Since `1.0.0`**:
-Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.mget( [ "myKeyA", "myKeyB" ] );
@@ -188,21 +138,9 @@ The method for mget changed from `.get( [ "a", "b" ] )` to `.mget( [ "a", "b" ] 
 
 ## Delete a key (DEL):
 
-`myCache.del( key, [callback] )`
+`myCache.del( key )`
 
 Delete a key. Returns the number of deleted entries. A delete will never fail.
-
-```js
-myCache.del( "myKey", function( err, count ){
-  if( !err ){
-    console.log( count ); // 1
-    // ... do something ...
-  }
-});
-```
-
-**Since `1.0.0`**:
-Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.del( "A" );
@@ -211,21 +149,9 @@ value = myCache.del( "A" );
 
 ## Delete multiple keys (MDEL):
 
-`myCache.del( [ key1, key2, ... ,keyn ], [callback] )`
+`myCache.del( [ key1, key2, ..., keyn ] )`
 
 Delete multiple keys. Returns the number of deleted entries. A delete will never fail.
-
-```js
-myCache.del( [ "myKeyA", "myKeyB" ], function( err, count ){
-  if( !err ){
-    console.log( count ); // 2
-    // ... do something ...
-  }
-});
-```
-
-**Since `1.0.0`**:
-Callback is now optional. You can also use synchronous syntax.
 
 ```js
 value = myCache.del( "A" );
@@ -240,7 +166,7 @@ value = myCache.del( [ "A", "B", "C", "D" ] );
 
 ## Change TTL (TTL):
 
-`myCache.ttl( key, ttl, [callback] )`
+`myCache.ttl( key, ttl )`
 
 Redefine the ttl of a key. Returns true if the key has been found and changed. Otherwise returns false.
 If the ttl-argument isn't passed the default-TTL will be used.
@@ -249,31 +175,19 @@ The key will be deleted when passing in a `ttl < 0`.
 
 ```js
 myCache = new NodeCache( { stdTTL: 100 } )
-myCache.ttl( "existendKey", 100, function( err, changed ){
-  if( !err ){
-    console.log( changed ); // true
-    // ... do something ...
-  }
-});
+changed = myCache.ttl( "existentKey", 100 )
+// true
 
-myCache.ttl( "missingKey", 100, function( err, changed ){
-  if( !err ){
-    console.log( changed ); // false
-    // ... do something ...
-  }
-});
+changed2 = myCache.ttl( "missingKey", 100 )
+// false
 
-myCache.ttl( "existendKey", function( err, changed ){
-  if( !err ){
-    console.log( changed ); // true
-    // ... do something ...
-  }
-});
+changed3 = myCache.ttl( "existentKey" )
+// true
 ```
 
 ## Get TTL (getTTL):
 
-`myCache.getTtl( key, [callback] )`
+`myCache.getTtl( key )`
 
 Receive the ttl of a key.
 You will get:
@@ -291,11 +205,7 @@ myCache.set( "noTtlKey", "NonExpireData", 0 )
 ts = myCache.getTtl( "ttlKey" )
 // ts wil be approximately 1456000600000
 
-myCache.getTtl( "ttlKey", function( err, ts ){
-  if( !err ){
-    // ts wil be approximately 1456000600000
-  }
-});
+ts = myCache.getTtl( "ttlKey" )
 // ts wil be approximately 1456000600000
 
 ts = myCache.getTtl( "noTtlKey" )
@@ -303,53 +213,31 @@ ts = myCache.getTtl( "noTtlKey" )
 
 ts = myCache.getTtl( "unknownKey" )
 // ts = undefined
-
 ```
 
 ## List keys (KEYS)
 
-`myCache.keys( [callback] )`
+`myCache.keys()`
 
 Returns an array of all existing keys.
 
 ```js
-// async
-myCache.keys( function( err, mykeys ){
-  if( !err ){
-    console.log( mykeys );
-   // [ "all", "my", "keys", "foo", "bar" ]
-  }
-});
-
-// sync
 mykeys = myCache.keys();
 
 console.log( mykeys );
 // [ "all", "my", "keys", "foo", "bar" ]
-
 ```
 
 ## Has key (HAS)
 
-`myCache.has( key, [callback] )`
+`myCache.has( key )`
 
 Returns boolean indicating if the key is cached.
 
 ```js
-// async
-myCache.has( 'myKey',  function( err, exists ){
-  if( !err ){
-    console.log( exists );
-   // true
-  }
-});
-
-// sync
 exists = myCache.has( 'myKey' );
 
 console.log( exists );
-// true
-
 ```
 
 ## Statistics (STATS):
@@ -365,8 +253,8 @@ myCache.getStats();
       keys: 0,    // global key count
       hits: 0,    // global hit count
       misses: 0,  // global miss count
-      ksize: 0,   // global key size count in bytes
-      vsize: 0    // global value size count in bytes
+      ksize: 0,   // global key size count in approximately bytes
+      vsize: 0    // global value size count in approximately bytes
     }
   */
 ```
@@ -385,8 +273,8 @@ myCache.getStats();
       keys: 0,    // global key count
       hits: 0,    // global hit count
       misses: 0,  // global miss count
-      ksize: 0,   // global key size count in bytes
-      vsize: 0    // global value size count in bytes
+      ksize: 0,   // global key size count in approximately bytes
+      vsize: 0    // global value size count in approximately bytes
     }
   */
 ```
