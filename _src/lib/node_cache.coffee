@@ -7,6 +7,7 @@ _isNumber = require( "lodash/isNumber" )
 _isObject = require( "lodash/isObject" )
 _isBoolean = require( "lodash/isBoolean" )
 _size = require( "lodash/size" )
+_forEach = require( "lodash/forEach" )
 _template = require( "lodash/template" )
 
 clone = require( "clone" )
@@ -39,7 +40,36 @@ module.exports = class NodeCache extends EventEmitter
 			errorOnMissing: false
 			# whether values should be deleted automatically at expiration
 			deleteOnExpire: true
+			# enable legacy callbacks
+			enableLegacyCallbacks: false
 		, @options )
+
+		# generate functions with callbacks (legacy)
+		if (@options.enableLegacyCallbacks)
+			_forEach([
+				"get",
+				"mget",
+				"set",
+				"del",
+				"ttl",
+				"getTtl",
+				"keys",
+				"has"
+			], (methodKey) =>
+				# reference real function
+				oldMethod = @[methodKey]
+				@[methodKey] = (...args, cb) =>
+					# return a callback if cb is defined and a function
+					if (typeof cb is "function")
+						try
+							res = oldMethod(...args)
+							cb(null, res)
+						catch err
+							cb(err)
+					else
+						return oldMethod(...args, cb)
+					return
+			)
 
 		# statistics container
 		@stats =
