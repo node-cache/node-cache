@@ -98,7 +98,7 @@ if ( value == undefined ){
 
 **Since `2.0.0`**:
 
-The return format changed to a simple value and a `ENOTFOUND` error if not found *( as `callback( err )` or on sync call as result instance of `Error` )
+The return format changed to a simple value and a `ENOTFOUND` error if not found *( as result instance of `Error` )
 
 **Since `2.1.0`**:
 
