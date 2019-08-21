@@ -520,7 +520,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method the calculate the key length
 	_getKeyLength: ( key )->
-		key.length
+		key.toString().length
 
 	# ## _getValLength
 	#
