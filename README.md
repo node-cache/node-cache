@@ -27,7 +27,7 @@ The upcoming 5.0.0 Release will drop support for node versions before 6.x!
 # Install
 
 ```bash
-  npm install node-cache --save
+	npm install node-cache --save
 ```
 
 Or just require the `node_cache.js` file to get the superclass
@@ -52,6 +52,7 @@ const myCache = new NodeCache();
 _Here's a [simple code example](https://runkit.com/mpneuried/useclones-example-83) showing the different behavior_
 - `deleteOnExpire`: *(default: `true`)* whether variables will be deleted automatically when they expire.
 If `true` the variable will be deleted. If `false` the variable will remain. You are encouraged to handle the variable upon the event `expired` by yourself.
+- `enableLegacyCallbacks`: *(default: `false`)* re-enables the usage of callbacks instead of sync functions. adds an additional `cb` argument to each function which resolves to `(err, result)`. will be removed in node-cache v6.x.
 
 ```js
 const NodeCache = require( "node-cache" );
@@ -71,6 +72,7 @@ Returns `true` on success.
 
 ```js
 obj = { my: "Special", variable: 42 };
+
 success = myCache.set( "myKey", obj, 10000 );
 // true
 ```
@@ -89,14 +91,14 @@ If the value was found it returns an object with the `key` `value` pair.
 ```js
 value = myCache.get( "myKey" );
 if ( value == undefined ){
-  // handle miss!
+	// handle miss!
 }
 // { my: "Special", variable: 42 }
 ```
 
 **Since `2.0.0`**:
 
-The return format changed to a simple value and a `ENOTFOUND` error if not found *( as result instance of `Error` )*.
+The return format changed to a simple value and a `ENOTFOUND` error if not found *( as result instance of `Error` )
 
 **Since `2.1.0`**:
 
@@ -108,15 +110,15 @@ So after 2.1.0 a miss returns `undefined`.
 
 ```js
 try{
-    value = myCache.get( "not-existing-key", true );
+		value = myCache.get( "not-existing-key", true );
 } catch( err ){
-    // ENOTFOUND: Key `not-existing-key` not found
+		// ENOTFOUND: Key `not-existing-key` not found
 }
 ```
 
 ## Get multiple keys (MGET):
 
-`myCache.mget( [ key1, key2, ... ,keyn ] )`
+`myCache.mget( [ key1, key2, ..., keyn ] )`
 
 Gets multiple saved values from the cache.
 Returns an empty object `{}` if not found or expired.
@@ -125,10 +127,10 @@ If the value was found it returns an object with the `key` `value` pair.
 ```js
 value = myCache.mget( [ "myKeyA", "myKeyB" ] );
 /*
-  {
-    "myKeyA": { my: "Special", variable: 123 },
-    "myKeyB": { the: "Glory", answer: 42 }
-  }
+	{
+		"myKeyA": { my: "Special", variable: 123 },
+		"myKeyB": { the: "Glory", answer: 42 }
+	}
 */
 ```
 
@@ -235,6 +237,7 @@ console.log( mykeys );
 Returns boolean indicating if the key is cached.
 
 ```js
+/* sync */
 exists = myCache.has( 'myKey' );
 
 console.log( exists );
@@ -248,15 +251,15 @@ Returns the statistics.
 
 ```js
 myCache.getStats();
-  /*
-    {
-      keys: 0,    // global key count
-      hits: 0,    // global hit count
-      misses: 0,  // global miss count
-      ksize: 0,   // global key size count in approximately bytes
-      vsize: 0    // global value size count in approximately bytes
-    }
-  */
+	/*
+		{
+			keys: 0,    // global key count
+			hits: 0,    // global hit count
+			misses: 0,  // global miss count
+			ksize: 0,   // global key size count in approximately bytes
+			vsize: 0    // global value size count in approximately bytes
+		}
+	*/
 ```
 
 ## Flush all data (FLUSH):
@@ -268,15 +271,15 @@ Flush all data.
 ```js
 myCache.flushAll();
 myCache.getStats();
-  /*
-    {
-      keys: 0,    // global key count
-      hits: 0,    // global hit count
-      misses: 0,  // global miss count
-      ksize: 0,   // global key size count in approximately bytes
-      vsize: 0    // global value size count in approximately bytes
-    }
-  */
+	/*
+		{
+			keys: 0,    // global key count
+			hits: 0,    // global hit count
+			misses: 0,  // global miss count
+			ksize: 0,   // global key size count in approximately bytes
+			vsize: 0    // global value size count in approximately bytes
+		}
+	*/
 ```
 
 ## Close the cache:
@@ -298,7 +301,7 @@ You will get the `key` and the `value` as callback argument.
 
 ```js
 myCache.on( "set", function( key, value ){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
@@ -309,7 +312,7 @@ You will get the `key` and the deleted `value` as callback arguments.
 
 ```js
 myCache.on( "del", function( key, value ){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
@@ -320,7 +323,7 @@ You will get the `key` and `value` as callback argument.
 
 ```js
 myCache.on( "expired", function( key, value ){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
@@ -330,7 +333,7 @@ Fired when the cache has been flushed.
 
 ```js
 myCache.on( "flush", function(){
-  // ... do something ...
+	// ... do something ...
 });
 ```
 
