@@ -28,15 +28,23 @@ declare namespace NodeCache {
 		 * get a cached key and change the stats
 		 *
 		 * @param key cache key or an array of keys
+		 * @param cb Callback function
 		 */
-		get<T>(key: Key): T | undefined;
+		get<T>(
+			key: Key,
+			cb?: Callback<T>
+		): T | undefined;
 
 		/**
 		 * get multiple cached keys at once and change the stats
 		 *
 		 * @param keys an array of keys
+		 * @param cb Callback function
 		 */
-		mget<T>(keys: Key[]): { [key: string]: T };
+		mget<T>(
+			keys: Key[],
+			cb?: Callback<{ [key: string]: T }>
+		): { [key: string]: T };
 
 		/**
 		 * set a cached key and change the stats
@@ -45,32 +53,61 @@ declare namespace NodeCache {
 		 * @param value A element to cache. If the option `option.forceString` is `true` the module trys to translate
 		 * it to a serialized JSON
 		 * @param ttl The time to live in seconds.
+		 * @param cb Callback function
 		 */
-		set<T>(key: Key, value: T, ttl: number | string): boolean;
+		set<T>(
+			key: Key,
+			value: T,
+			ttl: number | string,
+			cb?: Callback<boolean>
+		): boolean;
 
-		set<T>(key: Key, value: T): boolean;
+		set<T>(
+			key: Key,
+			value: T,
+			cb?: Callback<boolean>
+		): boolean;
 
 		/**
 		 * remove keys
 		 * @param keys cache key to delete or a array of cache keys
+		 * @param cb Callback function
 		 * @returns Number of deleted keys
 		 */
-		del(keys: Key | Key[]): number;
+		del(
+			keys: Key | Key[],
+			cb?: Callback<number>
+		): number;
 
 		/**
 		 * reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 it's similar to `.del()`
 		 */
-		ttl(key: Key, ttl: number): boolean;
+		ttl(
+			key: Key,
+			ttl: number,
+			cb?: Callback<boolean>
+		): boolean;
 
-		ttl(key: Key): boolean;
+		ttl(
+			key: Key,
+			cb?: Callback<boolean>
+		): boolean;
 
-		getTtl(key: Key): number | undefined;
+		getTtl(
+			key: Key,
+		): number|undefined;
+
+		getTtl(
+			key: Key,
+			cb?: Callback<boolean>
+		): boolean;
 
 		/**
 		 * list all keys within this cache
+		 * @param cb Callback function
 		 * @returns An array of all keys
 		 */
-		keys(): string[];
+		keys(cb?: Callback<string[]>): string[];
 
 		/**
 		 * get the stats
@@ -130,8 +167,7 @@ import Options = NodeCache.Options;
 import Stats = NodeCache.Stats;
 import Callback = NodeCache.Callback;
 
-declare class NodeCache extends events.EventEmitter
-	implements NodeCache.NodeCache {
+declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCache {
 	/** container for cached data */
 	data: Data;
 
@@ -147,15 +183,23 @@ declare class NodeCache extends events.EventEmitter
 	 * get a cached key and change the stats
 	 *
 	 * @param key cache key or an array of keys
+	 * @param cb Callback function
 	 */
-	get<T>(key: Key): T | undefined;
+	get<T>(
+		key: Key,
+		cb?: Callback<T>
+	): T | undefined;
 
 	/**
 	 * get multiple cached keys at once and change the stats
 	 *
 	 * @param keys an array of keys
+	 * @param cb Callback function
 	 */
-	mget<T>(keys: Key[]): { [key: string]: T };
+	mget<T>(
+		keys: Key[],
+		cb?: Callback<{ [key: string]: T }>
+	): { [key: string]: T };
 
 	/**
 	 * set a cached key and change the stats
@@ -164,10 +208,20 @@ declare class NodeCache extends events.EventEmitter
 	 * @param value A element to cache. If the option `option.forceString` is `true` the module trys to translate
 	 * it to a serialized JSON
 	 * @param ttl The time to live in seconds.
+	 * @param cb Callback function
 	 */
-	set<T>(key: Key, value: T, ttl: number | string): boolean;
+	set<T>(
+		key: Key,
+		value: T,
+		ttl: number | string,
+		cb?: Callback<boolean>
+	): boolean;
 
-	set<T>(key: Key, value: T): boolean;
+	set<T>(
+		key: Key,
+		value: T,
+		cb?: Callback<boolean>
+	): boolean;
 
 	/**
 	 * remove keys
@@ -175,29 +229,49 @@ declare class NodeCache extends events.EventEmitter
 	 * @param cb Callback function
 	 * @returns Number of deleted keys
 	 */
-	del(keys: Key | Key[]): number;
+	del(
+		keys: Key | Key[],
+		cb?: Callback<number>
+	): number;
 
 	/**
 	 * reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 `stdTtl` is used. if set lt 0 it's similar to `.del()`
 	 */
-	ttl(key: Key, ttl: number): boolean;
+	ttl(
+		key: Key,
+		ttl: number,
+		cb?: Callback<boolean>
+	): boolean;
 
-	ttl(key: Key): boolean;
+	ttl(
+		key: Key,
+		cb?: Callback<boolean>
+	): boolean;
 
-	getTtl(key: Key): number | undefined;
+	getTtl(
+		key: Key
+	): number|undefined;
+
+	getTtl(
+		key: Key,
+		cb?: Callback<boolean>,
+	): boolean;
+
 
 	/**
 	 * list all keys within this cache
+	 * @param cb Callback function
 	 * @returns An array of all keys
 	 */
-	keys(): string[];
+	keys(cb?: Callback<string[]>): string[];
 
 	/**
 	 * Check if a key is cached
 	 * @param key cache key to check
+	 * @param cb Callback function
 	 * @returns Boolean indicating if the key is cached or not
 	 */
-	has(key: Key): boolean;
+	has(key: Key, cb?: Callback<boolean>): boolean;
 
 	/**
 	 * get the stats
