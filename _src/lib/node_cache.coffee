@@ -1,15 +1,3 @@
-# lodash requires
-_assignIn = require( "lodash/assignIn" )
-_isArray = require( "lodash/isArray" )
-_isString = require( "lodash/isString" )
-_isFunction = require( "lodash/isFunction" )
-_isNumber = require( "lodash/isNumber" )
-_isObject = require( "lodash/isObject" )
-_isBoolean = require( "lodash/isBoolean" )
-_size = require( "lodash/size" )
-_forEach = require( "lodash/forEach" )
-_template = require( "lodash/template" )
-
 clone = require( "clone" )
 EventEmitter = require('events').EventEmitter
 
@@ -23,7 +11,7 @@ module.exports = class NodeCache extends EventEmitter
 		@data = {}
 
 		# module options
-		@options = _assignIn(
+		@options = Object.assign(
 			# convert all elements to string
 			forceString: false
 			# used standard size for calculating value size
@@ -47,7 +35,7 @@ module.exports = class NodeCache extends EventEmitter
 		# generate functions with callbacks (legacy)
 		if (@options.enableLegacyCallbacks)
 			console.warn("WARNING! Callback legacy support will drop in v6.x")
-			_forEach([
+			[
 				"get",
 				"mget",
 				"set",
@@ -56,7 +44,7 @@ module.exports = class NodeCache extends EventEmitter
 				"getTtl",
 				"keys",
 				"has"
-			], (methodKey) =>
+			].forEach((methodKey) =>
 				# reference real function
 				oldMethod = @[methodKey]
 				@[methodKey] = (...args, cb) =>
@@ -135,7 +123,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	mget: ( keys )=>
 		# convert a string to an array of one key
-		if not _isArray( keys )
+		if not Array.isArray( keys )
 			_err = @_error( "EKEYSTYPE" )
 			throw _err
 
@@ -177,11 +165,11 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	set: ( key, value, ttl )=>
 		# force the data to string
-		if @options.forceString and not _isString( value )
+		if @options.forceString and not typeof value is "string"
 			value = JSON.stringify( value )
 
 		# remap the arguments if `ttl` is not passed
-		if arguments.length is 3 and _isFunction( ttl )
+		if arguments.length is 3 and typeof ttl is "function"
 			ttl = @options.stdTTL
 
 		# handle invalid key types
@@ -231,7 +219,7 @@ module.exports = class NodeCache extends EventEmitter
 	#       return
 	del: ( keys, cb )=>
 		# convert keys to an array of itself
-		if not _isArray( keys )
+		if not Array.isArray( keys )
 			keys = [ keys ]
 
 		delCount = 0
@@ -558,25 +546,25 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal method to calculate the value length
 	_getValLength: ( value )=>
-		if _isString( value )
+		if typeof value is "string"
 			# if the value is a String get the real length
 			value.length
 		else if @options.forceString
 			# force string if it's defined and not passed
 			JSON.stringify( value ).length
-		else if _isArray( value )
+		else if Array.isArray( value )
 			# if the data is an Array multiply each element with a defined default length
 			@options.arrayValueSize * value.length
-		else if _isNumber( value )
+		else if typeof value is "number"
 			8
 		else if typeof value?.then is "function"
 			# if the data is a Promise, use defined default
 			# (can't calculate actual/resolved value size synchronously)
 			@options.promiseValueSize
-		else if _isObject( value )
+		else if typeof value is "object"
 			# if the data is an Object multiply each element with a defined default length
-			@options.objectValueSize * _size( value )
-		else if _isBoolean( value )
+			@options.objectValueSize * Object.keys( value ).length
+		else if typeof value is "boolean"
 			8
 		else
 			# default fallback
@@ -602,11 +590,14 @@ module.exports = class NodeCache extends EventEmitter
 	_initErrors: =>
 		@ERRORS = {}
 		for _errT, _errMsg of @_ERRORS
-			@ERRORS[ _errT ] = _template( _errMsg )
+			@ERRORS[ _errT ] = @createErrorMessage( _errMsg )
 
 		return
 
+	createErrorMessage: (errMsg) => (args) =>
+		return errMsg.replace("__key", args.type);
+
 	_ERRORS:
-		"ENOTFOUND": "Key `<%= key %>` not found"
-		"EKEYTYPE": "The key argument has to be of type `string` or `number`. Found: `<%= type %>`"
+		"ENOTFOUND": "Key `__key` not found"
+		"EKEYTYPE": "The key argument has to be of type `string` or `number`. Found: `__key`"
 		"EKEYSTYPE": "The keys argument has to be an array."
