@@ -758,7 +758,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		it "try to mget with a single key", () ->
-			(() => localCache.mget(state.getKeys[0])).should.throw({
+			(() -> localCache.mget(state.getKeys[0])).should.throw({
 				name: "EKEYSTYPE",
 				message: "The keys argument has to be an array."
 			})
@@ -767,7 +767,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		it "mget the sub-list", () ->
 			state.prediction.should.eql localCache.mget state.getKeys
-			state.n++;
+			state.n++
 			return
 
 		it "delete keys in the sub-list", () ->
@@ -801,7 +801,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			state.keys = [state.key1, state.key2, state.key3, state.key4, state.key5]
 			return
 		
-		describe "has validates expired ttl", () -> 
+		describe "has validates expired ttl", () ->
 			it "set a key with ttl", () ->
 				true.should.eql localCacheTTL.set state.key6, state.val, 0.7
 				return

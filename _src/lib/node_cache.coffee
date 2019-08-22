@@ -7,6 +7,7 @@ module.exports = class NodeCache extends EventEmitter
 		super()
 
 		@_initErrors()
+
 		# container for cached data
 		@data = {}
 
@@ -34,7 +35,8 @@ module.exports = class NodeCache extends EventEmitter
 
 		# generate functions with callbacks (legacy)
 		if (@options.enableLegacyCallbacks)
-			console.warn("WARNING! Callback legacy support will drop in v6.x")
+			console.warn("WARNING! node-cache legacy callback support will drop in v6.x")
+
 			[
 				"get",
 				"mget",
@@ -47,16 +49,16 @@ module.exports = class NodeCache extends EventEmitter
 			].forEach((methodKey) =>
 				# reference real function
 				oldMethod = @[methodKey]
-				@[methodKey] = (...args, cb) =>
+				@[methodKey] = (args..., cb) ->
 					# return a callback if cb is defined and a function
 					if (typeof cb is "function")
 						try
-							res = oldMethod(...args)
+							res = oldMethod(args...)
 							cb(null, res)
 						catch err
 							cb(err)
 					else
-						return oldMethod(...args, cb)
+						return oldMethod(args..., cb)
 					return
 				return
 			)
@@ -594,8 +596,7 @@ module.exports = class NodeCache extends EventEmitter
 
 		return
 
-	createErrorMessage: (errMsg) => (args) =>
-		return errMsg.replace("__key", args.type);
+	createErrorMessage: (errMsg) -> (args) -> errMsg.replace("__key", args.type)
 
 	_ERRORS:
 		"ENOTFOUND": "Key `__key` not found"
