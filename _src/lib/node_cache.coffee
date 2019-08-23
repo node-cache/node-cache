@@ -30,11 +30,13 @@ module.exports = class NodeCache extends EventEmitter
 			deleteOnExpire: true
 			# enable legacy callbacks
 			enableLegacyCallbacks: false
+			# max amount of keys that are being stored
+			maxKeys: -1
 		, @options )
 
 		# generate functions with callbacks (legacy)
 		if (@options.enableLegacyCallbacks)
-			console.warn("WARNING! Callback legacy support will drop in v6.x")
+			console.warn("WARNING! Callback legacy support will drop in node-cache v6.x")
 			[
 				"get",
 				"mget",
@@ -164,6 +166,11 @@ module.exports = class NodeCache extends EventEmitter
 	#       console.log( err, success )
 	#
 	set: ( key, value, ttl )=>
+		# check if cache is overflowing
+		if (@stats.keys >= @options.maxKeys && @options.maxKeys > -1)
+			_err = @_error( "ECACHEFULL" )
+			throw _err
+
 		# force the data to string
 		if @options.forceString and not typeof value is "string"
 			value = JSON.stringify( value )
@@ -599,5 +606,6 @@ module.exports = class NodeCache extends EventEmitter
 
 	_ERRORS:
 		"ENOTFOUND": "Key `__key` not found"
+		"ECACHEFULL": "Cache max key size exceeded"
 		"EKEYTYPE": "The key argument has to be of type `string` or `number`. Found: `__key`"
 		"EKEYSTYPE": "The keys argument has to be an array."
