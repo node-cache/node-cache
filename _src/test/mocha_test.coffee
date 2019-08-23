@@ -19,6 +19,9 @@ localCacheNoClone = new nodeCache({
 	checkperiod: 0
 })
 
+localCacheMaxKeys = new nodeCache({
+	maxKeys: 2
+})
 
 localCacheTTL = new nodeCache({
 	stdTTL: 0.3,
@@ -280,6 +283,40 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		return
 
+	describe "max key amount", () ->
+		before () ->
+			state =
+				key1: randomString(10)
+				key2: randomString(10)
+				key3: randomString(10)
+				value1: randomString(10)
+				value2: randomString(10)
+				value3: randomString(10)
+			return
+
+		it "exceed max key size", () ->
+			setKey = localCacheMaxKeys.set(state.key1, state.value1, 0)
+			true.should.eql setKey
+
+			setKey2 = localCacheMaxKeys.set(state.key2, state.value2, 0)
+			true.should.eql setKey2
+
+			(() -> localCacheMaxKeys.set(state.key3, state.value3, 0)).should.throw({
+				name: "ECACHEFULL"
+				message: "Cache max key size exceeded"
+			})
+			return
+
+		it "remove a key and set another one", () ->
+			del = localCacheMaxKeys.del(state.key1)
+			1.should.eql del
+
+			setKey3 = localCacheMaxKeys.set(state.key3, state.value3, 0)
+			true.should.eql setKey3
+			return
+
+		return
+
 	describe "correct and incorrect key types", () ->
 		describe "number", () ->
 			before () ->
@@ -293,42 +330,32 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 			it "set", () ->
 				for key in state.keys
-					localCache.set key, state.val, (err, res) ->
-						should.not.exist err
-						true.should.eql res
-						return
+					res = localCache.set key, state.val
+					true.should.eql res
 				return
 
 			it "get", () ->
-				localCache.get state.keys[0], (err, res) ->
-					should.not.exist err
-					state.val.should.eql res
-					return
+				res = localCache.get state.keys[0]
+				state.val.should.eql res
 				return
 
 			it "mget", () ->
-				localCache.mget state.keys[0..1], (err, res) ->
-					should.not.exist err
-					# generate prediction
-					prediction = {}
-					prediction[state.keys[0]] = state.val
-					prediction[state.keys[1]] = state.val
-					prediction.should.eql res
-					return
+				res = localCache.mget state.keys[0..1]
+				# generate prediction
+				prediction = {}
+				prediction[state.keys[0]] = state.val
+				prediction[state.keys[1]] = state.val
+				prediction.should.eql res
 				return
 
 			it "del single", () ->
-				localCache.del state.keys[0], (err, count) ->
-					should.not.exist err
-					1.should.eql count
-					return
+				count = localCache.del state.keys[0]
+				1.should.eql count
 				return
 
 			it "del multi", () ->
-				localCache.del state.keys[1..2], (err, count) ->
-					should.not.exist err
-					2.should.eql count
-					return
+				count = localCache.del state.keys[1..2]
+				2.should.eql count
 				return
 
 			it "ttl", (done) ->
@@ -372,42 +399,32 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 			it "set", () ->
 				for key in state.keys
-					localCache.set key, state.val, (err, res) ->
-						should.not.exist err
-						true.should.eql res
-						return
+					res = localCache.set key, state.val
+					true.should.eql res
 				return
 
 			it "get", () ->
-				localCache.get state.keys[0], (err, res) ->
-					should.not.exist err
-					state.val.should.eql res
-					return
+				res = localCache.get state.keys[0]
+				state.val.should.eql res
 				return
 
 			it "mget", () ->
-				localCache.mget state.keys[0..1], (err, res) ->
-					should.not.exist err
-					# generate prediction
-					prediction = {}
-					prediction[state.keys[0]] = state.val
-					prediction[state.keys[1]] = state.val
-					prediction.should.eql res
-					return
+				res = localCache.mget state.keys[0..1]
+				# generate prediction
+				prediction = {}
+				prediction[state.keys[0]] = state.val
+				prediction[state.keys[1]] = state.val
+				prediction.should.eql res
 				return
 
 			it "del single", () ->
-				localCache.del state.keys[0], (err, count) ->
-					should.not.exist err
-					1.should.eql count
-					return
+				count = localCache.del state.keys[0]
+				1.should.eql count
 				return
 
 			it "del multi", () ->
-				localCache.del state.keys[1..2], (err, count) ->
-					should.not.exist err
-					2.should.eql count
-					return
+				count = localCache.del state.keys[1..2]
+				2.should.eql count
 				return
 
 			it "ttl", (done) ->
@@ -832,13 +849,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 
 		it "set a key with ttl", () ->
-			localCache.set state.key1, state.val, 0.7, (err, res) ->
-				should.not.exist err
-				true.should.eql res
-				ts = localCache.getTtl state.key1
-				if state.now < ts < state.now + 300
-					throw new Error "Invalid timestamp"
-				return
+			res = localCache.set state.key1, state.val, 0.7
+			true.should.eql res
+			ts = localCache.getTtl state.key1
+			if state.now < ts < state.now + 300
+				throw new Error "Invalid timestamp"
 			return
 
 		it "check this key immediately", () ->
@@ -870,17 +885,13 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		it "set another key with ttl", () ->
-			localCache.set state.key2, state.val, 0.5, (err, res) ->
-				should.not.exist err
-				true.should.eql res
-				return
+			res = localCache.set state.key2, state.val, 0.5
+			true.should.eql res
 			return
 
 		it "check this key immediately", () ->
-			localCache.get state.key2, (err, res) ->
-				should.not.exist err
-				state.val.should.eql res
-				return
+			res = localCache.get state.key2
+			state.val.should.eql res
 			return
 
 		it "before it times out", () ->
@@ -969,10 +980,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 
 			it "check if the key still exists", () ->
-				localCache.get state.key3, (err, res) ->
-					should.not.exist err
-					state.val.should.eql res
-					return
+				res = localCache.get state.key3
+				state.val.should.eql res
 				return
 
 			it "wait until ttl has ended and check if the key was deleted", (done) ->
