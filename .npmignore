@@ -1,4 +1,6 @@
 .git*
+*.png
+/logo
 *.sublime*
 .DS_Store
 node_modules
