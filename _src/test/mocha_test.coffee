@@ -34,6 +34,10 @@ localCacheNoDelete = new nodeCache({
 	deleteOnExpire: false
 })
 
+localCacheMset = new nodeCache({
+	stdTTL: 0
+})
+
 BENCH = {}
 
 # just for testing disable the check period
@@ -1106,6 +1110,69 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			true.should.eql cachedRegex.test(match)
 			false.should.eql cachedRegex.test(noMatch)
 			return
+		return
+	
+	describe "mset", () ->
+		before () ->
+			state =
+				keyValueSet: [
+
+						key: randomString 10
+						val: randomString 10
+					,
+						key: randomString 10
+						val: randomString 10
+
+				]
+
+			return
+
+		it "mset an array of key value pairs", () ->
+			res = localCacheMset.mset state.keyValueSet
+			true.should.eql res
+			2.should.eql localCacheMset.getStats().keys
+			return
+		
+		it "mset - integer key", () ->
+			localCacheMset.flushAll()
+			state.keyValueSet[0].key = randomNumber 10
+			res = localCacheMset.mset state.keyValueSet
+			true.should.eql res
+			2.should.eql localCacheMset.getStats().keys
+			return
+		
+		it "mset - boolean key throw error", () ->
+			localCacheMset.flushAll()
+			state.keyValueSet[0].key = true
+
+			(() -> localCacheMset.mset(state.keyValueSet)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+				})
+			return
+		
+		it "mset - object key throw error", () ->
+			localCacheMset.flushAll()
+			state.keyValueSet[0].key = { a: 1 }
+
+			(() -> localCacheMset.mset(state.keyValueSet)).should.throw({
+					name: "EKEYTYPE"
+					message: "The key argument has to be of type `string` or `number`. Found: `object`"
+				})
+			return
+
+		it "mset - ttl type error check", () ->
+			localCacheMset.flushAll()
+			state.keyValueSet[0].ttl = { a: 1 }
+
+			(() -> localCacheMset.mset(state.keyValueSet)).should.throw({
+					name: "ETTLTYPE"
+					message: "The ttl argument has to be a number."
+				})
+			return
+		
+
+
 		return
 
 	return

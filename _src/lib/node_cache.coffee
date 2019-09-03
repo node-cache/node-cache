@@ -206,6 +206,27 @@ module.exports = class NodeCache extends EventEmitter
 		# return true
 		return true
 	
+
+	# ## mset
+	#
+	# set multiple key,value and ttl
+	#
+	# **Parameters:**
+	#
+	# * `keyValueSet` ( Object[] ): an array of object which includes key,value and ttl
+	#
+	# **Example:**
+	#
+	#     myCache.mset([
+	#					{
+	#					key:"myKey",
+	#					val:"myValue"
+	#					ttl:[optionsl]
+	#					}
+	# 					])
+	#
+	#
+	
 	mset: ( keyValueSet ) =>
 		# check if cache is overflowing
 		if (@stats.keys + keyValueSet.length >= @options.maxKeys && @options.maxKeys > -1)
@@ -215,7 +236,7 @@ module.exports = class NodeCache extends EventEmitter
 		# loop over keyValueSet to validate key and ttl
 
 		for keyValuePair in keyValueSet
-			{ key, value, ttl } = keyValuePair
+			{ key, val, ttl } = keyValuePair
 
 			# check if there is ttl and it's a number
 			if ttl and typeof ttl isnt "number"
@@ -228,8 +249,8 @@ module.exports = class NodeCache extends EventEmitter
 				throw err
 
 		for keyValuePair in keyValueSet
-			{ key, value, ttl } = keyValuePair
-			@set(key, value, ttl)
+			{ key, val, ttl } = keyValuePair
+			@set(key, val, ttl)
 		return true
 
 	# ## del
@@ -635,4 +656,4 @@ module.exports = class NodeCache extends EventEmitter
 		"ECACHEFULL": "Cache max key size exceeded"
 		"EKEYTYPE": "The key argument has to be of type `string` or `number`. Found: `__key`"
 		"EKEYSTYPE": "The keys argument has to be an array."
-		"ETTLTYPE": "The ttl argument has to be an integer."
+		"ETTLTYPE": "The ttl argument has to be a number."
