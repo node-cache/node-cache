@@ -168,7 +168,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	set: ( key, value, ttl )=>
 		# check if cache is overflowing
-		if (@stats.keys >= @options.maxKeys && @options.maxKeys > -1)
+		if (@options.maxKeys > -1 && @stats.keys >= @options.maxKeys)
 			_err = @_error( "ECACHEFULL" )
 			throw _err
 
@@ -209,7 +209,7 @@ module.exports = class NodeCache extends EventEmitter
 
 	# ## mset
 	#
-	# set multiple key,value and ttl
+	# set multiple keys at once
 	#
 	# **Parameters:**
 	#
@@ -217,19 +217,20 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     myCache.mset([
-	#					{
-	#					key:"myKey",
-	#					val:"myValue"
-	#					ttl:[optionsl]
-	#					}
-	# 					])
+	#	myCache.mset(
+	#		[
+	#			{
+	#				key: "myKey",
+	#				val: "myValue",
+	#				ttl: [ttl in seconds]
+	#			}
+	#		])
 	#
 	#
 	
 	mset: ( keyValueSet ) =>
 		# check if cache is overflowing
-		if (@stats.keys + keyValueSet.length >= @options.maxKeys && @options.maxKeys > -1)
+		if (@options.maxKeys > -1 && @stats.keys + keyValueSet.length >= @options.maxKeys)
 			_err = @_error( "ECACHEFULL" )
 			throw _err
 		
