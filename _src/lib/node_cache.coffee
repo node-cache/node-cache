@@ -89,9 +89,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     myCache.get "myKey", ( err, val )->
-	#       console.log( err, val )
-	#       return
+	#	myCache.get "myKey", ( err, val )
 	#
 	get: ( key )=>
 
@@ -120,9 +118,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     myCache.mget [ "foo", "bar" ], ( err, val )->
-	#       console.log( err, val )
-	#       return
+	#	myCache.mget [ "foo", "bar" ]
 	#
 	mget: ( keys )=>
 		# convert a string to an array of one key
@@ -160,11 +156,9 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     myCache.set "myKey", "my_String Value", ( err, success )->
-	#       console.log( err, success )
+	#	myCache.set "myKey", "my_String Value"
 	#
-	#     myCache.set "myKey", "my_String Value", "10", ( err, success )->
-	#       console.log( err, success )
+	#	myCache.set "myKey", "my_String Value", "10"
 	#
 	set: ( key, value, ttl )=>
 		# check if cache is overflowing
@@ -268,11 +262,8 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     myCache.del( "myKey" )
+	#	myCache.del( "myKey" )
 	#
-	#     myCache.del( "myKey", ( err, delCount )->
-	#       console.log( err, delCount )
-	#       return
 	del: ( keys, cb )=>
 		# convert keys to an array of itself
 		if not Array.isArray( keys )
@@ -316,10 +307,9 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     myCache.ttl( "myKey" ) // will set ttl to default ttl
+	#	myCache.ttl( "myKey" ) // will set ttl to default ttl
 	#
-	#     myCache.ttl( "myKey", 1000, ( err, keyFound )->
-	#       console.log( err, success )
+	#	myCache.ttl( "myKey", 1000 )
 	#
 	ttl: =>
 		# change args if only key and callback are passed
@@ -365,11 +355,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Example:**
 	#
-	#     ts = myCache.getTtl( "myKey" )
-	#
-	#     myCache.getTtl( "myKey",( err, ttl )->
-	#       console.log( err, ttl )
-	#       return
+	#	myCache.getTtl( "myKey" )
 	#
 	getTtl: ( key, cb )=>
 		if not key
