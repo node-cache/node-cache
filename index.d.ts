@@ -13,6 +13,12 @@
  */
 type Key = string | number;
 
+type ValueSetItem<T = any> = {
+	key: Key;
+	val: T;
+	ttl?: number;
+}
+
 declare namespace NodeCache {
 	interface NodeCache {
 		/** container for cached data */
@@ -66,6 +72,15 @@ declare namespace NodeCache {
 			key: Key,
 			value: T,
 			cb?: Callback<boolean>
+		): boolean;
+
+		/**
+		 * set multiple cached keys at once and change the stats
+		 *
+		 * @param keyValueSet  an array of object which includes key,value and ttl
+		 */
+		mset<T>(
+			keyValueSet: ValueSetItem<T>[],
 		): boolean;
 
 		/**
@@ -134,12 +149,15 @@ declare namespace NodeCache {
 	interface Options {
 		forceString?: boolean;
 		objectValueSize?: number;
+		promiseValueSize?: number;
 		arrayValueSize?: number;
 		stdTTL?: number;
 		checkperiod?: number;
 		useClones?: boolean;
 		errorOnMissing?: boolean;
 		deleteOnExpire?: boolean;
+		enableLegacyCallbacks?: boolean;
+		maxKeys?: number;
 	}
 
 	interface Stats {
@@ -221,6 +239,15 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 		key: Key,
 		value: T,
 		cb?: Callback<boolean>
+	): boolean;
+
+	/**
+	 * set multiple cached keys at once and change the stats
+	 *
+	 * @param keyValueSet  an array of object which includes key,value and ttl
+	 */
+	mset<T>(
+		keyValueSet: ValueSetItem<T>[],
 	): boolean;
 
 	/**
