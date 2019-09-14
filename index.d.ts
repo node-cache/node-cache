@@ -134,12 +134,15 @@ declare namespace NodeCache {
 	interface Options {
 		forceString?: boolean;
 		objectValueSize?: number;
+		promiseValueSize?: number;
 		arrayValueSize?: number;
 		stdTTL?: number;
 		checkperiod?: number;
 		useClones?: boolean;
 		errorOnMissing?: boolean;
 		deleteOnExpire?: boolean;
+		enableLegacyCallbacks?: boolean;
+		maxKeys?: number;
 	}
 
 	interface Stats {
