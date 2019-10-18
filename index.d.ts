@@ -179,10 +179,8 @@ declare namespace NodeCache {
 		 * en/disable cloning of variables.
 		 * disabling this is strongly encouraged when aiming for performance!
 		 *
-		 * If `true`:
-		 *   * set operations store a clone of the value
-		 *   * get operations create a fresh clone of the cached value
-		 * If `false` you'll save and get just the reference
+		 * If `true`: set operations store a clone of the value and get operations will create a fresh clone of the cached value
+		 * If `false` you'll just store a reference to your value
 		 *
 		 * @type {boolean}
 		 * @memberof Options
@@ -193,7 +191,7 @@ declare namespace NodeCache {
 		deleteOnExpire?: boolean;
 
 		/**
-		 * enable legacy callbacks
+		 * enable legacy callbacks.
 		 * legacy callback support will drop in v6.x!
 		 *
 		 * @type {boolean}
