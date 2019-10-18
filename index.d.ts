@@ -1,4 +1,4 @@
-// Type definitions for node-cache 4.1
+// Type definitions for node-cache 5
 // Project: https://github.com/tcs-de/nodecache
 // Definitions by: Ilya Mochalov <https://github.com/chrootsu>
 //                 Daniel Thunell <https://github.com/dthunell>
@@ -7,20 +7,8 @@
 
 /// <reference types="node" />
 
-/**
- * Since 4.1.0: Key-validation: The keys can be given as either string or number,
- * but are casted to a string internally anyway.
- */
-type Key = string | number;
-
-type ValueSetItem<T = any> = {
-	key: Key;
-	val: T;
-	ttl?: number;
-}
-
 declare namespace NodeCache {
-	interface NodeCache {
+	interface NodeCacheLegacyCallbacks {
 		/** container for cached data */
 		data: Data;
 
@@ -142,21 +130,84 @@ declare namespace NodeCache {
 		close(): void;
 	}
 
+	/**
+	 * Since 4.1.0: Key-validation: The keys can be given as either string or number,
+	 * but are casted to a string internally anyway.
+	 */
+	type Key = string | number;
+
+	type ValueSetItem<T = any> = {
+		key: Key;
+		val: T;
+		ttl?: number;
+	}
+
 	interface Data {
 		[key: string]: WrappedValue<any>;
 	}
 
 	interface Options {
+		/**
+		 * If enabled, all values will be stringified during the set operation
+		 *
+		 * @type {boolean}
+		 * @memberof Options
+		 */
 		forceString?: boolean;
+
 		objectValueSize?: number;
 		promiseValueSize?: number;
 		arrayValueSize?: number;
+
+		/**
+		 * standard time to live in seconds. 0 = infinity
+		 *
+		 * @type {number}
+		 * @memberof Options
+		 */
 		stdTTL?: number;
+
+		/**
+		 * time in seconds to check all data and delete expired keys
+		 *
+		 * @type {number}
+		 * @memberof Options
+		 */
 		checkperiod?: number;
+
+		/**
+		 * en/disable cloning of variables.
+		 * disabling this is strongly encouraged when aiming for performance!
+		 *
+		 * If `true`:
+		 *   * set operations store a clone of the value
+		 *   * get operations create a fresh clone of the cached value
+		 * If `false` you'll save and get just the reference
+		 *
+		 * @type {boolean}
+		 * @memberof Options
+		 */
 		useClones?: boolean;
+
 		errorOnMissing?: boolean;
 		deleteOnExpire?: boolean;
+
+		/**
+		 * enable legacy callbacks
+		 * legacy callback support will drop in v6.x!
+		 *
+		 * @type {boolean}
+		 * @memberof Options
+		 */
 		enableLegacyCallbacks?: boolean;
+
+		/**
+		 * max amount of keys that are being stored.
+		 * set operations will throw an error when the cache is full
+		 *
+		 * @type {number}
+		 * @memberof Options
+		 */
 		maxKeys?: number;
 	}
 
@@ -181,11 +232,14 @@ declare namespace NodeCache {
 import events = require("events");
 
 import Data = NodeCache.Data;
+import Key = NodeCache.Key;
 import Options = NodeCache.Options;
 import Stats = NodeCache.Stats;
 import Callback = NodeCache.Callback;
+import ValueSetItem = NodeCache.ValueSetItem;
+import NodeCacheLegacyCallbacks = NodeCache.NodeCacheLegacyCallbacks;
 
-declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCache {
+declare class NodeCache extends events.EventEmitter {
 	/** container for cached data */
 	data: Data;
 
@@ -195,6 +249,7 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	/** statistics container */
 	stats: Stats;
 
+	/** constructor */
 	constructor(options?: Options);
 
 	/**
@@ -204,8 +259,7 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	 * @param cb Callback function
 	 */
 	get<T>(
-		key: Key,
-		cb?: Callback<T>
+		key: Key
 	): T | undefined;
 
 	/**
@@ -215,8 +269,7 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	 * @param cb Callback function
 	 */
 	mget<T>(
-		keys: Key[],
-		cb?: Callback<{ [key: string]: T }>
+		keys: Key[]
 	): { [key: string]: T };
 
 	/**
@@ -231,14 +284,12 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	set<T>(
 		key: Key,
 		value: T,
-		ttl: number | string,
-		cb?: Callback<boolean>
+		ttl: number | string
 	): boolean;
 
 	set<T>(
 		key: Key,
-		value: T,
-		cb?: Callback<boolean>
+		value: T
 	): boolean;
 
 	/**
@@ -247,7 +298,7 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	 * @param keyValueSet  an array of object which includes key,value and ttl
 	 */
 	mset<T>(
-		keyValueSet: ValueSetItem<T>[],
+		keyValueSet: ValueSetItem<T>[]
 	): boolean;
 
 	/**
@@ -257,48 +308,34 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	 * @returns Number of deleted keys
 	 */
 	del(
-		keys: Key | Key[],
-		cb?: Callback<number>
+		keys: Key | Key[]
 	): number;
 
 	/**
-	 * reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 `stdTtl` is used. if set lt 0 it's similar to `.del()`
+	 * reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 it's similar to `.del()`
 	 */
 	ttl(
 		key: Key,
-		ttl: number,
-		cb?: Callback<boolean>
+		ttl: number
 	): boolean;
 
 	ttl(
-		key: Key,
-		cb?: Callback<boolean>
+		key: Key
 	): boolean;
 
 	getTtl(
-		key: Key
+		key: Key,
 	): number|undefined;
 
 	getTtl(
-		key: Key,
-		cb?: Callback<boolean>,
+		key: Key
 	): boolean;
-
 
 	/**
 	 * list all keys within this cache
-	 * @param cb Callback function
 	 * @returns An array of all keys
 	 */
-	keys(cb?: Callback<string[]>): string[];
-
-	/**
-	 * Check if a key is cached
-	 * @param key cache key to check
-	 * @param cb Callback function
-	 * @returns Boolean indicating if the key is cached or not
-	 */
-	has(key: Key, cb?: Callback<boolean>): boolean;
+	keys(): string[];
 
 	/**
 	 * get the stats
@@ -308,7 +345,14 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	getStats(): Stats;
 
 	/**
-	 * flush the hole data and reset the stats
+	 * Check if a key is cached
+	 * @param key cache key to check
+	 * @returns Boolean indicating if the key is cached or not
+	 */
+	has(key: Key): boolean;
+
+	/**
+	 * flush the whole data and reset the stats
 	 */
 	flushAll(): void;
 
@@ -317,5 +361,6 @@ declare class NodeCache extends events.EventEmitter implements NodeCache.NodeCac
 	 */
 	close(): void;
 }
+
 
 export = NodeCache;
