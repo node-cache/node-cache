@@ -9,9 +9,10 @@ node_js:
   - 11
   - 12
   - node
-  - lts/argon
   - lts/boron
   - lts/carbon
+  - lts/dubnium
+  - lts/erbium
   - lts/*
 install: npm install
 before_script:

@@ -1,10 +1,10 @@
 ![Logo](./logo/logo.png)
 
-[![Build Status](https://secure.travis-ci.org/mpneuried/nodecache.svg?branch=master)](http://travis-ci.org/mpneuried/nodecache)
-[![Windows Tests](https://img.shields.io/appveyor/ci/mpneuried/nodecache.svg?label=Windows%20Test)](https://ci.appveyor.com/project/mpneuried/nodecache)
-[![Dependency Status](https://david-dm.org/mpneuried/nodecache.svg)](https://david-dm.org/mpneuried/nodecache)
+[![Build Status](https://secure.travis-ci.org/node-cache/node-cache.svg?branch=master)](http://travis-ci.org/node-cache/node-cache)
+[![Windows Tests](https://img.shields.io/appveyor/ci/erdii/node-cache.svg?label=Windows%20Test)](https://ci.appveyor.com/project/node-cache/node-cache)
+[![Dependency Status](https://david-dm.org/node-cache/node-cache.svg)](https://david-dm.org/node-cache/node-cache)
 [![NPM version](https://badge.fury.io/js/node-cache.svg)](http://badge.fury.io/js/node-cache)
-[![Coveralls Coverage](https://img.shields.io/coveralls/mpneuried/nodecache.svg)](https://coveralls.io/github/mpneuried/nodecache)
+[![Coveralls Coverage](https://img.shields.io/coveralls/node-cache/node-cache.svg)](https://coveralls.io/github/node-cache/node-cache)
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tcs-de/nodecache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
