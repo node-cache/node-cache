@@ -352,88 +352,13 @@ Due to the [Issue #30](https://github.com/mpneuried/nodecache/issues/30) and [Is
 This could break your code, because for some variable types ( e.g. Promise ) its not possible to clone them.
 You can disable the cloning by setting the option `useClones: false`. In this case it's compatible with version `2.x`.
 
-## Benchmarks
+### version `5.x`
 
-### Version 1.1.x
-
-After adding io.js to the travis test here are the benchmark results for set and get of 100000 elements.
-But be careful with this results, because it has been executed on travis machines, so it is not guaranteed, that it was executed on similar hardware.
-
-**node.js `0.10.36`**
-SET: `324`ms ( `3.24`µs per item )
-GET: `7956`ms ( `79.56`µs per item )
-
-**node.js `0.12.0`**
-SET: `432`ms ( `4.32`µs per item )
-GET: `42767`ms ( `427.67`µs per item )
-
-**io.js `v1.1.0`**
-SET: `510`ms ( `5.1`µs per item )
-GET: `1535`ms ( `15.35`µs per item )
-
-### Version 2.0.x
-
-Again the same benchmarks by travis with version 2.0
-
-**node.js `0.6.21`**
-SET: `786`ms ( `7.86`µs per item )
-GET: `56`ms ( `0.56`µs per item )
-
-**node.js `0.10.36`**
-SET: `353`ms ( `3.53`µs per item )
-GET: `41`ms ( `0.41`µs per item )
-
-**node.js `0.12.2`**
-SET: `327`ms ( `3.27`µs per item )
-GET: `32`ms ( `0.32`µs per item )
-
-**io.js `v1.7.1`**
-SET: `238`ms ( `2.38`µs per item )
-GET: `34`ms ( `0.34`µs per item )
-
-> As you can see the version 2.x will increase the GET performance up to 200x in node 0.10.x.
-This is possible because the memory allocation for the object returned by 1.x is very expensive.
-
-### Version 3.0.x
-
-*see [travis results](https://travis-ci.org/mpneuried/nodecache/builds/64560503)*
-
-**node.js `0.6.21`**
-SET: `786`ms ( `7.24`µs per item )
-GET: `56`ms ( `1.14`µs per item )
-
-**node.js `0.10.38`**
-SET: `353`ms ( `5.41`µs per item )
-GET: `41`ms ( `1.23`µs per item )
-
-**node.js `0.12.4`**
-SET: `327`ms ( `4.63`µs per item )
-GET: `32`ms ( `0.60`µs per item )
-
-**io.js `v2.1.0`**
-SET: `238`ms ( `4.06`µs per item )
-GET: `34`ms ( `0.67`µs per item )
-
-> until the version 3.0.x the object cloning is included, so we lost a little bit of the performance
-
-### Version 3.1.x
-
-**node.js `v0.10.41`**
-SET: `305ms`  ( `3.05µs` per item )
-GET: `104ms`  ( `1.04µs` per item )
-
-**node.js `v0.12.9`**
-SET: `337ms`  ( `3.37µs` per item )
-GET: `167ms`  ( `1.67µs` per item )
-
-**node.js `v4.2.6`**
-SET: `356ms`  ( `3.56µs` per item )
-GET: `83ms`  ( `0.83µs` per item )
+Callbacks are deprecated in this version. They are still useable when enabling the `enableLegacyCallbacks` option when initializing the cache. Callbacks will be completely removed in `6.x`.
 
 ## Compatibility
 
-This module should work well back until node `0.6.x`.
-But it's only tested until version `0.10.x` because the build dependencies are not installable ;-) .
+Node-Cache supports all node versions >= 8
 
 ## Release History
 |Version|Date|Description|
