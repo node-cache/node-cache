@@ -1,6 +1,6 @@
 {
   "name": "node-cache",
-  "description": "Simple and fast NodeJS internal caching. Node internal in memory cache like memcached.",
+  "description": "Simple and fast internal caching for node.js",
   "keywords": [
     "cache",
     "caching",
@@ -11,7 +11,8 @@
     "internal",
     "node",
     "memcached",
-    "object"
+    "object",
+    "typings"
   ],
   "tags": [
     "cache",
@@ -23,57 +24,70 @@
     "internal",
     "node",
     "memcached",
-    "object"
+    "object",
+    "typings"
   ],
-  "version": "5.0.0-alpha.1",
-  "author": "mpneuried <mp@tcs.de>",
+  "version": "6.0.0-alpha.0",
+  "author": "M. Peter <mpneuried@googlemail.com>",
   "maintainers": [
     {
       "name": "M. Peter",
-      "email": "mp@tcs.de",
+      "email": "mpneuried@googlemail.com",
       "url": "https://github.com/mpneuried"
     },
     {
-      "name": "Joshy",
+      "name": "erdii",
       "email": "erdiicodes@gmail.com",
       "url": "https://erdii.engineering/"
     }
   ],
-  "main": "./index.js",
-  "types": "./index.d.ts",
-  "homepage": "https://github.com/mpneuried/nodecache",
+  "main": "dist/index.js",
+  "module": "dist/node-cache.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/node-cache/node-cache",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mpneuried/nodecache.git"
+    "url": "git://github.com/node-cache/node-cache.git"
   },
   "license": "MIT",
   "engines": {
-    "node": ">= 0.4.6"
+    "node": ">= 8"
   },
   "scripts": {
-    "test": "COFFEECOV_INIT_ALL=false mocha --require coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
-    "build": "grunt build"
+    "_test": "COFFEECOV_INIT_ALL=false mocha --require ts-node/register --require coffee-script/register _src/test/mocha_test.coffee -R spec && tsc",
+    "_build": "grunt build",
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 120,
+    "semi": true,
+    "singleQuote": false,
+    "trailingComma": "all",
+    "bracketSpacing": false
   },
   "dependencies": {
     "clone": "2.x"
   },
   "devDependencies": {
+    "@types/clone": "^0.1.30",
+    "@types/jest": "^24.0.19",
     "@types/node": "^8.9.4",
-    "coffee-coverage": "^3.0.1",
-    "coffee-script": "1.x",
-    "coveralls": "^3.0.3",
-    "grunt": "^1.0.4",
-    "grunt-banner": "0.6.x",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "1.0.x",
-    "grunt-contrib-coffee": "^2.1.0",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-include-replace": "3.2.x",
-    "grunt-mocha-cli": "^4.0.0",
-    "grunt-run": "^0.8.1",
-    "istanbul": "0.x",
-    "mocha": "^6.1.4",
-    "should": "11.x",
-    "typescript": "^2.6.1"
+    "coveralls": "^3.0.7",
+    "husky": "^3.0.9",
+    "ts-node": "^8.4.1",
+    "tsdx": "^0.10.5",
+    "tslib": "^1.10.0",
+    "typescript": "^3.6.4"
   }
 }

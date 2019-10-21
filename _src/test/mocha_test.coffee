@@ -6,7 +6,7 @@ clone = require "lodash/clone"
 
 pkg = JSON.parse fs.readFileSync("package.json")
 
-nodeCache = require "../"
+nodeCache = require("../../src").default
 { randomNumber, randomString, diffKeys } = require "./helpers"
 
 localCache = new nodeCache({
@@ -41,7 +41,7 @@ localCacheMset = new nodeCache({
 BENCH = {}
 
 # just for testing disable the check period
-localCache._killCheckPeriod()
+localCache.killCheckPeriod()
 
 # store test state
 state = {}
@@ -929,7 +929,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 				setTimeout(() ->
 					# trigger ttl check, which will trigger the `expired` event
-					localCache._checkData false
+					localCache.checkData false
 					return
 				, 550)
 				return
@@ -1004,7 +1004,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					res = localCacheTTL.get state.key5
 					should.not.exist res
 
-					localCacheTTL._checkData false
+					localCacheTTL.checkData false
 
 					# deep dirty check if key was deleted
 					should(localCacheTTL.data[state.key5]).be.undefined()
