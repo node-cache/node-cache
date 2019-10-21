@@ -46,9 +46,11 @@ const myCache = new NodeCache();
 `0` = unlimited
 - `checkperiod`: *(default: `600`)* The period in seconds, as a number, used for the automatic delete check interval.
 `0` = no periodic check.
-- `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.
-**Note:** `true` is recommended, because it'll behave like a server-based caching. You should set `false` if you want to save mutable objects or other complex types with mutability involved and wanted.
-_Here's a [simple code example](https://runkit.com/mpneuried/useclones-example-83) showing the different behavior_
+- `useClones`: *(default: `true`)* en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference.  
+**Note:**
+	- `true` is recommended if you want **simplicity**, because it'll behave like a server-based cache (it caches copies of plain data).
+	- `false` is recommended if you want to achieve **performance** or save mutable objects or other complex types with mutability involved and wanted, because it'll only store references of your data.
+	- _Here's a [simple code example](https://runkit.com/mpneuried/useclones-example-83) showing the different behavior_
 - `deleteOnExpire`: *(default: `true`)* whether variables will be deleted automatically when they expire.
 If `true` the variable will be deleted. If `false` the variable will remain. You are encouraged to handle the variable upon the event `expired` by yourself.
 - `enableLegacyCallbacks`: *(default: `false`)* re-enables the usage of callbacks instead of sync functions. Adds an additional `cb` argument to each function which resolves to `(err, result)`. will be removed in node-cache v6.x.
