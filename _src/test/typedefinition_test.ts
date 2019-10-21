@@ -12,7 +12,7 @@ interface TypeSample {
 
 {
 	let options: Options;
-	let cache: NodeCache.NodeCache;
+	let cache: NodeCache;
 	cache = new NodeCache();
 	cache = new NodeCache(options);
 }

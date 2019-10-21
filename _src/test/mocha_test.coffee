@@ -615,55 +615,6 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				state.keys.push key
 			return
 
-		describe "BENCHMARK", () ->
-			this.timeout(0)
-			# hack so mocha always shows timing information
-			this.slow(1)
-
-			it "SET", () ->
-				start = Date.now()
-				# not using forEach because it's magnitude 10 times slower than for
-				# and we are into a benchmark
-				for key in state.keys
-					should(localCache.set key, state.val, 0).be.ok()
-				duration = Date.now() - start
-				if not process.env.SILENT_MODE?
-					console.log "\tSET: #{state.count} keys to: `#{state.val}` #{duration}ms (#{duration/state.count}ms per item)"
-				else
-					BENCH[ "SET" ] = 1/(( duration/1000 )/state.count)
-				return
-
-			it "GET", () ->
-				# this benchmark is a bit useless because the equality check eats up
-				# around 3/4 of benchmark time
-				start = Date.now()
-				for key in state.keys
-					state.n++
-					state.val.should.eql localCache.get(key)
-				duration = Date.now() - start
-				if not process.env.SILENT_MODE?
-					console.log "\tGET: #{state.count} keys #{duration}ms (#{duration/state.count}ms per item)"
-				else
-					BENCH[ "GET" ] = 1/(( duration/1000 )/state.count)
-				return
-
-			it "check stats", () ->
-				stats = localCache.getStats()
-				keys = localCache.keys()
-
-				stats.keys.should.eql keys.length
-				state.count.should.eql keys.length
-				state.n.should.eql keys.length
-				return
-
-			after () ->
-				if not process.env.SILENT_MODE?
-					console.log "\tBenchmark stats:"
-					console.log stringify(localCache.getStats(), null, "\t")
-				return
-			return
-		return
-
 
 	describe "delete", () ->
 		this.timeout(0)
@@ -671,7 +622,19 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		before () ->
 			# don't override state because we still need `state.keys`
 			state.n = 0
-			state.startKeys = localCache.getStats().keys
+			return
+
+		before () ->
+			state =
+				n: 0
+				count: 100000
+				keys: []
+				val: randomString 20
+
+			for [1..state.count]
+				key = randomString 7
+				state.keys.push key
+				localCache.set(key, state.val)
 			return
 
 		it "delete all previously set keys", () ->
@@ -680,6 +643,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				state.n++
 
 			state.n.should.eql state.count
+			localCache.getStats().keys.should.eql 0
 			return
 
 		it "delete keys again; should not delete anything", () ->
@@ -831,23 +795,25 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				true.should.eql localCacheTTL.has state.key6
 				return
 	
-			it "before it times out", () ->
+			it "before it times out", (done) ->
 				setTimeout(() ->
 					state.n++
 					res = localCacheTTL.has state.key6
 					res.should.eql true
 					state.val.should.eql localCacheTTL.get state.key6
+					done()
 					return
 				, 20)
 				return
 	
-			it "and after it timed out", () ->
+			it "and after it timed out", (done) ->
 				setTimeout(() ->
 					res = localCacheTTL.has state.key6
 					res.should.eql false
 					
 					state.n++
 					should(localCacheTTL.get state.key6).be.undefined()
+					done()
 					return
 				, 800)
 				return
@@ -864,17 +830,18 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			state.val.should.eql localCache.get state.key1
 			return
 
-		it "before it times out", () ->
+		it "before it times out", (done) ->
 			setTimeout(() ->
 				state.n++
 				res = localCache.has state.key1
 				res.should.eql true
 				state.val.should.eql localCache.get state.key1
+				done()
 				return
 			, 20)
 			return
 
-		it "and after it timed out", () ->
+		it "and after it timed out", (done) ->
 			setTimeout(() ->
 				res = localCache.has state.key1
 				res.should.eql false
@@ -884,6 +851,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 				state.n++
 				should(localCache.get state.key1).be.undefined()
+				done()
 				return
 			, 700)
 			return
@@ -898,22 +866,24 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			state.val.should.eql res
 			return
 
-		it "before it times out", () ->
+		it "before it times out", (done) ->
 			setTimeout(() ->
 				state.n++
 
 				state.val.should.eql localCache.get state.key2
+				done()
 				return
 			, 20)
 			return
 
-		it "and after it timed out, too", () ->
+		it "and after it timed out, too", (done) ->
 			setTimeout(() ->
 				ts = localCache.getTtl state.key2
 				should.not.exist ts
 
 				state.n++
 				should(localCache.get state.key2).be.undefined()
+				done()
 				return
 			, 500)
 			return
@@ -1146,9 +1116,9 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			state.keyValueSet[0].key = true
 
 			(() -> localCacheMset.mset(state.keyValueSet)).should.throw({
-					name: "EKEYTYPE"
-					message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
-				})
+				name: "EKEYTYPE"
+				message: "The key argument has to be of type `string` or `number`. Found: `boolean`"
+			})
 			return
 		
 		it "mset - object key throw error", () ->
@@ -1156,9 +1126,9 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			state.keyValueSet[0].key = { a: 1 }
 
 			(() -> localCacheMset.mset(state.keyValueSet)).should.throw({
-					name: "EKEYTYPE"
-					message: "The key argument has to be of type `string` or `number`. Found: `object`"
-				})
+				name: "EKEYTYPE"
+				message: "The key argument has to be of type `string` or `number`. Found: `object`"
+			})
 			return
 
 		it "mset - ttl type error check", () ->
@@ -1166,12 +1136,10 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			state.keyValueSet[0].ttl = { a: 1 }
 
 			(() -> localCacheMset.mset(state.keyValueSet)).should.throw({
-					name: "ETTLTYPE"
-					message: "The ttl argument has to be a number."
-				})
+				name: "ETTLTYPE"
+				message: "The ttl argument has to be a number."
+			})
 			return
-		
-
 
 		return
 

@@ -92,7 +92,6 @@ module.exports = class NodeCache extends EventEmitter
 	#	myCache.get "myKey", ( err, val )
 	#
 	get: ( key )=>
-
 		# handle invalid key types
 		if (err = @_isInvalidKey( key ))?
 			throw err
@@ -158,7 +157,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	#	myCache.set "myKey", "my_String Value"
 	#
-	#	myCache.set "myKey", "my_String Value", "10"
+	#	myCache.set "myKey", "my_String Value", 10
 	#
 	set: ( key, value, ttl )=>
 		# check if cache is overflowing
@@ -170,8 +169,8 @@ module.exports = class NodeCache extends EventEmitter
 		if @options.forceString and not typeof value is "string"
 			value = JSON.stringify( value )
 
-		# remap the arguments if `ttl` is not passed
-		if arguments.length is 3 and typeof ttl is "function"
+		# set default ttl if not passed
+		unless ttl?
 			ttl = @options.stdTTL
 
 		# handle invalid key types
@@ -264,7 +263,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	#	myCache.del( "myKey" )
 	#
-	del: ( keys, cb )=>
+	del: ( keys )=>
 		# convert keys to an array of itself
 		if not Array.isArray( keys )
 			keys = [ keys ]
@@ -311,14 +310,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	#	myCache.ttl( "myKey", 1000 )
 	#
-	ttl: =>
-		# change args if only key and callback are passed
-		[ key, args... ] = arguments
-		for arg in args
-			switch typeof arg
-				when "number" then ttl = arg
-				when "function" then cb = arg
-
+	ttl: (key, ttl) =>
 		ttl or= @options.stdTTL
 		if not key
 			return false
@@ -327,7 +319,7 @@ module.exports = class NodeCache extends EventEmitter
 		if (err = @_isInvalidKey( key ))?
 			throw err
 
-		# check for existant data and update the ttl value
+		# check for existent data and update the ttl value
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			# if ttl < 0 delete the key. otherwise reset the value
 			if ttl >= 0
@@ -357,7 +349,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	#	myCache.getTtl( "myKey" )
 	#
-	getTtl: ( key, cb )=>
+	getTtl: ( key )=>
 		if not key
 			return undefined
 

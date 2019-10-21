@@ -25,7 +25,7 @@
     "memcached",
     "object"
   ],
-  "version": "4.2.1",
+  "version": "5.0.0-alpha.1",
   "author": "mpneuried <mp@tcs.de>",
   "maintainers": [
     {
@@ -52,7 +52,6 @@
   },
   "scripts": {
     "test": "COFFEECOV_INIT_ALL=false mocha --require coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
-    "test-docker": "SILENT_MODE=1 mocha test/mocha_test.js -R min && tsc",
     "build": "grunt build"
   },
   "dependencies": {
