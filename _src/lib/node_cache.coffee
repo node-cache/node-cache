@@ -25,8 +25,6 @@ module.exports = class NodeCache extends EventEmitter
 			checkperiod: 600
 			# en/disable cloning of variables. If `true` you'll get a copy of the cached variable. If `false` you'll save and get just the reference
 			useClones: true
-			# en/disable throwing errors when trying to `.get` missing or expired values.
-			errorOnMissing: false
 			# whether values should be deleted automatically at expiration
 			deleteOnExpire: true
 			# enable legacy callbacks

@@ -17,10 +17,16 @@ Keys can have a timeout (`ttl`) after which they expire and are deleted from the
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
 
-## ATTENTION - BREAKING MAJOR RELEASE INCOMING!!!
+## BREAKING MAJOR RELEASE v5.x
 
-The upcoming 5.0.0 Release will drop support for node versions before 6.x!
-(We are thinking about dropping node 6.x too, because it recently reached end-of-life.)
+The recent 5.x release:
+* dropped support for node versions before 8.x!
+* removed the callback-based api from all methods (you can re-enable them with the option `enableLegacyCallbacks`)
+
+## BREAKING MAJOR RELEASE v6.x UPCOMING
+
+Although not breaking per definition, our typescript rewrite will change internal functions and their names.
+Please get in contact with us, if you are using some parts of node-cache's internal api so we can work something out!
 
 
 # Install
@@ -82,6 +88,23 @@ success = myCache.set( "myKey", obj, 10000 );
 > Note: If the key expires based on it's `ttl` it will be deleted entirely from the internal data object.
 
 
+## Store multiple keys (MSET):
+
+`myCache.mset(Array<{key, val, ttl?}>)`
+
+Sets multiple `key` `val` pairs. It is possible to define a `ttl` (seconds).
+Returns `true` on success.
+
+```js
+const obj = { my: "Special", variable: 42 };
+const obj2 = { my: "other special", variable: 1337 };
+
+const success = myCache.mset([
+	{key: "myKey", val: obj, ttl: 10000},
+	{key: "myKey2", val: obj2},
+])
+```
+
 ## Retrieve a key (GET):
 
 `myCache.get( key )`
@@ -106,17 +129,6 @@ The return format changed to a simple value and a `ENOTFOUND` error if not found
 
 The return format changed to a simple value, but a due to discussion in #11 a miss shouldn't return an error.
 So after 2.1.0 a miss returns `undefined`.
-
-**Since `3.1.0`**
-`errorOnMissing` option added
-
-```js
-try{
-		value = myCache.get( "not-existing-key", true );
-} catch( err ){
-		// ENOTFOUND: Key `not-existing-key` not found
-}
-```
 
 ## Get multiple keys (MGET):
 
@@ -239,7 +251,6 @@ console.log( mykeys );
 Returns boolean indicating if the key is cached.
 
 ```js
-/* sync */
 exists = myCache.has( 'myKey' );
 
 console.log( exists );
@@ -365,6 +376,7 @@ Node-Cache supports all node versions >= 8
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|5.0.0|2019-10-23|Remove lodash dependency, add .has(key) and .mset([{key,val,ttl}]) methods to the cache. Thanks to [Regev Brody](https://github.com/regevbr) for PR [#132] and [Sujesh Thekkepatt](https://github.com/sujeshthekkepatt) for PR [#142]! Also thank you, to all other contributors that remain unnamed here!|
 |4.2.1|2019-07-22|Upgrade lodash to version 4.17.15 to suppress messages about unrelated security vulnerability|
 |4.2.0|2018-02-01|Add options.promiseValueSize for promise value. Thanks to [Ryan Roemer](https://github.com/ryan-roemer) for the pull [#84]; Added option `deleteOnExpire`; Added DefinitelyTyped Typescript definitions. Thanks to [Ulf Seltmann](https://github.com/useltmann) for the pulls [#90] and [#92]; Thanks to [Daniel Jin](https://github.com/danieljin) for the readme fix in pull [#93];  Optimized test and ci configs.|
 |4.1.1|2016-12-21|fix internal check interval for node < 0.10.25, thats the default node for ubuntu 14.04. Thanks to [Jimmy Hwang](https://github.com/JimmyHwang) for the pull [#78](https://github.com/mpneuried/nodecache/pull/78); added more docker tests|
@@ -417,7 +429,7 @@ Node-Cache supports all node versions >= 8
 
 # The MIT License (MIT)
 
-Copyright © 2013 Mathias Peter, http://www.tcs.de
+Copyright © 2019 Mathias Peter and the node-cache maintainers, https://github.com/node-cache/node-cache
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
