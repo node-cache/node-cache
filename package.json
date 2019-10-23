@@ -25,7 +25,7 @@
     "memcached",
     "object"
   ],
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0",
   "author": "mpneuried <mp@tcs.de>",
   "maintainers": [
     {
@@ -71,7 +71,7 @@
     "grunt-include-replace": "3.2.x",
     "grunt-mocha-cli": "^4.0.0",
     "grunt-run": "^0.8.1",
-    "istanbul": "0.x",
+    "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
     "should": "11.x",
     "typescript": "^2.6.1"
