@@ -38,7 +38,7 @@
     {
       "name": "erdii",
       "email": "erdiicodes@gmail.com",
-      "url": "https://erdii.engineering/"
+      "url": "https://github.com/erdii"
     }
   ],
   "main": "dist/index.js",
@@ -59,8 +59,8 @@
   "scripts": {
     "_test": "COFFEECOV_INIT_ALL=false mocha --require ts-node/register --require coffee-script/register _src/test/mocha_test.coffee -R spec && tsc",
     "_build": "grunt build",
-    "start": "tsdx watch",
-    "build": "tsdx build",
+    "start": "tsdx watch --target node",
+    "build": "tsdx build --target node",
     "test": "tsdx test",
     "lint": "tsdx lint"
   },

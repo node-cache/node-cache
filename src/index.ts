@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import clone from "clone";
+import {setTimeout, clearTimeout} from "timers";
 
 interface Options {
 	forceString: boolean;
@@ -51,7 +51,7 @@ export default class NodeCache extends EventEmitter {
 
 	private checkTimeout?: NodeJS.Timer;
 
-	constructor(options: ConstructorOptions) {
+	constructor(options?: ConstructorOptions) {
 		super();
 
 		this.options = Object.assign(
