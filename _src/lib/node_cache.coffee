@@ -593,7 +593,7 @@ module.exports = class NodeCache extends EventEmitter
 			# if the data is a Promise, use defined default
 			# (can't calculate actual/resolved value size synchronously)
 			@options.promiseValueSize
-		else if typeof value is "object"
+		else if value? and typeof value is "object"
 			# if the data is an Object multiply each element with a defined default length
 			@options.objectValueSize * Object.keys( value ).length
 		else if typeof value is "boolean"
