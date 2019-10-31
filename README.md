@@ -376,6 +376,7 @@ Node-Cache supports all node versions >= 8
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|5.0.1|2019-10-31|Fixed bug where users could not set null values. Thanks to [StefanoSega](https://github.com/StefanoSega), [jwest23](https://github.com/jwest23) and [marudor](https://github.com/marudor)!|
 |5.0.0|2019-10-23|Remove lodash dependency, add .has(key) and .mset([{key,val,ttl}]) methods to the cache. Thanks to [Regev Brody](https://github.com/regevbr) for PR [#132] and [Sujesh Thekkepatt](https://github.com/sujeshthekkepatt) for PR [#142]! Also thank you, to all other contributors that remain unnamed here!|
 |4.2.1|2019-07-22|Upgrade lodash to version 4.17.15 to suppress messages about unrelated security vulnerability|
 |4.2.0|2018-02-01|Add options.promiseValueSize for promise value. Thanks to [Ryan Roemer](https://github.com/ryan-roemer) for the pull [#84]; Added option `deleteOnExpire`; Added DefinitelyTyped Typescript definitions. Thanks to [Ulf Seltmann](https://github.com/useltmann) for the pulls [#90] and [#92]; Thanks to [Daniel Jin](https://github.com/danieljin) for the readme fix in pull [#93];  Optimized test and ci configs.|
