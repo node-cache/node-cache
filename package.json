@@ -25,7 +25,7 @@
     "memcached",
     "object"
   ],
-  "version": "5.0.0",
+  "version": "5.0.1",
   "author": "mpneuried <mp@tcs.de>",
   "maintainers": [
     {
