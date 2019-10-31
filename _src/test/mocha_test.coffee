@@ -1143,4 +1143,24 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		return
 
+	describe "Issues", () ->
+		describe("#151 - cannot set null", () ->
+			cache = null
+			before(() ->
+				cache = new nodeCache()
+				return
+			)
+
+			it("set the value `null` - this should not throw or otherwise fail", () ->
+				cache.set("test", null)
+				return
+			)
+
+			it("should also return `null`", () ->
+				should(cache.get("test")).be.null()
+				return
+			)
+			return
+		)
+		return
 	return
