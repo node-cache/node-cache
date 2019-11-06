@@ -3,7 +3,8 @@
 [![Build Status](https://secure.travis-ci.org/node-cache/node-cache.svg?branch=master)](http://travis-ci.org/node-cache/node-cache)
 [![Windows Tests](https://img.shields.io/appveyor/ci/erdii/node-cache.svg?label=Windows%20Test)](https://ci.appveyor.com/project/erdii/node-cache)
 [![Dependency Status](https://david-dm.org/node-cache/node-cache.svg)](https://david-dm.org/node-cache/node-cache)
-[![NPM version](https://badge.fury.io/js/node-cache.svg)](http://badge.fury.io/js/node-cache)
+[![NPM version](https://badge.fury.io/js/node-cache.svg)](https://www.npmjs.com/package/node-cache)
+[![NPM package downloads per month](https://img.shields.io/npm/dm/node-cache)](https://www.npmjs.com/package/node-cache)
 [![Coveralls Coverage](https://img.shields.io/coveralls/node-cache/node-cache.svg)](https://coveralls.io/github/node-cache/node-cache)
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tcs-de/nodecache?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
