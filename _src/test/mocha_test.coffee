@@ -70,6 +70,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 					b:
 						x: 2
 						y: 3
+				otp: randomString 10
 			return
 
 		it "set key", () ->
@@ -101,6 +102,50 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		it "delete an undefined key", () ->
 			count = localCache.del "xxx"
 			0.should.eql count
+			return
+
+		it "take key", () ->
+			# make sure we are starting fresh
+			res = localCache.has("otp")
+			res.should.eql false
+
+			# taking a non-exitent value should be fine
+			res = localCache.take("otp")
+			should.not.exist(res)
+
+			# check if otp insertion suceeded
+			res = localCache.set "otp", state.otp, 0
+			true.should.eql res
+
+			# are we able to check the presence of the key?
+			res = localCache.has("otp")
+			res.should.eql true
+
+			# not once, but twice?
+			# This proves that keys can be accessed as many times as required, but 
+			# not the value. The `take()` method makes the values as single-read, not the keys.
+			res = localCache.has("otp")
+			res.should.eql true
+
+			# take the value
+			otp = localCache.take("otp")
+			otp.should.eql state.otp
+
+			# key should not be present anymore once the value is read
+			res = localCache.has("otp")
+			res.should.eql false
+
+			# and, re-insertions are not probhitied
+			res = localCache.set "otp", "some other value"
+			true.should.eql res
+
+			# should be able take the value again
+			otp = localCache.take("otp")
+			otp.should.eql "some other value"
+
+			# key should not be present anymore, again
+			res = localCache.has("otp")
+			res.should.eql false					
 			return
 
 		it "update key (and get it to check if the update worked)", () ->
