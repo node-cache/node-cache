@@ -51,7 +51,7 @@
     "node": ">= 0.4.6"
   },
   "scripts": {
-    "test": "mocha --require coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
+    "test": "COFFEECOV_INIT_ALL=false mocha --require coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
     "build": "grunt build"
   },
   "dependencies": {
