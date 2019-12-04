@@ -148,6 +148,22 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			res.should.eql false					
 			return
 
+		it "take key with falsy values", () ->
+			# make sure we are starting fresh
+			res = localCache.has("otp")
+			res.should.eql false
+
+			# insert a falsy value and take it
+			res = localCache.set "otp", 0
+			true.should.eql res
+			otp = localCache.take("otp")
+			otp.should.eql 0
+
+			# key should not exist anymore
+			res = localCache.has("otp")
+			res.should.eql false
+			return
+
 		it "update key (and get it to check if the update worked)", () ->
 			res = localCache.set state.key, state.value2, 0
 			true.should.eql res

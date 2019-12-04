@@ -303,7 +303,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	take: ( key )=>
 		_ret = @get(key)
-		if (_ret) 
+		if (_ret?) 
 			@del(key)
 		return _ret
 
