@@ -287,6 +287,26 @@ module.exports = class NodeCache extends EventEmitter
 
 		return delCount
 
+	# ## take
+	#
+	# get the cached value and remove the key from the cache.
+	# Equivalent to calling `get(key)` + `del(key)`.
+	# Useful for implementing `single use` mechanism such as OTP, where once a value is read it will become obsolete.
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String | Number ): cache key
+	#
+	# **Example:**
+	#
+	#	myCache.take "myKey", ( err, val )
+	#
+	take: ( key )=>
+		_ret = @get(key)
+		if (_ret?) 
+			@del(key)
+		return _ret
+
 	# ## ttl
 	#
 	# reset or redefine the ttl of a key. `ttl` = 0 means infinite lifetime.
