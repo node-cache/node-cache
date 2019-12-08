@@ -661,7 +661,28 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			{}.should.eql localCache.data
 			return
 		return
+	
+	describe "flushStats", () ->
+		cache = null
+		before () ->
+			cache = new nodeCache()
+			return
 
+		it "set cache and flush stats value", () ->
+			key = randomString 10
+			value = randomString 10
+			res = cache.set key,value
+			true.should.eql res
+			1.should.eql cache.getStats().keys
+			cache.flushStats()
+			0.should.eql cache.getStats().keys
+			cache.get key
+			1.should.eql cache.getStats().hits
+			cache.get randomString 10
+			1.should.eql cache.getStats().misses
+
+			return
+		return
 
 	describe "many", () ->
 		before () ->

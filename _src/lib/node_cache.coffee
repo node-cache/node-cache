@@ -303,7 +303,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	take: ( key )=>
 		_ret = @get(key)
-		if (_ret?) 
+		if (_ret?)
 			@del(key)
 		return _ret
 
@@ -487,6 +487,38 @@ module.exports = class NodeCache extends EventEmitter
 		@_checkData( _startPeriod )
 
 		@emit( "flush" )
+
+		return
+	
+	
+		# ## flushStats
+	#
+	# flush the stats
+	#
+	# **Example:**
+	#
+	#     myCache.flushStats()
+	#
+	#     myCache.flushStats()
+	#     # {
+	#     # hits: 0,
+	#     # misses: 0,
+	#     # keys: 0,
+	#     # ksize: 0,
+	#     # vsize: 0
+	#     # }
+	#
+	flushStats: ()=>
+
+		# reset stats
+		@stats =
+			hits: 0
+			misses: 0
+			keys: 0
+			ksize: 0
+			vsize: 0
+
+		@emit( "flush_stats" )
 
 		return
 

@@ -296,6 +296,26 @@ myCache.getStats();
 	*/
 ```
 
+## Flush the stats (FLUSH STATS):
+
+`myCache.flushStats()`
+
+Flush the stats.
+
+```js
+myCache.flushStats();
+myCache.getStats();
+	/*
+		{
+			keys: 0,    // global key count
+			hits: 0,    // global hit count
+			misses: 0,  // global miss count
+			ksize: 0,   // global key size count in approximately bytes
+			vsize: 0    // global value size count in approximately bytes
+		}
+	*/
+```
+
 ## Close the cache:
 
 `myCache.close()`
@@ -347,6 +367,16 @@ Fired when the cache has been flushed.
 
 ```js
 myCache.on( "flush", function(){
+	// ... do something ...
+});
+```
+
+## flush_stats
+
+Fired when the cache stats has been flushed.
+
+```js
+myCache.on( "flush_stats", function(){
 	// ... do something ...
 });
 ```
