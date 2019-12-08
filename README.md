@@ -131,6 +131,21 @@ The return format changed to a simple value and a `ENOTFOUND` error if not found
 The return format changed to a simple value, but a due to discussion in #11 a miss shouldn't return an error.
 So after 2.1.0 a miss returns `undefined`.
 
+## Take a key (TAKE):
+
+`myCache.take( key )`
+
+get the cached value and remove the key from the cache.  
+Equivalent to calling `get(key)` + `del(key)`.  
+Useful for implementing `single use` mechanism such as OTP, where once a value is read it will become obsolete.
+
+```js
+myCache.set( "myKey", "myValue" )
+myCache.has( "myKey" ) // returns true because the key is cached right now
+value = myCache.take( "myKey" ) // value === "myValue"; this also deletes the key
+myCache.has( "myKey" ) // returns false because the key has been deleted
+```
+
 ## Get multiple keys (MGET):
 
 `myCache.mget( [ key1, key2, ..., keyn ] )`
