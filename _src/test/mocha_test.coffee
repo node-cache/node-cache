@@ -145,7 +145,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 			# key should not be present anymore, again
 			res = localCache.has("otp")
-			res.should.eql false					
+			res.should.eql false
 			return
 
 		it "take key with falsy values", () ->
@@ -680,7 +680,6 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			1.should.eql cache.getStats().hits
 			cache.get randomString 10
 			1.should.eql cache.getStats().misses
-
 			return
 		return
 

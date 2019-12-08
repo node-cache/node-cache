@@ -493,13 +493,13 @@ module.exports = class NodeCache extends EventEmitter
 	
 		# ## flushStats
 	#
-	# flush the stats
+	# flush the stats and reset all counters to 0
 	#
 	# **Example:**
 	#
 	#     myCache.flushStats()
 	#
-	#     myCache.flushStats()
+	#     myCache.getStats()
 	#     # {
 	#     # hits: 0,
 	#     # misses: 0,
