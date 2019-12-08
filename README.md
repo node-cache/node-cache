@@ -422,6 +422,7 @@ Node-Cache supports all node versions >= 8
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|5.1.0|2019-12-08|Add .take() from PR [#160] and .flushStats from PR [#161]. Thanks to [Sujesh Thekkepatt](https://github.com/sujeshthekkepatt) and [Gopalakrishna Palem](https://github.com/KrishnaPG)!|
 |5.0.2|2019-11-17|Fixed bug where expired values were deleted even though `deleteOnExpire` was set to `false`. Thanks to [fielding-wilson](https://github.com/fielding-wilson)!|
 |5.0.1|2019-10-31|Fixed bug where users could not set null values. Thanks to [StefanoSega](https://github.com/StefanoSega), [jwest23](https://github.com/jwest23) and [marudor](https://github.com/marudor)!|
 |5.0.0|2019-10-23|Remove lodash dependency, add .has(key) and .mset([{key,val,ttl}]) methods to the cache. Thanks to [Regev Brody](https://github.com/regevbr) for PR [#132] and [Sujesh Thekkepatt](https://github.com/sujeshthekkepatt) for PR [#142]! Also thank you, to all other contributors that remain unnamed here!|
