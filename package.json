@@ -41,14 +41,14 @@
   ],
   "main": "./index.js",
   "types": "./index.d.ts",
-  "homepage": "https://github.com/mpneuried/nodecache",
+  "homepage": "https://github.com/node-cache/node-cache",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mpneuried/nodecache.git"
+    "url": "git://github.com/node-cache/node-cache.git"
   },
   "license": "MIT",
   "engines": {
-    "node": ">= 0.4.6"
+    "node": ">= 8.0.0"
   },
   "scripts": {
     "test": "COFFEECOV_INIT_ALL=false mocha --require coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
