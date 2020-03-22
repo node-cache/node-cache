@@ -31,7 +31,11 @@ module.exports = class NodeCache extends EventEmitter
 			enableLegacyCallbacks: false
 			# max amount of keys that are being stored
 			maxKeys: -1
+			# prefix key
+			prefix: ""
 		, @options )
+
+		@prefix = @options.prefix
 
 		# generate functions with callbacks (legacy)
 		if (@options.enableLegacyCallbacks)
@@ -90,6 +94,7 @@ module.exports = class NodeCache extends EventEmitter
 	#	myCache.get "myKey", ( err, val )
 	#
 	get: ( key )=>
+		key = @prefix + key;
 		# handle invalid key types
 		if (err = @_isInvalidKey( key ))?
 			throw err
@@ -126,6 +131,7 @@ module.exports = class NodeCache extends EventEmitter
 		# define return
 		oRet = {}
 		for key in keys
+			key = @prefix + key;
 			# handle invalid key types
 			if (err = @_isInvalidKey( key ))?
 				throw err
@@ -158,6 +164,7 @@ module.exports = class NodeCache extends EventEmitter
 	#	myCache.set "myKey", "my_String Value", 10
 	#
 	set: ( key, value, ttl )=>
+		key = @prefix + key;
 		# check if cache is overflowing
 		if (@options.maxKeys > -1 && @stats.keys >= @options.maxKeys)
 			_err = @_error( "ECACHEFULL" )
@@ -229,6 +236,7 @@ module.exports = class NodeCache extends EventEmitter
 
 		for keyValuePair in keyValueSet
 			{ key, val, ttl } = keyValuePair
+			key = @prefix + key;
 
 			# check if there is ttl and it's a number
 			if ttl and typeof ttl isnt "number"
@@ -268,6 +276,7 @@ module.exports = class NodeCache extends EventEmitter
 
 		delCount = 0
 		for key in keys
+			key = @prefix + key;
 			# handle invalid key types
 			if (err = @_isInvalidKey( key ))?
 				throw err
@@ -302,6 +311,7 @@ module.exports = class NodeCache extends EventEmitter
 	#	myCache.take "myKey", ( err, val )
 	#
 	take: ( key )=>
+		key = @prefix + key
 		_ret = @get(key)
 		if (_ret?)
 			@del(key)
@@ -329,6 +339,7 @@ module.exports = class NodeCache extends EventEmitter
 	#	myCache.ttl( "myKey", 1000 )
 	#
 	ttl: (key, ttl) =>
+		key = @prefix + key
 		ttl or= @options.stdTTL
 		if not key
 			return false
@@ -371,6 +382,7 @@ module.exports = class NodeCache extends EventEmitter
 		if not key
 			return undefined
 
+		key = @prefix + key;
 		# handle invalid key types
 		if (err = @_isInvalidKey( key ))?
 			throw err
@@ -422,6 +434,7 @@ module.exports = class NodeCache extends EventEmitter
 	#     # true
 	#
 	has: ( key )=>
+		key = @prefix + key
 		_exists = @data[ key ]? and @_check( key, @data[ key ] )
 		return _exists
 
