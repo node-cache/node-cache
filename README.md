@@ -112,7 +112,7 @@ const success = myCache.mset([
 
 Gets a saved value from the cache.
 Returns a `undefined` if not found or expired.
-If the value was found it returns an object with the `key` `value` pair.
+If the value was found it returns the `value`.
 
 ```js
 value = myCache.get( "myKey" );
