@@ -358,6 +358,11 @@ declare class NodeCache extends events.EventEmitter {
 	 * This will clear the interval timeout which is set on checkperiod option.
 	 */
 	close(): void;
+
+	/**
+	 * flush the stats and reset all counters to 0
+	 */
+	flushStats(): void;
 }
 
 
