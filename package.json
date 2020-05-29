@@ -69,10 +69,10 @@
     "grunt-contrib-coffee": "^2.1.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-include-replace": "3.2.x",
-    "grunt-mocha-cli": "^4.0.0",
+    "grunt-mocha-cli": "^6.0.0",
     "grunt-run": "^0.8.1",
     "istanbul": "^0.4.5",
-    "mocha": "^6.1.4",
+    "mocha": "^7.2.0",
     "should": "11.x",
     "typescript": "^2.6.1"
   }
