@@ -29,9 +29,12 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
     - run: npx istanbul report text-summary lcov
+    - id: extract_branch
+      run: echo "::set-output name=branch::$(echo "$GITHUB_REF" | sed 's/refs\/heads\/\(.*\)/\1/' -)"
     - run: cat ./coverage/lcov.info | npx coveralls
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         COVERALLS_SERVICE_NAME: "gh-actions"
+        COVERALLS_SERVICE_NUMBER: "${{ github.run_id }}:${{ github.run_number }}"
         COVERALLS_GIT_BRANCH: ${{ steps.extract_branch.outputs.branch }}
         COVERALLS_PARALLEL: "true"
