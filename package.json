@@ -51,8 +51,9 @@
     "node": ">= 8.0.0"
   },
   "scripts": {
-    "test": "COFFEECOV_INIT_ALL=false mocha --require coffee-script/register --require coffee-coverage/register-istanbul _src/test/mocha_test.coffee -R spec && tsc",
-    "build": "grunt build"
+    "test": "nyc --require coffee-script/register mocha _src/test/mocha_test.coffee -R spec && tsc",
+    "build": "grunt build",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "clone": "2.x"
@@ -71,8 +72,8 @@
     "grunt-include-replace": "3.2.x",
     "grunt-mocha-cli": "^6.0.0",
     "grunt-run": "^0.8.1",
-    "istanbul": "^0.4.5",
     "mocha": "^7.2.0",
+    "nyc": "^15.1.0",
     "should": "11.x",
     "typescript": "^2.6.1"
   }
