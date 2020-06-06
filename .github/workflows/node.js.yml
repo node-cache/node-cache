@@ -28,3 +28,7 @@ jobs:
     - run: npm ci || npm install
     - run: npm run build --if-present
     - run: npm test
+    - run: npx istanbul report text-summary lcov
+    - run: cat ./coverage/lcov.info | npx coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
