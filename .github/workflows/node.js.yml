@@ -30,7 +30,8 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.github_token }}
-        flag-name: run-${{ matrix.node-version }}
+        # uncomment after https://github.com/coverallsapp/github-action/pull/54 is merged
+        # flag-name: run-${{ matrix.node-version }}
         parallel: true
         path-to-lcov: "./lcov.info"
 
