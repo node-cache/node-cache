@@ -13,3 +13,4 @@ coffeelint.json
 .editorconfig
 coverage/
 .nyc_output/
+lcov.info

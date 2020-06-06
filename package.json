@@ -53,7 +53,7 @@
   "scripts": {
     "test": "nyc --require coffee-script/register mocha _src/test/mocha_test.coffee -R spec && tsc",
     "build": "grunt build",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "export-coverage": "nyc report --reporter=text-lcov > lcov.info"
   },
   "dependencies": {
     "clone": "2.x"
