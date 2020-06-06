@@ -20,3 +20,5 @@ deploy.json
 *.log
 
 coverage/
+.nyc_output/
+lcov.info

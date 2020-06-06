@@ -12,3 +12,5 @@ npm-debug.log
 coffeelint.json
 .editorconfig
 coverage/
+.nyc_output/
+lcov.info
