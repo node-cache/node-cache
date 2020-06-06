@@ -1,10 +1,10 @@
 ![Logo](./logo/logo.png)
 
-![Node.js CI](https://github.com/node-cache/node-cache/workflows/Node.js%20CI/badge.svg?branch=master)
+[![Node.js CI](https://github.com/node-cache/node-cache/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/node-cache/node-cache/actions?query=workflow%3A%22Node.js+CI%22+branch%3A%22master%22)
 ![Dependency status](https://img.shields.io/david/node-cache/node-cache)
-![NPM package version](https://img.shields.io/npm/v/node-cache?label=npm%20package)
-![NPM monthly downloads](https://img.shields.io/npm/dm/node-cache)
-![GitHub issues](https://img.shields.io/github/issues/node-cache/node-cache)
+[![NPM package version](https://img.shields.io/npm/v/node-cache?label=npm%20package)](https://www.npmjs.com/package/node-cache)
+[![NPM monthly downloads](https://img.shields.io/npm/dm/node-cache)](https://www.npmjs.com/package/node-cache)
+[![GitHub issues](https://img.shields.io/github/issues/node-cache/node-cache)](https://github.com/node-cache/node-cache/issues)
 [![Coveralls Coverage](https://img.shields.io/coveralls/node-cache/node-cache.svg)](https://coveralls.io/github/node-cache/node-cache)
 
 # Simple and fast NodeJS internal caching.
