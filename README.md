@@ -418,6 +418,7 @@ Node-Cache supports all node versions >= 8
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|5.1.1|2020-06-06|[#184], [#183] thanks [Jonah Werre](https://github.com/jwerre) for reporting [#181]!, [#180], Thanks [Titus](https://github.com/tstone) for [#169]!, Thanks [Ianfeather](https://github.com/Ianfeather) for [#168]!, Thanks [Adam Haglund](https://github.com/BeeeQueue) for [#176]|
 |5.1.0|2019-12-08|Add .take() from PR [#160] and .flushStats from PR [#161]. Thanks to [Sujesh Thekkepatt](https://github.com/sujeshthekkepatt) and [Gopalakrishna Palem](https://github.com/KrishnaPG)!|
 |5.0.2|2019-11-17|Fixed bug where expired values were deleted even though `deleteOnExpire` was set to `false`. Thanks to [fielding-wilson](https://github.com/fielding-wilson)!|
 |5.0.1|2019-10-31|Fixed bug where users could not set null values. Thanks to [StefanoSega](https://github.com/StefanoSega), [jwest23](https://github.com/jwest23) and [marudor](https://github.com/marudor)!|
