@@ -684,7 +684,7 @@ module.exports = class NodeCache extends EventEmitter
 
 	_ERRORS:
 		"ENOTFOUND": "Key `__key` not found"
-		"ECACHEFULL": "Cache max key size exceeded"
+		"ECACHEFULL": "Cache max keys amount exceeded"
 		"EKEYTYPE": "The key argument has to be of type `string` or `number`. Found: `__key`"
 		"EKEYSTYPE": "The keys argument has to be an array."
 		"ETTLTYPE": "The ttl argument has to be a number."

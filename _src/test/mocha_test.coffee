@@ -368,7 +368,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 			(() -> localCacheMaxKeys.set(state.key3, state.value3, 0)).should.throw({
 				name: "ECACHEFULL"
-				message: "Cache max key size exceeded"
+				message: "Cache max keys amount exceeded"
 			})
 			return
 
