@@ -264,7 +264,7 @@ declare class NodeCache extends events.EventEmitter {
 	 * get multiple cached keys at once and change the stats
 	 *
 	 * @param keys an array of keys
-	 * @returns on object containing the values stored in the matching keys
+	 * @returns an object containing the values stored in the matching keys
 	 */
 	mget<T>(
 		keys: Key[]
