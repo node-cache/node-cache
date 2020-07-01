@@ -253,8 +253,8 @@ declare class NodeCache extends events.EventEmitter {
 	/**
 	 * get a cached key and change the stats
 	 *
-	 * @param key cache key or an array of keys
-	 * @param cb Callback function
+	 * @param key cache key
+	 * @returns The value stored in the key
 	 */
 	get<T>(
 		key: Key
@@ -264,7 +264,7 @@ declare class NodeCache extends events.EventEmitter {
 	 * get multiple cached keys at once and change the stats
 	 *
 	 * @param keys an array of keys
-	 * @param cb Callback function
+	 * @returns an object containing the values stored in the matching keys
 	 */
 	mget<T>(
 		keys: Key[]
@@ -277,7 +277,6 @@ declare class NodeCache extends events.EventEmitter {
 	 * @param value A element to cache. If the option `option.forceString` is `true` the module trys to translate
 	 * it to a serialized JSON
 	 * @param ttl The time to live in seconds.
-	 * @param cb Callback function
 	 */
 	set<T>(
 		key: Key,
@@ -293,7 +292,7 @@ declare class NodeCache extends events.EventEmitter {
 	/**
 	 * set multiple cached keys at once and change the stats
 	 *
-	 * @param keyValueSet  an array of object which includes key,value and ttl
+	 * @param keyValueSet an array of object which includes key,value and ttl
 	 */
 	mset<T>(
 		keyValueSet: ValueSetItem<T>[]
@@ -309,6 +308,18 @@ declare class NodeCache extends events.EventEmitter {
 		keys: Key | Key[]
 	): number;
 
+	/**
+	 * get a cached key and remove it from the cache.
+	 * Equivalent to calling `get(key)` + `del(key)`.
+	 * Useful for implementing `single use` mechanism such as OTP, where once a value is read it will become obsolete.
+	 *
+	 * @param key cache key
+	 * @returns The value stored in the key
+	 */
+	take<T>(
+		key: Key
+	): T | undefined;
+					  
 	/**
 	 * reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 it's similar to `.del()`
 	 */
