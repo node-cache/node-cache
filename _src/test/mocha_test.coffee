@@ -1256,7 +1256,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 			)
 
-			it("should not throw when setting a of key of type `object` (or any other type that gets tested after `Buffer` in `_getValLength()`) when `Buffer` is not available in the global scope", () ->
+			it("should not throw when setting a key of type `object` (or any other type that gets tested after `Buffer` in `_getValLength()`) when `Buffer` is not available in the global scope", () ->
 				should(Buffer).be.undefined()
 				cache.set("foo", {})
 				return
