@@ -418,6 +418,7 @@ Node-Cache supports all node versions >= 8
 ## Release History
 |Version|Date|Description|
 |:--:|:--:|:--|
+|5.1.2|2020-07-01|[#195] type definition for `.take()` and typo fixes, thx [shhadi](https://github.com/shhadi)!, [#198]/[#197] error when setting a value in a js environment without `Buffer` in global scope, thanks [jdussouillez](https://github.com/jdussouillez) and [Sirz3chs](https://github.com/Sirz3chs) for your help|
 |5.1.1|2020-06-06|[#184], [#183] thanks [Jonah Werre](https://github.com/jwerre) for reporting [#181]!, [#180], Thanks [Titus](https://github.com/tstone) for [#169]!, Thanks [Ianfeather](https://github.com/Ianfeather) for [#168]!, Thanks [Adam Haglund](https://github.com/BeeeQueue) for [#176]|
 |5.1.0|2019-12-08|Add .take() from PR [#160] and .flushStats from PR [#161]. Thanks to [Sujesh Thekkepatt](https://github.com/sujeshthekkepatt) and [Gopalakrishna Palem](https://github.com/KrishnaPG)!|
 |5.0.2|2019-11-17|Fixed bug where expired values were deleted even though `deleteOnExpire` was set to `false`. Thanks to [fielding-wilson](https://github.com/fielding-wilson)!|
