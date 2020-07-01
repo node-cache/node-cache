@@ -1243,5 +1243,31 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			)
 			return
 		)
+
+		describe("#197 - ReferenceError: Buffer is not defined (maybe we should have a general 'browser compatibility' test-suite?", () ->
+			cache = null
+			globalBuffer = global.Buffer
+
+			before(() ->
+				# make `Buffer` globally unavailable
+				# we have to explicitly set to `undefined` because our `clone` dependency checks for that
+				global.Buffer = undefined
+				cache = new nodeCache()
+				return
+			)
+
+			it("should not throw when setting a of key of type `object` (or any other type that gets tested after `Buffer` in `_getValLength()`) when `Buffer` is not available in the global scope", () ->
+				should(Buffer).be.undefined()
+				cache.set("foo", {})
+				return
+			)
+
+			after(() ->
+				global.Buffer = globalBuffer
+				should(Buffer).eql(globalBuffer)
+			)
+			return
+		)
+
 		return
 	return
