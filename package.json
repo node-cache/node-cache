@@ -61,11 +61,11 @@
     "start": "tsdx watch --target node",
     "build": "tsdx build --target node",
     "test": "tsdx test",
-    "lint": "tsdx lint"
+    "lint": "tsdx lint src"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint"
+      "pre-commit": "npm run lint"
     }
   },
   "prettier": {
