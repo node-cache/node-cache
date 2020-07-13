@@ -1,5 +1,6 @@
 import {EventEmitter} from "events";
 import {setTimeout, clearTimeout} from "timers";
+import clone from "clone";
 
 interface Options {
 	forceString: boolean;

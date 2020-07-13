@@ -57,7 +57,6 @@
     "node": ">= 8"
   },
   "scripts": {
-    "_test": "COFFEECOV_INIT_ALL=false mocha --require ts-node/register --require coffee-script/register _src/test/mocha_test.coffee -R spec && tsc",
     "_build": "grunt build",
     "start": "tsdx watch --target node",
     "build": "tsdx build --target node",
@@ -77,17 +76,18 @@
     "bracketSpacing": false
   },
   "dependencies": {
-    "clone": "2.x"
+    "clone": "^2.1.2"
   },
   "devDependencies": {
     "@types/clone": "^0.1.30",
-    "@types/jest": "^24.0.19",
-    "@types/node": "^8.9.4",
-    "coveralls": "^3.0.7",
-    "husky": "^3.0.9",
-    "ts-node": "^8.4.1",
-    "tsdx": "^0.10.5",
-    "tslib": "^1.10.0",
-    "typescript": "^3.6.4"
+    "@types/jest": "^24.9.1",
+    "@types/node": "^8.10.61",
+    "@types/should": "^13.0.0",
+    "coveralls": "^3.1.0",
+    "husky": "^3.1.0",
+    "ts-node": "^8.10.2",
+    "tsdx": "^0.13.2",
+    "tslib": "^1.13.0",
+    "typescript": "^3.9.6"
   }
 }
