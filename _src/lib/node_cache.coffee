@@ -205,11 +205,11 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# * `key` ( String | Number ): cache key
 	# * `[ ttl ]` ( Number | String ): ( optional ) The time to live in seconds.
-	# * `value` ( Function | Any ): if Function is given, its return value will be fetched, otherwise the value itself is fetched
+	# * `value` ( Any ): if `Function` type is given, it will be executed and returned value will be fetched, otherwise the value itself is fetched
 	#
 	# **Example:**
 	#
-	#	myCache.fetch "myKey", 10, () => "my_String value"
+	# myCache.fetch "myKey", 10, () => "my_String value"
 	#
 	# myCache.fetch "myKey", "my_String value"
 	#
