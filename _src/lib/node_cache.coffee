@@ -197,6 +197,30 @@ module.exports = class NodeCache extends EventEmitter
 		# return true
 		return true
 	
+	# ## fetch
+	#
+	# in the event of a cache miss (no value is assinged to given cache key), value will be written to cache and returned. In case of cache hit, cached value will be returned without executing given value. If the given value is type of `Function`, it will be executed and returned result will be fetched
+	#
+	# **Parameters:**
+	#
+	# * `key` ( String | Number ): cache key
+	# * `[ ttl ]` ( Number | String ): ( optional ) The time to live in seconds.
+	# * `value` ( Function | Any ): if Function is given, its return value will be fetched, otherwise the value itself is fetched
+	#
+	# **Example:**
+	#
+	#	myCache.fetch "myKey", 10, () => "my_String value"
+	#
+	# myCache.fetch "myKey", "my_String value"
+	#
+	fetch: ( key, ttl, value )=>
+		# check if cache is hit
+		_ret = @get( key )
+		if _ret?
+			return _ret
+		_ret = if typeof value == 'function' then value() else value
+		@set( key, _ret, ttl )
+		return _ret
 
 	# ## mset
 	#

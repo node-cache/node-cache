@@ -1223,6 +1223,35 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		return
+  
+	describe "fetch", () ->
+		beforeEach () ->
+				localCache.flushAll()
+				state =
+					func: () -> 
+						return 'foo'
+		
+		context 'when value is type of Function', () ->
+			it 'execute it and fetch returned value', () ->
+				'foo'.should.eql localCache.fetch( 'key', 100, state.func )
+				return
+
+		context 'when value is not a function', () ->
+			it 'return the value itself', () ->
+				'bar'.should.eql localCache.fetch( 'key', 100, 'bar' )
+				return
+
+		context 'cache hit', () ->
+			it 'return cached value', () ->
+				localCache.set 'key', 'bar', 100
+				'bar'.should.eql localCache.fetch( 'key', 100, state.func )
+				return
+
+		context 'cache miss', () ->
+			it 'write given value to cache and return it', () ->
+				'foo'.should.eql localCache.fetch( 'key', 100, state.func )
+				'foo'.should.eql localCache.get( 'key' )
+				return
 
 	describe "Issues", () ->
 		describe("#151 - cannot set null", () ->
