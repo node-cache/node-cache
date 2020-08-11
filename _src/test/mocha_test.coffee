@@ -1252,6 +1252,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				'foo'.should.eql localCache.fetch( 'key', 100, state.func )
 				'foo'.should.eql localCache.get( 'key' )
 				return
+		
+		context 'when ttl is omitted', () ->
+		  it 'swap ttl and value', () ->
+			  'foo'.should.eql localCache.fetch( 'key', state.func )
+				return
 
 	describe "Issues", () ->
 		describe("#151 - cannot set null", () ->
