@@ -299,12 +299,12 @@ declare class NodeCache extends events.EventEmitter {
 	fetch<T>(
 		key: Key,
 		ttl: number | string,
-		value: () => T | T,
+		value: () => T,
   ): T;
 
 	fetch<T>(
 		key: Key,
-		value: () => T | T,
+		value: () => T,
 	): T;
 
 	/**
