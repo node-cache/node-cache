@@ -215,9 +215,8 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	fetch: ( key, ttl, value )=>
 		# check if cache is hit
-		_ret = @get( key )
-		if _ret?
-			return _ret
+		if @has( key )
+			return @get( key )
 		if typeof value == 'undefined'
 			value = ttl
 			ttl = undefined
