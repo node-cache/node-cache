@@ -1223,7 +1223,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		return
-  
+
 	describe "fetch", () ->
 		beforeEach () ->
 				localCache.flushAll()
@@ -1254,8 +1254,8 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 		
 		context 'when ttl is omitted', () ->
-		  it 'swap ttl and value', () ->
-			  'foo'.should.eql localCache.fetch( 'key', state.func )
+			it 'swap ttl and value', () ->
+				'foo'.should.eql localCache.fetch( 'key', state.func )
 				return
 
 	describe "Issues", () ->
