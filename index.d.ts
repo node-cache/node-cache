@@ -290,6 +290,24 @@ declare class NodeCache extends events.EventEmitter {
 	): boolean;
 
 	/**
+	 * in the event of a cache miss (no value is assinged to given cache key), value will be written to cache and returned. In case of cache hit, cached value will be returned without executing given value. If the given value is type of `Function`, it will be executed and returned result will be fetched
+	 * 
+	 * @param key cache key
+	 * @param ttl The time to live in seconds.
+	 * @param value function that returns a value to be stored in cache, or the value itself
+	 */
+	fetch<T>(
+		key: Key,
+		ttl: number | string,
+		value: () => T | T,
+  ): T;
+
+	fetch<T>(
+		key: Key,
+		value: () => T | T,
+	): T;
+
+	/**
 	 * set multiple cached keys at once and change the stats
 	 *
 	 * @param keyValueSet an array of object which includes key,value and ttl
