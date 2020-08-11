@@ -94,7 +94,7 @@ module.exports = class NodeCache extends EventEmitter
 		if (err = @_isInvalidKey( key ))?
 			throw err
 
-		# get data and incremet stats
+		# get data and increment stats
 		if @data[ key ]? and @_check( key, @data[ key ] )
 			@stats.hits++
 			_ret = @_unwrap( @data[ key ] )
@@ -148,7 +148,7 @@ module.exports = class NodeCache extends EventEmitter
 	# **Parameters:**
 	#
 	# * `key` ( String | Number ): cache key
-	# * `value` ( Any ): A element to cache. If the option `option.forceString` is `true` the module trys to translate it to a serialized JSON
+	# * `value` ( Any ): An element to cache. If the option `option.forceString` is `true` the module trys to translate it to a serialized JSON
 	# * `[ ttl ]` ( Number | String ): ( optional ) The time to live in seconds.
 	#
 	# **Example:**
@@ -204,7 +204,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `keyValueSet` ( Object[] ): an array of object which includes key,value and ttl
+	# * `keyValueSet` ( Object[] ): an array of objects which include key, value, and ttl
 	#
 	# **Example:**
 	#
@@ -251,7 +251,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `keys` ( String | Number | String|Number[] ): cache key to delete or a array of cache keys
+	# * `keys` ( String | Number | String|Number[] ): cache key to delete or an array of cache keys
 	#
 	# **Return**
 	#
@@ -357,7 +357,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# **Parameters:**
 	#
-	# * `key` ( String | Number ): cache key to check the ttl value
+	# * `key` ( String | Number ): cache key to check the ttl value of
 	#
 	# **Return**
 	#
