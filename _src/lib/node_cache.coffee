@@ -218,6 +218,9 @@ module.exports = class NodeCache extends EventEmitter
 		_ret = @get( key )
 		if _ret?
 			return _ret
+		if typeof value == 'undefined'
+			value = ttl
+			ttl = undefined
 		_ret = if typeof value == 'function' then value() else value
 		@set( key, _ret, ttl )
 		return _ret
