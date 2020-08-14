@@ -47,6 +47,22 @@ interface TypeSample {
 
 {
 	let cache: NodeCache;
+	let key: string;
+	let ttl: number | string;
+	let result: TypeSample;
+	let func = (): TypeSample => {
+		return {
+			a: 1,
+			b: 'foo',
+			c: true
+		};
+	};
+	result = cache.fetch<TypeSample>(key, func);
+	result = cache.fetch<TypeSample>(key, ttl, func);
+}
+
+{
+	let cache: NodeCache;
 	let keys: string | string[];
 	let result: number;
 	result = cache.del(keys);
