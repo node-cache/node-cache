@@ -564,10 +564,12 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	# internal housekeeping method.
 	# Check all the cached data and delete the invalid values
-	_checkData: ( startPeriod = true )=>
+	async _checkData: ( startPeriod = true )=>
 		# run the housekeeping method
+		i = 0
 		for key, value of @data
-			setImmediate(() => @_check( key, value ))
+			@_check( key, value )
+			if (i % 10 === 0) await new Promise(resolve => setImmediate(resolve));
 
 		if startPeriod and @options.checkperiod > 0
 			@checkTimeout = setTimeout( @_checkData, ( @options.checkperiod * 1000 ), startPeriod )
