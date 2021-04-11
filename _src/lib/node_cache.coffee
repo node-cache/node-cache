@@ -103,6 +103,7 @@ module.exports = class NodeCache extends EventEmitter
 		else
 			# if not found return undefined
 			@stats.misses++
+			@emit( "miss", key )
 			return undefined
 
 	# ## mget
@@ -137,6 +138,7 @@ module.exports = class NodeCache extends EventEmitter
 			else
 				# if not found return a error
 				@stats.misses++
+				@emit( "miss", key )
 
 		# return all found keys
 		return oRet
