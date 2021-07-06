@@ -207,6 +207,17 @@ declare namespace NodeCache {
 		 * @memberof Options
 		 */
 		maxKeys?: number;
+
+		/**
+		 * allow replacement of oldest key
+		 * 
+		 * If `true`: set operations won't throw an error when max amount of keys is reached. It'll delete the oldest key to create space
+		 * If `false`: set operation will throw an error when max amount of keys is reached.
+		 * 
+		 * @type {boolean}
+		 * @memberof Options
+		 */
+		 replaceOldestKey?: boolean
 	}
 
 	interface Stats {
