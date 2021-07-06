@@ -381,7 +381,21 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		return
-
+	describe "replaceOldest: replaces oldest key when set to true", () ->
+		it "remove oldest key to allow new cache when replaceOldest is true", () ->
+			localCacheMaxKeys.options.replaceOldestKey = true
+			localCacheMaxKeys.set(state.key1, state.value1, 0)
+			# oldest key key2 from previous test should be removed
+			should([state.key3, state.key1]).eql(localCacheMaxKeys.keys())
+			return
+		it "throw error when maxSize if full and replaceOldest is false", () ->
+			localCacheMaxKeys.options.replaceOldestKey = false
+			(()=> localCacheMaxKeys.set(state.key2, state.value2, 0).should.throw({
+				name: "ECACHEFULL"
+				message: "Cache max keys amount exceeded"
+			}))	
+			return
+		return 
 	describe "correct and incorrect key types", () ->
 		describe "number", () ->
 			before () ->
