@@ -1271,12 +1271,32 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 			)
 
-			it("should also return `null`", () ->
+			it("should also return `value`", () ->
 				should(cache.get("test")).be.null()
 				return
 			)
 			return
 		)
+
+		describe("#264 - bug: set undefined, get null", () ->
+			cache = null
+			before(() ->
+				cache = new nodeCache()
+				return
+			)
+
+			it("set the value `undefined` - this should not throw or otherwise fail", () ->
+				cache.set("test", undefined)
+				return
+			)
+
+			it("should also return `value`", () ->
+				should(cache.get("test")).be.undefined()
+				return
+			)
+			return
+		)
+
 
 		describe("#197 - ReferenceError: Buffer is not defined (maybe we should have a general 'browser compatibility' test-suite?", () ->
 			cache = null

@@ -644,7 +644,7 @@ module.exports = class NodeCache extends EventEmitter
 				return clone( value.v )
 			else
 				return value.v
-		return null
+		return if value.v == undefined then value.v else null
 
 	# ## _getKeyLength
 	#
