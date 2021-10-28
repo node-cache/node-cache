@@ -1271,7 +1271,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 			)
 
-			it("should also return `value`", () ->
+			it("should also return `null`", () ->
 				should(cache.get("test")).be.null()
 				return
 			)
@@ -1290,7 +1290,7 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 				return
 			)
 
-			it("should also return `value`", () ->
+			it("should also return `undefined`", () ->
 				should(cache.get("test")).be.undefined()
 				return
 			)
