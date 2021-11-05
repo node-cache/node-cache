@@ -164,7 +164,7 @@ module.exports = class NodeCache extends EventEmitter
 			throw _err
 
 		# force the data to string
-		if @options.forceString and not typeof value is "string"
+		if @options.forceString and typeof value isnt "string"
 			value = JSON.stringify( value )
 
 		# set default ttl if not passed
