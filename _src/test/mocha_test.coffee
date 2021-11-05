@@ -1307,21 +1307,21 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			cache = null
 			before(() ->
 				cache = new nodeCache({
-			    forceString: true
-			  })
+					forceString: true
+				})
 				return
 			)
 
 			it("set the value `null` - this should transform into a string", () -> 
-			  cache.set "test", null
-			  should(cache.get("test")).eql("null")
-			  return
+				cache.set "test", null
+				should(cache.get("test")).eql("null")
+				return
 			)
 
 			it("set the value `{ hello: 'World' }` - this should transform into a string", () -> 
-			  cache.set "test", { hello: 'World' }
-			  should(cache.get("test")).eql("{\"hello\":\"World\"}")
-			  return
+				cache.set "test", { hello: 'World' }
+				should(cache.get("test")).eql("{\"hello\":\"World\"}")
+				return
 			)
 			return
 		)
