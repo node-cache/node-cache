@@ -69,7 +69,7 @@
     "grunt-contrib-clean": "1.0.x",
     "grunt-contrib-coffee": "^2.1.0",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-include-replace": "3.2.x",
+    "grunt-include-replace": "5.0.x",
     "grunt-mocha-cli": "^6.0.0",
     "grunt-run": "^0.8.1",
     "mocha": "^7.2.0",
