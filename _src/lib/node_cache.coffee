@@ -479,7 +479,7 @@ module.exports = class NodeCache extends EventEmitter
 
 	# ## flushAll
 	#
-	# flush the whole data and reset the stats
+	# flush the whole data and reset the stats, additionally you can pass the object that you need when 'flush' is emitted. For ex: in case of response that you want to send after success or failure.
 	#
 	# **Example:**
 	#
@@ -494,7 +494,7 @@ module.exports = class NodeCache extends EventEmitter
 	#     # vsize: 0
 	#     # }
 	#
-	flushAll: ( _startPeriod = true )=>
+	flushAll: ( _startPeriod = true, obj )=>
 		# parameter just for testing
 
 		# set data empty
@@ -512,7 +512,7 @@ module.exports = class NodeCache extends EventEmitter
 		@_killCheckPeriod()
 		@_checkData( _startPeriod )
 
-		@emit( "flush" )
+		@emit( "flush", obj )
 
 		return
 	
