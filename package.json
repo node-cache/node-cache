@@ -72,7 +72,7 @@
     "grunt-include-replace": "3.2.x",
     "grunt-mocha-cli": "^6.0.0",
     "grunt-run": "^0.8.1",
-    "mocha": "^7.2.0",
+    "mocha": "^9.1.4",
     "nyc": "^15.1.0",
     "should": "11.x",
     "typescript": "^4.2.4"
