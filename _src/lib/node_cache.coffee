@@ -159,7 +159,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	set: ( key, value, ttl )=>
 		# check if cache is overflowing
-		if (@options.maxKeys > -1 && @stats.keys >= @options.maxKeys)
+		if (@options.maxKeys > -1 && @stats.keys >= @options.maxKeys && !@data[ key ])
 			_err = @_error( "ECACHEFULL" )
 			throw _err
 
