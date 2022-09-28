@@ -89,7 +89,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	#	myCache.get "myKey", ( err, val )
 	#
-	get: ( key )=>
+	get: ( key, defaultObj = null )=>
 		# handle invalid key types
 		if (err = @_isInvalidKey( key ))?
 			throw err
@@ -101,9 +101,9 @@ module.exports = class NodeCache extends EventEmitter
 			# return data
 			return _ret
 		else
-			# if not found return undefined
+			# if not found return defaultObj otherwise undefined
 			@stats.misses++
-			return undefined
+			return defaultObj || undefined
 
 	# ## mget
 	#
