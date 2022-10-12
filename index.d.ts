@@ -46,13 +46,13 @@ declare namespace NodeCache {
 		 * @param key cache key
 		 * @param value A element to cache. If the option `option.forceString` is `true` the module trys to translate
 		 * it to a serialized JSON
-		 * @param ttl The time to live in seconds.
+		 * @param ttl The time to live in seconds. If not set or null/undefined the stdTTL will be used
 		 * @param cb Callback function
 		 */
 		set<T>(
 			key: Key,
 			value: T,
-			ttl: number | string,
+			ttl: number | string | null | undefined,
 			cb?: Callback<boolean>
 		): boolean;
 
@@ -291,7 +291,7 @@ declare class NodeCache extends events.EventEmitter {
 
 	/**
 	 * in the event of a cache miss (no value is assinged to given cache key), value will be written to cache and returned. In case of cache hit, cached value will be returned without executing given value. If the given value is type of `Function`, it will be executed and returned result will be fetched
-	 * 
+	 *
 	 * @param key cache key
 	 * @param ttl The time to live in seconds.
 	 * @param value function that returns a value to be stored in cache, or the value itself
@@ -337,7 +337,7 @@ declare class NodeCache extends events.EventEmitter {
 	take<T>(
 		key: Key
 	): T | undefined;
-					  
+
 	/**
 	 * reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 it's similar to `.del()`
 	 */
