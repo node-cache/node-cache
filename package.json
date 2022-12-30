@@ -70,9 +70,9 @@
     "grunt-contrib-coffee": "^2.1.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-include-replace": "3.2.x",
-    "grunt-mocha-cli": "^6.0.0",
+    "grunt-mocha-cli": "^7.0.0",
     "grunt-run": "^0.8.1",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "should": "11.x",
     "typescript": "^4.2.4"
