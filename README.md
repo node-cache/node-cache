@@ -231,10 +231,10 @@ myCache.set( "ttlKey", "MyExpireData" )
 myCache.set( "noTtlKey", "NonExpireData", 0 )
 
 ts = myCache.getTtl( "ttlKey" )
-// ts wil be approximately 1456000600000
+// ts will be approximately 1456000600000
 
 ts = myCache.getTtl( "ttlKey" )
-// ts wil be approximately 1456000600000
+// ts will be approximately 1456000600000
 
 ts = myCache.getTtl( "noTtlKey" )
 // ts = 0
