@@ -23,6 +23,11 @@ localCacheMaxKeys = new nodeCache({
 	maxKeys: 2
 })
 
+localCacheReplaceOldestKey = new nodeCache({
+	maxKeys: 2,
+	replaceOldestKey: true
+})
+
 localCacheTTL = new nodeCache({
 	stdTTL: 0.3,
 	checkperiod: 0
@@ -381,7 +386,41 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 
 		return
-
+	describe "replaceOldest: replaces oldest key when set to true", () ->
+		before () ->
+			state =
+				key1: randomString(10)
+				key2: randomString(10)
+				key3: randomString(10)
+				value1: randomString(10)
+				value2: randomString(10)
+				value3: randomString(10)
+			return
+		it "remove oldest key to allow new cache when replaceOldest is true", (done) ->
+			setTimeout(()->
+				localCacheReplaceOldestKey.set(state.key1, state.value1)
+			, 100)
+			setTimeout(()-> 
+				localCacheReplaceOldestKey.set(state.key2, state.value2)
+			, 200)
+			setTimeout(()-> 
+				localCacheReplaceOldestKey.set(state.key3, state.value3)
+			, 300)
+			setTimeout(() ->
+				# oldest key key2 from previous test should be removed
+				should([state.key2, state.key3]).eql(localCacheReplaceOldestKey.keys())
+				done()
+				return
+			, 500)
+			return
+		it "throw error when maxSize if full and replaceOldest is false", () ->
+			localCacheReplaceOldestKey.options.replaceOldestKey = false
+			(()=> localCacheReplaceOldestKey.set(state.key2, state.value2).should.throw({
+				name: "ECACHEFULL"
+				message: "Cache max keys amount exceeded"
+			}))	
+			return
+		return 
 	describe "correct and incorrect key types", () ->
 		describe "number", () ->
 			before () ->

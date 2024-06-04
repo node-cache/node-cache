@@ -31,6 +31,8 @@ module.exports = class NodeCache extends EventEmitter
 			enableLegacyCallbacks: false
 			# max amount of keys that are being stored
 			maxKeys: -1
+			# auto replace oldest cache when maxKeys is reached
+			replaceOldestKey: false
 		, @options )
 
 		# generate functions with callbacks (legacy)
@@ -160,8 +162,18 @@ module.exports = class NodeCache extends EventEmitter
 	set: ( key, value, ttl )=>
 		# check if cache is overflowing
 		if (@options.maxKeys > -1 && @stats.keys >= @options.maxKeys)
-			_err = @_error( "ECACHEFULL" )
-			throw _err
+			# if replaceOldest then delete the oldest key
+			if(@options.replaceOldestKey)
+				oldestDate = Date.now()
+				oldestKey
+				for _key, _val of @data
+					if _val.d <= oldestDate
+						oldestDate = _val.d
+						oldestKey = _key
+				@del(oldestKey)
+			else
+				_err = @_error( "ECACHEFULL" )
+				throw _err
 
 		# force the data to string
 		if @options.forceString and typeof value isnt "string"
@@ -632,6 +644,7 @@ module.exports = class NodeCache extends EventEmitter
 		oReturn =
 			t: livetime
 			v: if asClone then clone( value ) else value
+			d: now
 
 	# ## _unwrap
 	#
