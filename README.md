@@ -13,6 +13,18 @@ A simple caching module that has `set`, `get` and `delete` methods and works a l
 Keys can have a timeout (`ttl`) after which they expire and are deleted from the cache.
 All keys are stored in a single object so the practical limit is at around 1m keys.
 
+## Declaration to not sell out
+
+We have received numerous requests in the past to hand over this project to a new maintainer so that it could be revived and brought back to life.
+Many of these request also offered money to essentially "buy" the project (or its reputation and its user-base).
+
+These requests are highly risky for the current users of this project, especially in times of the xz-backdoor and the thought of handing over the trust of the userbase (which was almost single-handedly built up by [@mpneuried](https://github.com/mpneuried) and sponsored by [Team Centric Software](https://www.tcs.de/)) feels like we would berate you.
+Handing the keys to this project (especially the permission to publish new versions of the package on npm), over to someone new includes handing over the trust our userbase puts into the package.
+
+Therefore **we vow not to sell this project, and it's 2,886,264 weekly downloads (according to npm as of May 29th 2024)**.
+
+Yes, this project is apparently unmaintained. If you want to pick up the slack, feel free to create a fork and start maintaining over there. If the community wants it will follow.
+
 
 ## BREAKING MAJOR RELEASE v5.x
 
