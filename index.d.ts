@@ -237,7 +237,7 @@ import Callback = NodeCache.Callback;
 import ValueSetItem = NodeCache.ValueSetItem;
 import NodeCacheLegacyCallbacks = NodeCache.NodeCacheLegacyCallbacks;
 
-declare class NodeCache extends events.EventEmitter {
+declare class NodeCache<ValueType = unknown> extends events.EventEmitter {
 	/** container for cached data */
 	data: Data;
 
@@ -256,9 +256,9 @@ declare class NodeCache extends events.EventEmitter {
 	 * @param key cache key
 	 * @returns The value stored in the key
 	 */
-	get<T>(
+	get<T extends ValueType>(
 		key: Key
-	): T | undefined;
+	): ValueType extends unknown ? T : ValueType | undefined;
 
 	/**
 	 * get multiple cached keys at once and change the stats
@@ -266,9 +266,9 @@ declare class NodeCache extends events.EventEmitter {
 	 * @param keys an array of keys
 	 * @returns an object containing the values stored in the matching keys
 	 */
-	mget<T>(
+	mget<T extends ValueType>(
 		keys: Key[]
-	): { [key: string]: T };
+	): { [key: string]: ValueType extends unknown ? T : ValueType };
 
 	/**
 	 * set a cached key and change the stats
@@ -278,42 +278,42 @@ declare class NodeCache extends events.EventEmitter {
 	 * it to a serialized JSON
 	 * @param ttl The time to live in seconds.
 	 */
-	set<T>(
+	set<T extends ValueType>(
 		key: Key,
-		value: T,
+		value: ValueType extends unknown ? T : ValueType,
 		ttl: number | string
 	): boolean;
 
-	set<T>(
+	set<T extends ValueType>(
 		key: Key,
-		value: T
+		value: ValueType extends unknown ? T : ValueType
 	): boolean;
 
 	/**
 	 * in the event of a cache miss (no value is assinged to given cache key), value will be written to cache and returned. In case of cache hit, cached value will be returned without executing given value. If the given value is type of `Function`, it will be executed and returned result will be fetched
-	 * 
+	 *
 	 * @param key cache key
 	 * @param ttl The time to live in seconds.
 	 * @param value function that returns a value to be stored in cache, or the value itself
 	 */
-	fetch<T>(
+	fetch<T extends ValueType>(
 		key: Key,
 		ttl: number | string,
-		value: () => T,
-  ): T;
+		value: () => ValueType extends unknown ? T : ValueType,
+  ): ValueType extends unknown ? T : ValueType;
 
-	fetch<T>(
+	fetch<T extends ValueType>(
 		key: Key,
-		value: () => T,
-	): T;
+		value: () => ValueType extends unknown ? T : ValueType,
+	): ValueType extends unknown ? T : ValueType;
 
 	/**
 	 * set multiple cached keys at once and change the stats
 	 *
 	 * @param keyValueSet an array of object which includes key,value and ttl
 	 */
-	mset<T>(
-		keyValueSet: ValueSetItem<T>[]
+	mset<T extends ValueType>(
+		keyValueSet: ValueSetItem<ValueType extends unknown ? T : ValueType>[]
 	): boolean;
 
 	/**
@@ -334,10 +334,9 @@ declare class NodeCache extends events.EventEmitter {
 	 * @param key cache key
 	 * @returns The value stored in the key
 	 */
-	take<T>(
+	take<T extends ValueType>(
 		key: Key
-	): T | undefined;
-					  
+	): (ValueType extends unknown ? T : ValueType) | undefined;
 	/**
 	 * reset or redefine the ttl of a key. If `ttl` is not passed or set to 0 it's similar to `.del()`
 	 */
