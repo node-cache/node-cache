@@ -1326,5 +1326,19 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			return
 		)
 
+		describe("#255 - get with default value", () ->
+			cache = null
+			before(() ->
+				cache = new nodeCache()
+				return
+			)
+
+			it("should return default value if cache is empty and default object defined", () ->
+				should(cache.get("test", defaultObj={test: true})).eql({test: true})
+				return
+			)
+			return
+		)
+
 		return
 	return
