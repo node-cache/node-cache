@@ -380,6 +380,11 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 			true.should.eql setKey3
 			return
 
+		it "overwrite key", () ->
+			setKey3 = localCacheMaxKeys.set(state.key3, state.value3, 0)
+			true.should.eql setKey3
+			return
+
 		return
 
 	describe "correct and incorrect key types", () ->
