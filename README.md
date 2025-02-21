@@ -41,7 +41,7 @@ Please get in contact with us, if you are using some parts of node-cache's inter
 # Install
 
 ```bash
-	npm install node-cache --save
+npm install node-cache --save
 ```
 
 Or just require the `node_cache.js` file to get the superclass
@@ -243,10 +243,10 @@ myCache.set( "ttlKey", "MyExpireData" )
 myCache.set( "noTtlKey", "NonExpireData", 0 )
 
 ts = myCache.getTtl( "ttlKey" )
-// ts wil be approximately 1456000600000
+// ts will be approximately 1456000600000
 
 ts = myCache.getTtl( "ttlKey" )
-// ts wil be approximately 1456000600000
+// ts will be approximately 1456000600000
 
 ts = myCache.getTtl( "noTtlKey" )
 // ts = 0
