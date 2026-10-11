@@ -356,7 +356,7 @@ module.exports = class NodeCache extends EventEmitter
 	#
 	ttl: (key, ttl) =>
 		ttl or= @options.stdTTL
-		if not key
+		if not key?
 			return false
 
 		# handle invalid key types
@@ -394,7 +394,7 @@ module.exports = class NodeCache extends EventEmitter
 	#	myCache.getTtl( "myKey" )
 	#
 	getTtl: ( key )=>
-		if not key
+		if not key?
 			return undefined
 
 		# handle invalid key types

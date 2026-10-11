@@ -1328,3 +1328,18 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 
 		return
 	return
+
+describe "TTL methods with valid falsey keys", () ->
+	for key in [0, ""]
+		do (key) ->
+			it "updates and reads TTL for #{JSON.stringify(key)}", () ->
+				cache = new nodeCache({ checkperiod: 0 })
+				cache.set(key, "value").should.eql true
+				should(cache.getTtl(key)).eql 0
+				cache.ttl(key, 60).should.eql true
+				(cache.getTtl(key) > Date.now()).should.eql true
+				cache.get(key).should.eql "value"
+				cache.ttl(key, -1).should.eql true
+				cache.has(key).should.eql false
+				cache.close()
+				return
