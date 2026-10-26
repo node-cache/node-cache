@@ -55,6 +55,28 @@ describe "`#{pkg.name}@#{pkg.version}` on `node@#{process.version}`", () ->
 		console.log txt
 		return
 
+	describe "expired listener deletion", () ->
+		for method, expected of {get: undefined, mget: {}, has: false, getTtl: undefined}
+			do (method, expected) ->
+				it "#{method} handles deletion by an expired listener", () ->
+					cache = new nodeCache({checkperiod: 0, deleteOnExpire: false})
+					cache.set "expired", "value", -1
+					cache.on "expired", (key, value) ->
+						value.should.eql "value"
+						cache.del key
+					argument = if method is "mget" then ["expired"] else "expired"
+					should(cache[method](argument)).eql expected
+					cache.keys().should.eql []
+					cache.getStats().keys.should.eql 0
+					return
+
+		it "keeps a value refreshed by an expired listener", () ->
+			cache = new nodeCache({checkperiod: 0, deleteOnExpire: false})
+			cache.set "expired", "old", -1
+			cache.on "expired", (key) -> cache.set key, "new", 0
+			cache.get("expired").should.eql "new"
+			return
+
 	describe "general sync-style", () ->
 		before () ->
 			localCache.flushAll()

@@ -592,6 +592,8 @@ module.exports = class NodeCache extends EventEmitter
 				_retval = false
 				@del( key )
 			@emit( "expired", key, @_unwrap(data) )
+			# The expired listener may have removed the entry.
+			_retval = false unless @data[ key ]?
 
 		return _retval
 
